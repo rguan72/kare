@@ -1,4 +1,4 @@
-# Revity
+# kare
 
 rguan72/grocerylist was used as starter code for this repository.
 
