@@ -1,20 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet, SafeAreaView, FlatList } from "react-native";
 import { Layout, Button, Input } from "@ui-kitten/components";
 import ListItem from "../components/ListItem";
-
-interface Comment {
-  user: string;
-  description: string;
-}
+import { addComment, getComments } from "../utils/FirebaseUtils";
 
 export default function Thread() {
   const [comments, setComments] = useState([]);
   const [value, setValue] = useState("");
 
-  function addComment(comment: Comment) {
-    setComments(comments.concat(comment));
-  }
+  useEffect(() => {
+    const getAndSetComments = async () => {
+      const allComments = await getComments();
+      setComments(allComments);
+    };
+    getAndSetComments();
+  });
 
   return (
     <SafeAreaView
@@ -27,7 +27,7 @@ export default function Thread() {
       <FlatList
         data={comments}
         renderItem={({ item }) => (
-          <ListItem user={item.user} description={item.description} />
+          <ListItem user={item.user} text={item.text} />
         )}
       />
       <Layout
@@ -44,10 +44,7 @@ export default function Thread() {
         />
         <Button
           onPress={() => {
-            addComment({
-              user: "richard",
-              description: value
-            });
+            addComment("yoyoyo");
             setValue("");
           }}
           style={styles.mt0}

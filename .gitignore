@@ -11,5 +11,8 @@ web-build/
 web-report/
 *.log
 
+# VSCode
+.vscode
+
 # macOS
 .DS_Store
