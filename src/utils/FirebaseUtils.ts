@@ -23,7 +23,10 @@ interface commentList {
 function addComment(comment: comment) {
   db.collection(collections.comments)
     .doc()
-    .set(comment);
+    .set({
+      timestamp: firebaseApp.firestore.FieldValue.serverTimestamp(),
+      ...comment
+    });
 }
 
 function likeComment(ref: string) {
@@ -81,4 +84,15 @@ function monitorComments(setComments) {
     });
 }
 
-export { addComment, monitorComments, likeComment, dislikeComment };
+function getGroups() {
+  return db
+    .collection(collections.groups)
+    .get()
+    .then(querySnapshot => {
+      const groups = [];
+      querySnapshot.forEach(doc => groups.push({ id: doc.id, ...doc.data() }));
+      return groups;
+    });
+}
+
+export { addComment, monitorComments, likeComment, dislikeComment, getGroups };

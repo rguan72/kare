@@ -1,15 +1,39 @@
-import React from "react";
-import { StyleSheet } from "react-native";
+import React, { useState, useEffect } from "react";
+import { StyleSheet, FlatList } from "react-native";
 import { Layout, Text } from "@ui-kitten/components";
 import GroupItem from "../components/GroupItem";
+import { getGroups } from "../utils/FirebaseUtils";
+
+interface Group {
+  title: String;
+  description: String;
+  id: String;
+}
 
 export default function HomeScreen({ navigation }) {
+  const [groups, setGroups] = useState([]);
+  useEffect(() => {
+    getGroups().then(data => setGroups(data));
+  });
+
   return (
     <Layout>
-      <GroupItem
-        title="Women in Tech"
-        description="Cool group where we dicuss things"
-        onPress={() => navigation.navigate("Thread")}
+      <FlatList
+        data={groups}
+        renderItem={({ item }) => (
+          <GroupItem
+            title={item.title}
+            description={item.description}
+            text={item.text}
+            onPress={() =>
+              navigation.navigate("Thread", {
+                title: item.title,
+                description: item.description
+              })
+            }
+          />
+        )}
+        keyExtractor={item => item.id}
       />
     </Layout>
   );
