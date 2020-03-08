@@ -6,8 +6,7 @@ import LikeButton from "./LikeButton";
 import DislikeButton from "./DislikeButton";
 import { HandEmoji } from "../constants/emojis";
 
-export default function ListItem({ user, text }) {
-  const [likes, setLikes] = useState(0);
+export default function ListItem({ user, text, likes, onLike, onDislike }) {
   return (
     <Card style={styles.card}>
       <Text>
@@ -17,8 +16,8 @@ export default function ListItem({ user, text }) {
       <Text> {text} </Text>
       <Text> {likes} Likes </Text>
       <Layout style={{ flexDirection: "row" }}>
-        <LikeButton onPress={() => setLikes(likes + 1)} />
-        <DislikeButton onPress={() => setLikes(likes - 1)} />
+        <LikeButton onPress={onLike} />
+        <DislikeButton onPress={onDislike} />
       </Layout>
     </Card>
   );
@@ -26,7 +25,10 @@ export default function ListItem({ user, text }) {
 
 ListItem.propTypes = {
   user: PropTypes.string.isRequired,
-  text: PropTypes.string.isRequired
+  text: PropTypes.string.isRequired,
+  likes: PropTypes.number.isRequired,
+  onLike: PropTypes.func.isRequired,
+  onDislike: PropTypes.func.isRequired
 };
 
 const styles = StyleSheet.create({
