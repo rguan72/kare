@@ -1,6 +1,7 @@
 const collections = {
   comments: "comments",
-  groups: "groups"
+  groups: "groups",
+  users: "users"
 };
 
 export { collections };

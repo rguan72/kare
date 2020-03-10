@@ -13,15 +13,15 @@ import ListItem from "../components/ListItem";
 import {
   addComment,
   monitorComments,
-  likeComment,
-  dislikeComment
+  reportComment
 } from "../utils/FirebaseUtils";
 
 export default function Thread({ route }) {
   const [comments, setComments] = useState([]);
   const [value, setValue] = useState("");
   const { title, description } = route.params;
-
+  // hard coded for demo
+  const userId = "AoC3Bt3MgTlVm75ejvkd";
   useEffect(() => {
     const unsubscribe = monitorComments(setComments);
     return () => unsubscribe();
@@ -49,11 +49,9 @@ export default function Thread({ route }) {
         ListHeaderComponent={GroupTitle}
         renderItem={({ item }) => (
           <ListItem
-            user={item.user}
+            userId={item.userId}
             text={item.text}
-            likes={item.likes}
-            onLike={() => likeComment(item.id)}
-            onDislike={() => dislikeComment(item.id)}
+            onReport={() => reportComment(item.id)}
           />
         )}
         keyExtractor={item => item.id}
@@ -72,7 +70,7 @@ export default function Thread({ route }) {
         />
         <Button
           onPress={() => {
-            addComment({ user: "rich", text: value, likes: 0, show: true });
+            addComment({ userId: userId, text: value, reports: 0, show: true });
             setValue("");
           }}
           style={styles.mt0}

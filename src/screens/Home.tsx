@@ -13,7 +13,9 @@ interface Group {
 export default function HomeScreen({ navigation }) {
   const [groups, setGroups] = useState([]);
   useEffect(() => {
-    getGroups().then(data => setGroups(data));
+    getGroups()
+      .then(data => setGroups(data))
+      .catch(err => console.log(err));
   });
 
   return (

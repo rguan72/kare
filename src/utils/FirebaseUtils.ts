@@ -6,9 +6,9 @@ import { community } from "../constants/community";
 const db = firebase.firestore();
 
 interface comment {
-  user: String;
+  userId: String;
   text: String;
-  likes: Number;
+  reports: Number;
   show: Boolean;
 }
 
@@ -29,46 +29,12 @@ function addComment(comment: comment) {
     });
 }
 
-function likeComment(ref: string) {
-  const updateObj = {
-    likes: firebaseApp.firestore.FieldValue.increment(1),
-    show: true
-  };
-  const like = async () => {
-    const data = await db
-      .collection(collections.comments)
-      .doc(ref)
-      .get()
-      .then(doc => doc.data());
-    if (data.likes + 1 < community.reportCutoff) {
-      updateObj.show = false;
-    }
-    db.collection(collections.comments)
-      .doc(ref)
-      .update(updateObj);
-  };
-  like();
-}
-
-function dislikeComment(ref: string) {
-  const updateObj = {
-    likes: firebaseApp.firestore.FieldValue.increment(-1),
-    show: true
-  };
-  const dislike = async () => {
-    const data = await db
-      .collection(collections.comments)
-      .doc(ref)
-      .get()
-      .then(doc => doc.data());
-    if (data.likes - 1 < community.reportCutoff) {
-      updateObj.show = false;
-    }
-    db.collection(collections.comments)
-      .doc(ref)
-      .update(updateObj);
-  };
-  dislike();
+function reportComment(id: string) {
+  db.collection(collections.comments)
+    .doc(id)
+    .update({
+      show: false
+    });
 }
 
 function monitorComments(setComments) {
@@ -77,11 +43,22 @@ function monitorComments(setComments) {
     .where("show", "==", true)
     .onSnapshot(querySnapshot => {
       const comments = [];
-      querySnapshot.forEach(doc =>
-        comments.push({ id: doc.id, ...doc.data() })
-      );
+      querySnapshot.forEach(doc => {
+        comments.push({
+          id: doc.id,
+          ...doc.data()
+        });
+      });
       setComments(comments);
     });
+}
+
+function getUser(id) {
+  return db
+    .collection(collections.users)
+    .doc(id)
+    .get()
+    .then(ref => ref.data());
 }
 
 function getGroups() {
@@ -95,4 +72,4 @@ function getGroups() {
     });
 }
 
-export { addComment, monitorComments, likeComment, dislikeComment, getGroups };
+export { addComment, monitorComments, reportComment, getGroups, getUser };

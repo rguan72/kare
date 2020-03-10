@@ -13,7 +13,24 @@ const Emoji = ({ label, symbol }: EmojiProps) => (
 );
 
 function HandEmoji() {
-  return <Emoji symbol="🖐️" label="hand" />;
+  return <Emoji symbol="🖐️" label="hand wave" />;
 }
 
-export { HandEmoji };
+function peaceEmoji() {
+  return <Emoji symbol="☮️" label="peace" />;
+}
+
+function handsUpEmoji() {
+  return <Emoji symbol="🙌🏽" label="hands up" />;
+}
+
+function waterWaveEmoji() {
+  return <Emoji symbol="🌊" label="water wave" />;
+}
+
+export default {
+  handWave: HandEmoji,
+  peace: peaceEmoji,
+  handsUp: handsUpEmoji,
+  waterWave: waterWaveEmoji
+};
