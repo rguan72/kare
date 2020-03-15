@@ -28,9 +28,16 @@ function waterWaveEmoji() {
   return <Emoji symbol="🌊" label="water wave" />;
 }
 
-export default {
+function flagEmoji() {
+  return <Emoji symbol="🚩" label="flag" />;
+}
+
+const emojis = {
   handWave: HandEmoji,
   peace: peaceEmoji,
   handsUp: handsUpEmoji,
-  waterWave: waterWaveEmoji
+  waterWave: waterWaveEmoji,
+  flag: flagEmoji
 };
+
+export default emojis;

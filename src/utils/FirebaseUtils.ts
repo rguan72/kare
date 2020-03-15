@@ -37,11 +37,13 @@ function reportComment(id: string) {
     });
 }
 
-function monitorComments(setComments) {
+function getComments() {
   return db
     .collection(collections.comments)
     .where("show", "==", true)
-    .onSnapshot(querySnapshot => {
+    .orderBy("timestamp", "asc")
+    .get()
+    .then(querySnapshot => {
       const comments = [];
       querySnapshot.forEach(doc => {
         comments.push({
@@ -49,7 +51,7 @@ function monitorComments(setComments) {
           ...doc.data()
         });
       });
-      setComments(comments);
+      return comments;
     });
 }
 
@@ -72,4 +74,4 @@ function getGroups() {
     });
 }
 
-export { addComment, monitorComments, reportComment, getGroups, getUser };
+export { addComment, getComments, reportComment, getGroups, getUser };

@@ -1,11 +1,13 @@
 import React from "react";
 import "react-native-gesture-handler";
+import { Image } from "react-native";
 import { ApplicationProvider, Text } from "@ui-kitten/components";
 import { StyleSheet, YellowBox } from "react-native";
 import { decode, encode } from "base-64";
 import { mapping, light as lightTheme } from "@eva-design/eva";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
+import { LOGO } from "./Images";
 import HomeScreen from "./src/screens/Home";
 import Thread from "./src/screens/Thread";
 
@@ -20,6 +22,10 @@ if (!global.atob) {
 
 const Stack = createStackNavigator();
 
+function LogoTitle() {
+  return <Image style={{ width: 60, height: 60 }} source={LOGO} />;
+}
+
 export default function App() {
   // Ignore Firebase timer issues
   YellowBox.ignoreWarnings(["Setting a timer"]);
@@ -31,12 +37,15 @@ export default function App() {
           <Stack.Screen
             name="Home"
             component={HomeScreen}
-            options={{ title: "Groups" }}
+            options={{ title: "", headerTransparent: true }}
           />
           <Stack.Screen
             name="Thread"
             component={Thread}
-            options={{ title: "HelpNow" }}
+            options={{
+              headerTitle: "",
+              headerTransparent: true
+            }}
           />
         </Stack.Navigator>
       </ApplicationProvider>

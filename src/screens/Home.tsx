@@ -16,10 +16,10 @@ export default function HomeScreen({ navigation }) {
     getGroups()
       .then(data => setGroups(data))
       .catch(err => console.log(err));
-  });
+  }, []);
 
   return (
-    <Layout>
+    <Layout style={{ backgroundColor: "#F0F0F0", marginTop: 30 }}>
       <FlatList
         data={groups}
         renderItem={({ item }) => (

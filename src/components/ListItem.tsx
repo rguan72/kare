@@ -18,16 +18,16 @@ export default function ListItem({ userId, text, onReport }) {
         setColor(userData.color);
       });
     }
-  });
+  }, [name]);
+  const userEmoji = Emojis[emoji];
   return (
     <Card style={styles.card}>
-      <Text>
-        {Emojis[emoji]}
-        <Text category="h5"> {name} </Text>
+      <Text style={styles.mb}>
+        {emoji === "" ? "" : userEmoji()} {name}
       </Text>
-      <Text> {text} </Text>
+      <Text category="h6"> {text} </Text>
       <TouchableOpacity onPress={onReport}>
-        <Text style={styles.mt}> Report </Text>
+        <Text style={styles.mt}> {Emojis.flag()} Report </Text>
       </TouchableOpacity>
     </Card>
   );
@@ -41,9 +41,15 @@ ListItem.propTypes = {
 
 const styles = StyleSheet.create({
   card: {
-    minWidth: 100
+    marginLeft: 10,
+    marginRight: 10,
+    marginBottom: 10,
+    borderRadius: 20
   },
   mt: {
     marginTop: 20
+  },
+  mb: {
+    marginBottom: 10
   }
 });
