@@ -70,20 +70,27 @@ export default function Thread({ route }) {
           backgroundColor: "#F3EAFF"
         }}
       >
-        <ScrollView keyboardShouldPersistTaps="always">
-          <FlatList
-            data={comments}
-            ListHeaderComponent={GroupTitle}
-            renderItem={({ item }) => (
+        {/* <ScrollView keyboardShouldPersistTaps="always"> */}
+        <FlatList
+          data={comments}
+          ListHeaderComponent={GroupTitle}
+          renderItem={({ item }) => {
+            const date =
+              item && item.timestamp
+                ? item.timestamp.toDate().toLocaleDateString()
+                : "";
+            return (
               <ListItem
                 userId={item.userId}
                 text={item.text}
                 onReport={() => reportComment(item.id)}
+                date={date}
               />
-            )}
-            keyExtractor={item => item.id}
-          />
-        </ScrollView>
+            );
+          }}
+          keyExtractor={item => item.id}
+        />
+        {/* </ScrollView> */}
         <Layout
           style={{
             justifyContent: "flex-end",

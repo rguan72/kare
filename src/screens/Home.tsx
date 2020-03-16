@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, FlatList } from "react-native";
-import { Layout, Text } from "@ui-kitten/components";
+import { StyleSheet, FlatList, View } from "react-native";
+import { Layout, Text, withStyles } from "@ui-kitten/components";
 import GroupItem from "../components/GroupItem";
 import { getGroups } from "../utils/FirebaseUtils";
 
@@ -10,7 +10,7 @@ interface Group {
   id: String;
 }
 
-export default function HomeScreen({ navigation }) {
+function HomeScreen({ navigation }) {
   const [groups, setGroups] = useState([]);
   useEffect(() => {
     getGroups()
@@ -19,7 +19,10 @@ export default function HomeScreen({ navigation }) {
   }, []);
 
   return (
-    <Layout style={{ backgroundColor: "#F0F0F0", marginTop: 30 }}>
+    <View style={{ marginTop: 30, backgroundColor: "#FFFDF4", flex: 1 }}>
+      <View style={{ alignItems: "center", marginTop: 15 }}>
+        <Text category="h5">My Communities</Text>
+      </View>
       <FlatList
         data={groups}
         renderItem={({ item }) => (
@@ -37,9 +40,15 @@ export default function HomeScreen({ navigation }) {
         )}
         keyExtractor={item => item.id}
       />
-    </Layout>
+    </View>
   );
 }
+
+export default withStyles(HomeScreen, theme => ({
+  light: {
+    backgroundColor: theme["color-primary-100"]
+  }
+}));
 
 const styles = StyleSheet.create({
   m: {

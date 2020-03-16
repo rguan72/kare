@@ -2,7 +2,7 @@ import React from "react";
 import "react-native-gesture-handler";
 import { Image } from "react-native";
 import { ApplicationProvider, Text } from "@ui-kitten/components";
-import { StyleSheet, YellowBox } from "react-native";
+import { StyleSheet, YellowBox, View } from "react-native";
 import { decode, encode } from "base-64";
 import { mapping, light as lightTheme } from "@eva-design/eva";
 import { NavigationContainer } from "@react-navigation/native";
