@@ -4,22 +4,24 @@ import { Card, Text, Layout } from "@ui-kitten/components";
 import { StyleSheet, View } from "react-native";
 import PropTypes from "prop-types";
 import Emojis from "../constants/emojis";
+import Colors from "../constants/userColors"
 import { getUser } from "../utils/FirebaseUtils";
 
 export default function ListItem({ userId, text, onReport, date }) {
   const [name, setName] = useState("");
-  const [emoji, setEmoji] = useState("");
-  const [color, setColor] = useState("");
+  //const [emoji, setEmoji] = useState("");
+  const [color, setColor] = useState(Colors["purple"]); //defualt purple
   useEffect(() => {
     if (userId) {
       getUser(userId).then(userData => {
         setName(userData.name);
-        setEmoji(userData.emoji);
+        //setEmoji(userData.emoji);
         setColor(userData.color);
       });
     }
   }, [name]);
-  const userEmoji = Emojis[emoji];
+  const userColor = Colors[color];
+
   return (
     <Card style={styles.card}>
       {/* <View
@@ -33,9 +35,11 @@ export default function ListItem({ userId, text, onReport, date }) {
         }}
       > */}
       <View style={{ flexDirection: "row" }}>
+        <View style={[styles.square, {backgroundColor: userColor, marginRight: 5}]} /> 
         <Text style={styles.mb}>
-          {emoji === "" ? "" : userEmoji()} {name}
-        </Text>
+          {" "} 
+          {name}
+        </Text> 
         <Text style={{ color: "rgba(0, 0, 0, 0.3)" }}>
           {" * "}
           {date}
@@ -44,7 +48,7 @@ export default function ListItem({ userId, text, onReport, date }) {
       {/* </View> */}
       <Text category="h6"> {text} </Text>
       <TouchableOpacity onPress={onReport}>
-        <Text style={styles.mt}> {Emojis.flag()} Report </Text>
+        <Text style={styles.mt}> {Emojis.flag()} Flag </Text>
       </TouchableOpacity>
     </Card>
   );
@@ -74,5 +78,10 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 44 / 2
+  },
+  square: {
+    width: 20,
+    height: 20,
+    borderRadius: 5
   }
 });
