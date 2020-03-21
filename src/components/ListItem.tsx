@@ -1,36 +1,78 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { TouchableOpacity } from "react-native";
 import { Card, Text, Layout } from "@ui-kitten/components";
-import { StyleSheet } from "react-native";
+import { StyleSheet, View } from "react-native";
 import PropTypes from "prop-types";
-import LikeButton from "./LikeButton";
-import DislikeButton from "./DislikeButton";
-import { HandEmoji } from "../constants/emojis";
+import Emojis from "../constants/emojis";
+import { getUser } from "../utils/FirebaseUtils";
 
-export default function ListItem({ user, text }) {
-  const [likes, setLikes] = useState(0);
+export default function ListItem({ userId, text, onReport, date }) {
+  const [name, setName] = useState("");
+  const [emoji, setEmoji] = useState("");
+  const [color, setColor] = useState("");
+  useEffect(() => {
+    if (userId) {
+      getUser(userId).then(userData => {
+        setName(userData.name);
+        setEmoji(userData.emoji);
+        setColor(userData.color);
+      });
+    }
+  }, [name]);
+  const userEmoji = Emojis[emoji];
   return (
     <Card style={styles.card}>
-      <Text>
-        <HandEmoji />
-        <Text category="h5"> {user} </Text>
-      </Text>
-      <Text> {text} </Text>
-      <Text> {likes} Likes </Text>
-      <Layout style={{ flexDirection: "row" }}>
-        <LikeButton onPress={() => setLikes(likes + 1)} />
-        <DislikeButton onPress={() => setLikes(likes - 1)} />
-      </Layout>
+      {/* <View
+        style={{
+          width: 55,
+          height: 55,
+          borderRadius: 55 / 2,
+          backgroundColor: Colors["red"],
+          alignItems: "center",
+          justifyContent: "center"
+        }}
+      > */}
+      <View style={{ flexDirection: "row" }}>
+        <Text style={styles.mb}>
+          {emoji === "" ? "" : userEmoji()} {name}
+        </Text>
+        <Text style={{ color: "rgba(0, 0, 0, 0.3)" }}>
+          {" * "}
+          {date}
+        </Text>
+      </View>
+      {/* </View> */}
+      <Text category="h6"> {text} </Text>
+      <TouchableOpacity onPress={onReport}>
+        <Text style={styles.mt}> {Emojis.flag()} Report </Text>
+      </TouchableOpacity>
     </Card>
   );
 }
 
 ListItem.propTypes = {
-  user: PropTypes.string.isRequired,
-  text: PropTypes.string.isRequired
+  userId: PropTypes.string.isRequired,
+  text: PropTypes.string.isRequired,
+  date: PropTypes.string.isRequired,
+  onReport: PropTypes.func.isRequired
 };
 
 const styles = StyleSheet.create({
   card: {
-    minWidth: 100
+    marginLeft: 10,
+    marginRight: 10,
+    marginBottom: 10,
+    borderRadius: 20
+  },
+  mt: {
+    marginTop: 20
+  },
+  mb: {
+    marginBottom: 10
+  },
+  circle: {
+    width: 44,
+    height: 44,
+    borderRadius: 44 / 2
   }
 });
