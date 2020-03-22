@@ -9,13 +9,11 @@ import { getUser } from "../utils/FirebaseUtils";
 
 export default function ListItem({ userId, text, onReport, date }) {
   const [name, setName] = useState("");
-  //const [emoji, setEmoji] = useState("");
   const [color, setColor] = useState(Colors["purple"]); //defualt purple
   useEffect(() => {
     if (userId) {
       getUser(userId).then(userData => {
         setName(userData.name);
-        //setEmoji(userData.emoji);
         setColor(userData.color);
       });
     }
@@ -82,6 +80,7 @@ const styles = StyleSheet.create({
   square: {
     width: 20,
     height: 20,
-    borderRadius: 5
+    borderRadius: 5,
+    overflow: "hidden"
   }
 });
