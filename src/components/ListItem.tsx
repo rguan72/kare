@@ -43,11 +43,14 @@ export default function ListItem({ userId, text, onReport, date }) {
           {date}
         </Text>
       </View>
-      {/* </View> */}
       <Text category="h6"> {text} </Text>
+      <View style={{
+          alignItems: "flex-end"
+        }} >
       <TouchableOpacity onPress={onReport}>
         <Text style={styles.mt}> {Emojis.flag()} Flag </Text>
       </TouchableOpacity>
+      </View>
     </Card>
   );
 }
@@ -67,6 +70,7 @@ const styles = StyleSheet.create({
     borderRadius: 20
   },
   mt: {
+    fontSize: 13,
     marginTop: 20
   },
   mb: {
