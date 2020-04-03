@@ -7,17 +7,34 @@ import { addUser } from "../utils/FirebaseUtils";
 
 
 function SetupSurvey({navigation}) {
+    // initial state
+    const initialState = {
+      username: "",
+      q1: "",
+      q2: "",
+      q3: "",
+      q4: "",
+      q5: ""
+    };
     const [color, setColor] = useState("");
     const [userName, setUserName] = useState("");
+    const [values, setValues] = useState(initialState);
+
+    function handleEventChange(e, name) {
+      console.log(values);
+      setValues({ ...values, [name]: e.nativeEvent.text });
+    }
+
+    const isEnabled = values["username"].length > 0 && values["q1"].length > 0 && values["q2"].length > 0 && values["q3"].length > 0 && values["q4"].length > 0 && values["q5"].length > 0 && color.length > 0;
 
     return (
     <View style={{ marginTop: 30, backgroundColor: "#F3EAFF", flex: 1 }}>
-      <View style={{ alignItems: "center", marginTop: 15 }}>
-        <Text category="h4">Setup Survey</Text>
-      </View>
       <ScrollView>
+        <View style={{ alignItems: "center", marginTop: 15, marginBottom: 15 }}>
+          <Text category="h4">Setup Survey</Text>
+        </View>
         <Card style={styles.card}>
-            <Text category="h6">Select your favorite Color:</Text>
+            <Text category="h6">Select your favorite Color: (Required)</Text>
             <RNPickerSelect
                 style={pickerSelectStyles}
                 onValueChange={(value) => setColor(value)}
@@ -32,11 +49,13 @@ function SetupSurvey({navigation}) {
             />
         </Card>
         <Card style={styles.card}>
-            <Text category="h6">What is your spirit animal?</Text>
+            <Text category="h6">What is your spirit animal? (Required)</Text>
             <Input 
+                value={values["username"]}
+                onChange={ e => handleEventChange(e, "username")}
                 onEndEditing={ e => {
-                    var num1 = Math.floor(Math.random() * 1000).toString(10); 
-                    var num2 = Math.floor(Math.random() * 1000).toString(10); 
+                    var num1 = Math.floor(Math.random() * 900 + 100).toString(10); // to ensure 3 digits 
+                    var num2 = Math.floor(Math.random() * 900 + 100).toString(10); // to ensure 3 digits
                     return (
                         setUserName(num1 + e.nativeEvent.text.trim().toLowerCase() + num2)
                     ) 
@@ -46,32 +65,42 @@ function SetupSurvey({navigation}) {
             <Text>{userName}</Text>
         </Card>
         <Card style={styles.card}>
-            <Text category="h6">Question 1:</Text>
+            <Text category="h6">Question 1: (Required)</Text>
             <Input 
+              value={values["q1"]}
+              onChange={ e => handleEventChange(e, "q1")}
               onEndEditing={ e => {console.log(e)}} // placeholder for what we actually should do
             />
         </Card>
         <Card style={styles.card}>
-            <Text category="h6">Question 2:</Text>
+            <Text category="h6">Question 2: (Required)</Text>
             <Input 
+              value={values["q2"]}
+              onChange={ e => handleEventChange(e, "q2")}
               onEndEditing={ e => {console.log(e)}} // placeholder for what we actually should do
             />
         </Card>
         <Card style={styles.card}>
-            <Text category="h6">Question 3:</Text>
+            <Text category="h6">Question 3: (Required)</Text>
             <Input 
+              value={values["q3"]}
+              onChange={ e => handleEventChange(e, "q3")}
               onEndEditing={ e => {console.log(e)}} // placeholder for what we actually should do
             />
         </Card>
         <Card style={styles.card}> 
-            <Text category="h6">Question 4:</Text>
+            <Text category="h6">Question 4: (Required)</Text>
             <Input 
+              value={values["q4"]}
+              onChange={ e => handleEventChange(e, "q4")}
               onEndEditing={ e => {console.log(e)}} // placeholder for what we actually should do
             />
         </Card>
         <Card style={styles.card}>
-            <Text category="h6">Question 5:</Text>
+            <Text category="h6">Question 5: (Required)</Text>
             <Input 
+              value={values["q5"]}
+              onChange={ e => handleEventChange(e, "q5")}
               onEndEditing={ e => {console.log(e)}} // placeholder for what we actually should do
             />
         </Card>
@@ -85,9 +114,10 @@ function SetupSurvey({navigation}) {
                 }
                 navigation.navigate("Home")
             }}
+            disabled={!isEnabled}
             style={{
-                borderColor: "#D6B8FF", 
-                backgroundColor: "#D6B8FF"
+                borderColor: "#5505BA", 
+                backgroundColor: "#5505BA"
             }}
         >
             Join Now!

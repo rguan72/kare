@@ -76,9 +76,6 @@ function addUser(user) {
       timestamp: firebaseApp.firestore.FieldValue.serverTimestamp(),
       ...user
     })
-    .then(ref => {
-      return true;
-    })
 }
 
 function getGroups() {
