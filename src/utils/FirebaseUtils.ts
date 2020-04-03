@@ -9,6 +9,7 @@ interface comment {
   userId: String;
   text: String;
   reports: Number;
+  numReplies: Number;
   show: Boolean;
 }
 
@@ -25,8 +26,28 @@ function addComment(comment: comment) {
     .doc()
     .set({
       timestamp: firebaseApp.firestore.FieldValue.serverTimestamp(),
+      numReplies: 0,
+      parentId: "",
       ...comment
     });
+}
+
+function addReply(commentId, comment: comment) {
+  db.collection(collections.comments) // add a new comment
+    .add({
+      timestamp: firebaseApp.firestore.FieldValue.serverTimestamp(),
+      numReplies: 0,
+      parentId: commentId,
+      ...comment
+    })
+    .then(ref => {
+      db.collection(collections.comments) // then go into parent comment and update num replies and reply array
+        .doc(commentId)
+        .update({
+          numReplies: firebaseApp.firestore.FieldValue.increment(1),
+          replies: firebaseApp.firestore.FieldValue.arrayUnion(ref.id)
+        })
+    }); 
 }
 
 function reportComment(id: string) {
@@ -40,6 +61,7 @@ function reportComment(id: string) {
 function getComments() {
   return db
     .collection(collections.comments)
+    .where("parentId", "==", "")
     .where("show", "==", true)
     .orderBy("timestamp", "asc")
     .get()
@@ -52,6 +74,26 @@ function getComments() {
         });
       });
       return comments;
+    });
+}
+
+function getReplies(commentId) {
+  return db
+    .collection(collections.comments)
+    .where("parentId", '==', commentId)
+    .where("show", "==", true)
+    .orderBy("timestamp", "asc")
+    .get()
+    .then(querySnapshot => {
+      const replies = [];
+      querySnapshot.forEach(doc => {
+        replies.push({
+          id: doc.id,
+          ...doc.data()
+        });
+      });
+      console.log(replies);
+      return replies;
     });
 }
 
@@ -74,4 +116,4 @@ function getGroups() {
     });
 }
 
-export { addComment, getComments, reportComment, getGroups, getUser };
+export { addComment, getComments, reportComment, getGroups, getUser, getReplies, addReply };
