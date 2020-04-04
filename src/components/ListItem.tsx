@@ -11,7 +11,7 @@ export default function ListItem({ userId, text, onReport, date, onReply, numRep
   const [name, setName] = useState("");
   const [color, setColor] = useState(Colors["purple"]); //defualt purple
   useEffect(() => {
-    if (userId) {
+    if (userId) { 
       getUser(userId).then(userData => {
         setName(userData.name);
         setColor(userData.color);

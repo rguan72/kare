@@ -77,9 +77,9 @@ export default function Thread({ route, navigation}) {
           ListHeaderComponent={GroupTitle}
           renderItem={({ item }) => {
             const date =
-              /*item && item.timestamp
+              item && item.timestamp
                 ? item.timestamp.toDate().toLocaleDateString()
-                : */"";
+                : "";
             return ( 
               <ListItem
                 userId={item.userId}
@@ -88,7 +88,8 @@ export default function Thread({ route, navigation}) {
                   navigation.navigate("Replies", {
                     user: item.userId,
                     comment: item.text,
-                    commentId: item.id
+                    commentId: item.id,
+                    date: date
                   })
                 }}
                 onReport={() => reportComment(item.id)}

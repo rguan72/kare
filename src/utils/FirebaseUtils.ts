@@ -92,7 +92,6 @@ function getReplies(commentId) {
           ...doc.data()
         });
       });
-      console.log(replies);
       return replies;
     });
 }

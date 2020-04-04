@@ -7,19 +7,26 @@ import PropTypes from "prop-types";
 import { KeyboardAvoidingView, View } from "react-native";
 import { Layout, Button, Input, Text, Card } from "@ui-kitten/components";
 import ListItem from "../components/ListItem";
-import { addReply, getReplies, reportComment } from "../utils/FirebaseUtils";
+import { addReply, getReplies, reportComment, getUser } from "../utils/FirebaseUtils";
 
 export default function Replies({ route, navigation}) {
   const [replies, setReplies] = useState([]);
   const [value, setValue] = useState("");
-  const { user, comment, commentId } = route.params;
+  const [name, setName] = useState("");
+  const [userColor, setUserColor] = useState("");
+  const { user, comment, commentId, date } = route.params;
   // hard coded for demo 
   const userId = "ztKIibvRJFjoz26pztO4";
   //const userId = user; // something like this would be done in reality
 
-  useEffect(() => { // change to get replies
+  useEffect(() => { 
     getReplies(commentId).then(data => setReplies(data));
   }, [replies]);
+
+  getUser(user).then(userData => {
+    setName(userData.name);
+    setUserColor(userData.color);
+  });
 
   const ReplyParent = () => (
     <Layout style={[styles.mb, styles.bgColor, styles.mt]}>
@@ -29,24 +36,23 @@ export default function Replies({ route, navigation}) {
         }}
       >
         <Layout
-          style={{
+          style={{ 
             flexDirection: "column",
             backgroundColor: "#F3EAFF"
           }}
         >
           <Card style={styles.card} >
             <View style={{ flexDirection: "row" }}>
-                <View style={[styles.square, {/*add color*/marginRight: 5}]} /> 
+                <View style={[styles.square, { backgroundColor: userColor, marginRight: 5}]} /> 
                 <Text style={styles.mb}>
                 {" "} 
-                {user}
+                {name}
                 </Text> 
                 <Text style={{ color: "rgba(0, 0, 0, 0.3)" }}>
                 {" * "}
-                {/*date*/}
+                {date}
                 </Text>
             </View>
-            {/* </View> */}
             <Text category="h6"> {comment} </Text>
         </Card>
         </Layout>
