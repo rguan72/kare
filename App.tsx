@@ -10,6 +10,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { LOGO } from "./Images";
 import HomeScreen from "./src/screens/Home";
 import Thread from "./src/screens/Thread";
+
 import UserComments from "./src/screens/UserComments"
 
 // Firebase bug workaround: https://stackoverflow.com/questions/60361519/cant-find-a-variable-atob

@@ -7,7 +7,7 @@ import {
 } from "react-native";
 import PropTypes from "prop-types";
 import { Layout, Button, Input, Text } from "@ui-kitten/components";
-import ListItem from "../components/ListItem";
+import UserListItem from "../components/UserListItem";
 import { getUserComments, reportComment, getUser } from "../utils/FirebaseUtils";
 
 
@@ -74,7 +74,7 @@ export default function UserComments({ route }) {
                   ? item.timestamp.toDate().toLocaleDateString()
                   : "";
                 return (
-                  <ListItem
+                  <UserListItem
                     userId={item.userId}
                     text={item.text}
                     onReport={() => reportComment(userId)}

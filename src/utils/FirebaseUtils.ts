@@ -93,4 +93,4 @@ function getGroups() {
     });
 }
 
-export { addComment, getComments, reportComment, getGroups, getUser, getUserComments };
+export { addComment, getComments, reportComment, getGroups, getUser, addUser, getUserComments };
