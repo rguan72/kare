@@ -7,7 +7,7 @@ import {
   TextInput
 } from "react-native";
 import PropTypes from "prop-types";
-import { KeyboardAvoidingView, ScrollView } from "react-native";
+import { KeyboardAvoidingView, Platform, Keyboard, TouchableWithoutFeedback } from "react-native";
 import { Layout, Button, Input, Text } from "@ui-kitten/components";
 import ListItem from "../components/ListItem";
 import { addComment, getComments, reportComment } from "../utils/FirebaseUtils";
@@ -63,7 +63,7 @@ export default function Thread({ route, navigation}) {
   );
 
   return (
-    <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
+    <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : null} style={{ flex: 1 }}>
       <SafeAreaView
         style={{
           flex: 1,
@@ -71,64 +71,65 @@ export default function Thread({ route, navigation}) {
           backgroundColor: "#F3EAFF"
         }}
       >
-        {/* <ScrollView keyboardShouldPersistTaps="always"> */}
-        <FlatList
-          data={comments}
-          ListHeaderComponent={GroupTitle}
-          renderItem={({ item }) => {
-            const date =
-              item && item.timestamp
-                ? item.timestamp.toDate().toLocaleDateString()
-                : "";
-            return ( 
-              <ListItem
-                userId={item.userId}
-                text={item.text}
-                onReply={() => {
-                  navigation.navigate("Replies", {
-                    user: item.userId,
-                    comment: item.text,
-                    commentId: item.id,
-                    date: date
-                  })
-                }}
-                onReport={() => reportComment(item.id)}
-                date={date}
-                numReplies={item.numReplies}
-              />
-            );
-          }}
-          keyExtractor={item => item.id}
-        />
-        <Layout
-          style={{
-            justifyContent: "flex-end",
-            backgroundColor: "#F3EAFF",
-            flexDirection: "column"
-          }}
-        >
-          <Input
-            placeholder="Add comment"
-            value={value}
-            onChangeText={setValue}
-          />
-          <Button
-            onPress={() => {
-              addComment({
-                userId: userId,
-                text: value,
-                reports: 0,
-                show: true,
-                numReplies: 0
-              });
-              setValue("");
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <FlatList
+            data={comments}
+            ListHeaderComponent={GroupTitle}
+            renderItem={({ item }) => {
+              const date =
+                item && item.timestamp
+                  ? item.timestamp.toDate().toLocaleDateString()
+                  : "";
+              return ( 
+                <ListItem
+                  userId={item.userId}
+                  text={item.text}
+                  onReply={() => {
+                    navigation.navigate("Replies", {
+                      user: item.userId,
+                      comment: item.text,
+                      commentId: item.id,
+                      date: date
+                    })
+                  }}
+                  onReport={() => reportComment(item.id)}
+                  date={date}
+                  numReplies={item.numReplies}
+                />
+              );
             }}
-            style={styles.mt0}
-            disabled={value === ""}
+            keyExtractor={item => item.id}
+          />
+          <Layout
+            style={{
+              justifyContent: "flex-end",
+              backgroundColor: "#F3EAFF",
+              flexDirection: "column"
+            }}
           >
-            Submit
-          </Button>
-        </Layout>
+            <Input
+              placeholder="Add comment"
+              value={value}
+              onChangeText={setValue}
+            />
+            <Button
+              onPress={() => {
+                addComment({
+                  userId: userId,
+                  text: value,
+                  reports: 0,
+                  show: true,
+                  numReplies: 0
+                });
+                setValue("");
+              }}
+              style={styles.mt0}
+              disabled={value === ""}
+            >
+              Submit
+            </Button>
+          </Layout>
+        </TouchableWithoutFeedback>
       </SafeAreaView>
     </KeyboardAvoidingView>
   );

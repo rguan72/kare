@@ -4,16 +4,17 @@ import {
   SafeAreaView,
   FlatList} from "react-native";
 import PropTypes from "prop-types";
-import { KeyboardAvoidingView, View } from "react-native";
+import { KeyboardAvoidingView, View, Platform, Keyboard, TouchableWithoutFeedback } from "react-native";
 import { Layout, Button, Input, Text, Card } from "@ui-kitten/components";
 import ListItem from "../components/ListItem";
 import { addReply, getReplies, reportComment, getUser } from "../utils/FirebaseUtils";
+import Colors from "../constants/userColors"
 
 export default function Replies({ route, navigation}) {
   const [replies, setReplies] = useState([]);
   const [value, setValue] = useState("");
   const [name, setName] = useState("");
-  const [userColor, setUserColor] = useState("");
+  const [userColor, setUserColor] = useState(Colors["purple"]); // default
   const { user, comment, commentId, date } = route.params;
   // hard coded for demo 
   const userId = "ztKIibvRJFjoz26pztO4";
@@ -25,7 +26,7 @@ export default function Replies({ route, navigation}) {
 
   getUser(user).then(userData => {
     setName(userData.name);
-    setUserColor(userData.color);
+    setUserColor(Colors[userData.color]);
   });
 
   const ReplyParent = () => (
@@ -62,7 +63,7 @@ export default function Replies({ route, navigation}) {
   );
 
   return (
-    <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
+    <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : null} style={{ flex: 1 }}>
       <SafeAreaView
         style={{
           flex: 1,
@@ -70,62 +71,64 @@ export default function Replies({ route, navigation}) {
           backgroundColor: "#F3EAFF"
         }}
       >
-        <FlatList
-          data={replies}
-          ListHeaderComponent={ReplyParent} // going to be comment
-          renderItem={({ item }) => {
-            const date =
-              item && item.timestamp
-                ? item.timestamp.toDate().toLocaleDateString()
-                : "";
-            return ( 
-              <ListItem
-                userId={item.userId}
-                text={item.text}
-                onReport={() => reportComment(item.id)}
-                date={date}
-                onReply={() => {
-                    navigation.navigate("Replies", {
-                      user: item.userId,
-                      comment: item.text,
-                      commentId: item.id
-                    })
-                  }}
-                numReplies={item.numReplies}
-              />
-            );
-          }}
-          keyExtractor={item => item.id}
-        />
-        <Layout
-          style={{
-            justifyContent: "flex-end",
-            backgroundColor: "#F3EAFF",
-            flexDirection: "column"
-          }}
-        >
-          <Input
-            placeholder="Add comment"
-            value={value}
-            onChangeText={setValue}
-          />
-          <Button
-            onPress={() => {
-              addReply(commentId, {
-                userId: userId,
-                text: value,
-                reports: 0,
-                show: true,
-                numReplies: 0
-              });
-              setValue("");
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <FlatList
+            data={replies}
+            ListHeaderComponent={ReplyParent} // going to be comment
+            renderItem={({ item }) => {
+              const date =
+                item && item.timestamp
+                  ? item.timestamp.toDate().toLocaleDateString()
+                  : "";
+              return ( 
+                <ListItem
+                  userId={item.userId}
+                  text={item.text}
+                  onReport={() => reportComment(item.id)}
+                  date={date}
+                  onReply={() => {
+                      navigation.navigate("Replies", {
+                        user: item.userId,
+                        comment: item.text,
+                        commentId: item.id
+                      })
+                    }}
+                  numReplies={item.numReplies}
+                />
+              );
             }}
-            style={styles.mt0}
-            disabled={value === ""}
+            keyExtractor={item => item.id}
+          />
+          <Layout
+            style={{
+              justifyContent: "flex-end",
+              backgroundColor: "#F3EAFF",
+              flexDirection: "column"
+            }}
           >
-            Submit
-          </Button>
-        </Layout>
+            <Input
+              placeholder="Add comment"
+              value={value}
+              onChangeText={setValue}
+            />
+            <Button
+              onPress={() => {
+                addReply(commentId, {
+                  userId: userId,
+                  text: value,
+                  reports: 0,
+                  show: true,
+                  numReplies: 0
+                });
+                setValue("");
+              }}
+              style={styles.mt0}
+              disabled={value === ""}
+            >
+              Submit
+            </Button>
+          </Layout>
+        </TouchableWithoutFeedback>
       </SafeAreaView>
     </KeyboardAvoidingView>
   );
@@ -150,7 +153,7 @@ const styles = StyleSheet.create({
     marginBottom: 20
   },
   mt: {
-    marginTop: 60
+    marginTop: 80
   },
   bgColor: {
     backgroundColor: "#F3EAFF"
