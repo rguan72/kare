@@ -10,6 +10,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { LOGO } from "./Images";
 import HomeScreen from "./src/screens/Home";
 import Thread from "./src/screens/Thread";
+import SetupSurvey from './src/screens/Setup';
 
 import UserComments from "./src/screens/UserComments"
 
@@ -36,6 +37,11 @@ export default function App() {
     <NavigationContainer>
       <ApplicationProvider mapping={mapping} theme={lightTheme}>
         <Stack.Navigator>
+          {<Stack.Screen
+            name="SetupSurvey"
+            component={SetupSurvey}
+            options={{ title: "", headerTransparent: true }}
+          />}
           <Stack.Screen
             name="UserComments"
             component={UserComments}
