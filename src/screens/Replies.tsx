@@ -1,74 +1,88 @@
 import React, { useState, useEffect } from "react";
-import {
-  StyleSheet,
-  SafeAreaView,
-  FlatList} from "react-native";
+import { StyleSheet, SafeAreaView, FlatList } from "react-native";
 import PropTypes from "prop-types";
-import { KeyboardAvoidingView, View, Platform, Keyboard, TouchableWithoutFeedback } from "react-native";
+import {
+  KeyboardAvoidingView,
+  View,
+  Platform,
+  Keyboard,
+  TouchableWithoutFeedback,
+} from "react-native";
 import { Layout, Button, Input, Text, Card } from "@ui-kitten/components";
 import ListItem from "../components/ListItem";
-import { addReply, getReplies, reportComment, getUser } from "../utils/FirebaseUtils";
-import Colors from "../constants/userColors"
+import {
+  addReply,
+  getReplies,
+  reportComment,
+  getUser,
+} from "../utils/FirebaseUtils";
+import Colors from "../constants/userColors";
 
-export default function Replies({ route, navigation}) {
+export default function Replies({ route, navigation }) {
   const [replies, setReplies] = useState([]);
   const [value, setValue] = useState("");
   const [name, setName] = useState("");
   const [userColor, setUserColor] = useState(Colors["purple"]); // default
   const { user, comment, commentId, date } = route.params;
-  // hard coded for demo 
+  // hard coded for demo
   const userId = "ztKIibvRJFjoz26pztO4";
   //const userId = user; // something like this would be done in reality
 
-  useEffect(() => { 
-    getReplies(commentId).then(data => setReplies(data));
+  useEffect(() => {
+    getReplies(commentId).then((data) => setReplies(data));
   }, [replies]);
 
-  getUser(user).then(userData => {
-    setName(userData.name);
-    setUserColor(Colors[userData.color]);
-  });
+  useEffect(() => {
+    getUser(user).then((userData) => {
+      setName(userData.name);
+      setUserColor(Colors[userData.color]);
+    });
+  }, []); // so it only runs once
 
   const ReplyParent = () => (
     <Layout style={[styles.mb, styles.bgColor, styles.mt]}>
       <Layout
         style={{
-          backgroundColor: "#F3EAFF"
+          backgroundColor: "#F3EAFF",
         }}
       >
         <Layout
-          style={{ 
+          style={{
             flexDirection: "column",
-            backgroundColor: "#F3EAFF"
+            backgroundColor: "#F3EAFF",
           }}
         >
-          <Card style={styles.card} >
+          <Card style={styles.card}>
             <View style={{ flexDirection: "row" }}>
-                <View style={[styles.square, { backgroundColor: userColor, marginRight: 5}]} /> 
-                <Text style={styles.mb}>
-                {" "} 
-                {name}
-                </Text> 
-                <Text style={{ color: "rgba(0, 0, 0, 0.3)" }}>
+              <View
+                style={[
+                  styles.square,
+                  { backgroundColor: userColor, marginRight: 5 },
+                ]}
+              />
+              <Text style={styles.mb}> {name}</Text>
+              <Text style={{ color: "rgba(0, 0, 0, 0.3)" }}>
                 {" * "}
                 {date}
-                </Text>
+              </Text>
             </View>
-            <Text category="h6"> {comment} </Text>
-        </Card>
+            <Text category='h6'> {comment} </Text>
+          </Card>
         </Layout>
       </Layout>
     </Layout>
-    
   );
 
   return (
-    <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : null} style={{ flex: 1 }}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : null}
+      style={{ flex: 1 }}
+    >
       <SafeAreaView
         style={{
           flex: 1,
           justifyContent: "flex-end",
-          backgroundColor: "#F3EAFF"
+          backgroundColor: "#F3EAFF",
         }}
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -80,34 +94,34 @@ export default function Replies({ route, navigation}) {
                 item && item.timestamp
                   ? item.timestamp.toDate().toLocaleDateString()
                   : "";
-              return ( 
+              return (
                 <ListItem
                   userId={item.userId}
                   text={item.text}
                   onReport={() => reportComment(item.id)}
                   date={date}
                   onReply={() => {
-                      navigation.navigate("Replies", {
-                        user: item.userId,
-                        comment: item.text,
-                        commentId: item.id
-                      })
-                    }}
+                    navigation.navigate("Replies", {
+                      user: item.userId,
+                      comment: item.text,
+                      commentId: item.id,
+                    });
+                  }}
                   numReplies={item.numReplies}
                 />
               );
             }}
-            keyExtractor={item => item.id}
+            keyExtractor={(item) => item.id}
           />
           <Layout
             style={{
               justifyContent: "flex-end",
               backgroundColor: "#F3EAFF",
-              flexDirection: "column"
+              flexDirection: "column",
             }}
           >
             <Input
-              placeholder="Add comment"
+              placeholder='Add comment'
               value={value}
               onChangeText={setValue}
             />
@@ -118,7 +132,7 @@ export default function Replies({ route, navigation}) {
                   text: value,
                   reports: 0,
                   show: true,
-                  numReplies: 0
+                  numReplies: 0,
                 });
                 setValue("");
               }}
@@ -135,44 +149,44 @@ export default function Replies({ route, navigation}) {
 }
 
 Replies.propTypes = {
-  route: PropTypes.object.isRequired
+  route: PropTypes.object.isRequired,
 };
 
 const styles = StyleSheet.create({
   footer: {
     justifyContent: "flex-end",
-    flex: 1
+    flex: 1,
   },
   flex: {
-    display: "flex"
+    display: "flex",
   },
   mt0: {
-    marginTop: 0
+    marginTop: 0,
   },
   mb: {
-    marginBottom: 20
+    marginBottom: 20,
   },
   mt: {
-    marginTop: 80
+    marginTop: 80,
   },
   bgColor: {
-    backgroundColor: "#F3EAFF"
+    backgroundColor: "#F3EAFF",
   },
   card: {
     marginLeft: 10,
     marginRight: 10,
     marginBottom: 10,
-    borderRadius: 20
+    borderRadius: 20,
   },
   circle: {
     width: 44,
     height: 44,
-    borderRadius: 44 / 2
+    borderRadius: 44 / 2,
   },
   square: {
     width: 20,
     height: 20,
     borderRadius: 5,
-    overflow: "hidden"
-  }
+    overflow: "hidden",
+  },
 });
