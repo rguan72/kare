@@ -13,6 +13,11 @@ interface comment {
   show: Boolean;
 }
 
+interface user {
+  userName: String, 
+  color: String,
+}
+
 interface returnComment extends comment {
   id: String;
 }
@@ -104,6 +109,16 @@ function getUser(id) {
     .then(ref => ref.data());
 }
 
+function addUser(user) {
+  db
+    .collection(collections.users)
+    .doc()
+    .set({
+      timestamp: firebaseApp.firestore.FieldValue.serverTimestamp(),
+      ...user
+    })
+}
+
 function getGroups() {
   return db
     .collection(collections.groups)
@@ -115,4 +130,5 @@ function getGroups() {
     });
 }
 
-export { addComment, getComments, reportComment, getGroups, getUser, getReplies, addReply };
+export { addComment, getComments, reportComment, getGroups, getUser, addUser, getReplies, addReply };
+
