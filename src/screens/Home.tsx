@@ -16,7 +16,7 @@ function HomeScreen({ navigation }) {
     getGroups()
       .then(data => setGroups(data))
       .catch(err => console.log(err));
-  }, []);
+  }, [groups]);
 
   return (
     <View style={{ marginTop: 30, backgroundColor: "#FFFDF4", flex: 1 }}>

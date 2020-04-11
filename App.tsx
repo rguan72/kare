@@ -10,6 +10,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { LOGO } from "./Images";
 import HomeScreen from "./src/screens/Home";
 import Thread from "./src/screens/Thread";
+import Replies from "./src/screens/Replies";
 import SetupSurvey from './src/screens/Setup';
 
 import UserComments from "./src/screens/UserComments"
@@ -58,6 +59,14 @@ export default function App() {
           <Stack.Screen
             name="Thread"
             component={Thread}
+            options={{
+              headerTitle: "",
+              headerTransparent: true
+            }}
+          />
+          <Stack.Screen
+            name="Replies"
+            component={Replies}
             options={{
               headerTitle: "",
               headerTransparent: true
