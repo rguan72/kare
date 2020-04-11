@@ -82,6 +82,25 @@ function getComments() {
     });
 }
 
+function getUserComments(user) {
+  return db
+    .collection(collections.comments)
+    .where("userId", "==", user)
+    .where("show", "==", true)
+    .orderBy("timestamp", "asc")
+    .get()
+    .then(querySnapshot => {
+      const comments = [];
+      querySnapshot.forEach(doc => {
+        comments.push({
+          id: doc.id,
+          ...doc.data()
+        });
+      });
+      return comments;
+    });
+}
+  
 function getReplies(commentId) {
   return db
     .collection(collections.comments)
@@ -130,5 +149,5 @@ function getGroups() {
     });
 }
 
-export { addComment, getComments, reportComment, getGroups, getUser, addUser, getReplies, addReply };
 
+export { addComment, getComments, reportComment, getGroups, getUser, addUser, getReplies, addReply, getUserComments };

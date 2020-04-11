@@ -13,6 +13,8 @@ import Thread from "./src/screens/Thread";
 import Replies from "./src/screens/Replies";
 import SetupSurvey from './src/screens/Setup';
 
+import UserComments from "./src/screens/UserComments"
+
 // Firebase bug workaround: https://stackoverflow.com/questions/60361519/cant-find-a-variable-atob
 if (!global.btoa) {
   global.btoa = encode;
@@ -41,6 +43,14 @@ export default function App() {
             component={SetupSurvey}
             options={{ title: "", headerTransparent: true }}
           />}
+          <Stack.Screen
+            name="UserComments"
+            component={UserComments}
+            options={{
+              headerTitle: "",
+              headerTransparent: true
+            }}
+          />
           <Stack.Screen
             name="Home"
             component={HomeScreen}
