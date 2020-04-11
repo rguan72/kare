@@ -9,6 +9,7 @@ interface comment {
   userId: String;
   text: String;
   reports: Number;
+  numReplies: Number;
   show: Boolean;
 }
 
@@ -30,8 +31,28 @@ function addComment(comment: comment) {
     .doc()
     .set({
       timestamp: firebaseApp.firestore.FieldValue.serverTimestamp(),
-      ...comment,
+      numReplies: 0,
+      parentId: "",
+      ...comment
     });
+}
+
+function addReply(commentId, comment: comment) {
+  db.collection(collections.comments) // add a new comment
+    .add({
+      timestamp: firebaseApp.firestore.FieldValue.serverTimestamp(),
+      numReplies: 0,
+      parentId: commentId,
+      ...comment
+    })
+    .then(ref => {
+      db.collection(collections.comments) // then go into parent comment and update num replies and reply array
+        .doc(commentId)
+        .update({
+          numReplies: firebaseApp.firestore.FieldValue.increment(1),
+          replies: firebaseApp.firestore.FieldValue.arrayUnion(ref.id)
+        })
+    }); 
 }
 
 function reportComment(id: string) {
@@ -44,6 +65,7 @@ function watchComments(setComments) {
   console.log("getComments read");
   return db
     .collection(collections.comments)
+    .where("parentId", "==", "")
     .where("show", "==", true)
     .orderBy("timestamp", "asc")
     .onSnapshot((querySnapshot) => {
@@ -75,6 +97,25 @@ function getUserComments(user) {
         });
       });
       return comments;
+    });
+}
+  
+function getReplies(commentId) {
+  return db
+    .collection(collections.comments)
+    .where("parentId", '==', commentId)
+    .where("show", "==", true)
+    .orderBy("timestamp", "asc")
+    .get()
+    .then(querySnapshot => {
+      const replies = [];
+      querySnapshot.forEach(doc => {
+        replies.push({
+          id: doc.id,
+          ...doc.data()
+        });
+      });
+      return replies;
     });
 }
 
@@ -110,12 +151,5 @@ function getGroups() {
     });
 }
 
-export {
-  addComment,
-  watchComments,
-  reportComment,
-  getGroups,
-  getUser,
-  addUser,
-  getUserComments,
-};
+
+export { addComment, watchComments, reportComment, getGroups, getUser, addUser, getReplies, addReply, getUserComments };
