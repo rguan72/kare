@@ -13,8 +13,8 @@ interface comment {
 }
 
 interface user {
-  userName: String, 
-  color: String,
+  userName: String;
+  color: String;
 }
 
 interface returnComment extends comment {
@@ -30,49 +30,48 @@ function addComment(comment: comment) {
     .doc()
     .set({
       timestamp: firebaseApp.firestore.FieldValue.serverTimestamp(),
-      ...comment
+      ...comment,
     });
 }
 
 function reportComment(id: string) {
-  db.collection(collections.comments)
-    .doc(id)
-    .update({
-      show: false
-    });
+  db.collection(collections.comments).doc(id).update({
+    show: false,
+  });
 }
 
-function getComments() {
+function watchComments(setComments) {
+  console.log("getComments read");
   return db
     .collection(collections.comments)
     .where("show", "==", true)
     .orderBy("timestamp", "asc")
-    .get()
-    .then(querySnapshot => {
+    .onSnapshot((querySnapshot) => {
       const comments = [];
-      querySnapshot.forEach(doc => {
+      querySnapshot.forEach((doc) => {
         comments.push({
           id: doc.id,
-          ...doc.data()
+          ...doc.data(),
         });
       });
-      return comments;
+      setComments(comments);
     });
 }
 
 function getUserComments(user) {
+  console.log("getUserComments read");
   return db
     .collection(collections.comments)
     .where("userId", "==", user)
     .where("show", "==", true)
     .orderBy("timestamp", "asc")
     .get()
-    .then(querySnapshot => {
+    .then((querySnapshot) => {
       const comments = [];
-      querySnapshot.forEach(doc => {
+      querySnapshot.forEach((doc) => {
         comments.push({
           id: doc.id,
-          ...doc.data()
+          ...doc.data(),
         });
       });
       return comments;
@@ -80,33 +79,43 @@ function getUserComments(user) {
 }
 
 function getUser(id) {
+  console.log("getUser read");
   return db
     .collection(collections.users)
     .doc(id)
     .get()
-    .then(ref => ref.data());
+    .then((ref) => ref.data());
 }
 
 function addUser(user) {
-  db
-    .collection(collections.users)
+  db.collection(collections.users)
     .doc()
     .set({
       timestamp: firebaseApp.firestore.FieldValue.serverTimestamp(),
-      ...user
-    })
+      ...user,
+    });
 }
 
 function getGroups() {
+  console.log("getGroups read");
   return db
     .collection(collections.groups)
     .get()
-    .then(querySnapshot => {
+    .then((querySnapshot) => {
       const groups = [];
-      querySnapshot.forEach(doc => groups.push({ id: doc.id, ...doc.data() }));
+      querySnapshot.forEach((doc) =>
+        groups.push({ id: doc.id, ...doc.data() })
+      );
       return groups;
     });
 }
 
-
-export { addComment, getComments, reportComment, getGroups, getUser, addUser, getUserComments };
+export {
+  addComment,
+  watchComments,
+  reportComment,
+  getGroups,
+  getUser,
+  addUser,
+  getUserComments,
+};

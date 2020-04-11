@@ -4,13 +4,17 @@ import {
   SafeAreaView,
   FlatList,
   Image,
-  TextInput
+  TextInput,
 } from "react-native";
 import PropTypes from "prop-types";
 import { KeyboardAvoidingView, ScrollView } from "react-native";
 import { Layout, Button, Input, Text } from "@ui-kitten/components";
 import ListItem from "../components/ListItem";
-import { addComment, getComments, reportComment } from "../utils/FirebaseUtils";
+import {
+  addComment,
+  watchComments,
+  reportComment,
+} from "../utils/FirebaseUtils";
 import { WOMEN } from "../../Images";
 
 export default function Thread({ route }) {
@@ -20,8 +24,9 @@ export default function Thread({ route }) {
   // hard coded for demo
   const userId = "ztKIibvRJFjoz26pztO4";
   useEffect(() => {
-    getComments().then(data => setComments(data));
-  }, [comments]);
+    const unsubscribe = watchComments(setComments);
+    return () => unsubscribe();
+  }, []);
 
   const GroupTitle = () => (
     <Layout style={[styles.mb, styles.bgColor, styles.mt]}>
@@ -33,14 +38,14 @@ export default function Thread({ route }) {
           alignItems: "center",
           backgroundColor: "#F3EAFF",
           marginTop: 15,
-          marginLeft: 40
+          marginLeft: 40,
         }}
       >
         <Layout
           style={{
             flexDirection: "column",
             marginLeft: 10,
-            backgroundColor: "#F3EAFF"
+            backgroundColor: "#F3EAFF",
           }}
         >
           <Text category="h4"> {title} </Text>
@@ -53,7 +58,7 @@ export default function Thread({ route }) {
               flexShrink: 1,
               maxWidth: 60,
               maxHeight: 60,
-              marginLeft: 15
+              marginLeft: 15,
             }}
           />
         </Layout>
@@ -67,7 +72,7 @@ export default function Thread({ route }) {
         style={{
           flex: 1,
           justifyContent: "flex-end",
-          backgroundColor: "#F3EAFF"
+          backgroundColor: "#F3EAFF",
         }}
       >
         {/* <ScrollView keyboardShouldPersistTaps="always"> */}
@@ -88,14 +93,14 @@ export default function Thread({ route }) {
               />
             );
           }}
-          keyExtractor={item => item.id}
+          keyExtractor={(item) => item.id}
         />
         {/* </ScrollView> */}
         <Layout
           style={{
             justifyContent: "flex-end",
             backgroundColor: "#F3EAFF",
-            flexDirection: "column"
+            flexDirection: "column",
           }}
         >
           <Input
@@ -109,7 +114,7 @@ export default function Thread({ route }) {
                 userId: userId,
                 text: value,
                 reports: 0,
-                show: true
+                show: true,
               });
               setValue("");
             }}
@@ -125,27 +130,27 @@ export default function Thread({ route }) {
 }
 
 Thread.propTypes = {
-  route: PropTypes.object.isRequired
+  route: PropTypes.object.isRequired,
 };
 
 const styles = StyleSheet.create({
   footer: {
     justifyContent: "flex-end",
-    flex: 1
+    flex: 1,
   },
   flex: {
-    display: "flex"
+    display: "flex",
   },
   mt0: {
-    marginTop: 0
+    marginTop: 0,
   },
   mb: {
-    marginBottom: 20
+    marginBottom: 20,
   },
   mt: {
-    marginTop: 60
+    marginTop: 60,
   },
   bgColor: {
-    backgroundColor: "#F3EAFF"
-  }
+    backgroundColor: "#F3EAFF",
+  },
 });

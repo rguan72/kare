@@ -10,9 +10,9 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { LOGO } from "./Images";
 import HomeScreen from "./src/screens/Home";
 import Thread from "./src/screens/Thread";
-import SetupSurvey from './src/screens/Setup';
+import SetupSurvey from "./src/screens/Setup";
 
-import UserComments from "./src/screens/UserComments"
+import UserComments from "./src/screens/UserComments";
 
 // Firebase bug workaround: https://stackoverflow.com/questions/60361519/cant-find-a-variable-atob
 if (!global.btoa) {
@@ -37,18 +37,10 @@ export default function App() {
     <NavigationContainer>
       <ApplicationProvider mapping={mapping} theme={lightTheme}>
         <Stack.Navigator>
-          {<Stack.Screen
+          <Stack.Screen
             name="SetupSurvey"
             component={SetupSurvey}
             options={{ title: "", headerTransparent: true }}
-          />}
-          <Stack.Screen
-            name="UserComments"
-            component={UserComments}
-            options={{
-              headerTitle: "",
-              headerTransparent: true
-            }}
           />
           <Stack.Screen
             name="Home"
@@ -56,11 +48,19 @@ export default function App() {
             options={{ title: "", headerTransparent: true }}
           />
           <Stack.Screen
+            name="UserComments"
+            component={UserComments}
+            options={{
+              headerTitle: "",
+              headerTransparent: true,
+            }}
+          />
+          <Stack.Screen
             name="Thread"
             component={Thread}
             options={{
               headerTitle: "",
-              headerTransparent: true
+              headerTransparent: true,
             }}
           />
         </Stack.Navigator>
@@ -74,9 +74,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
   },
   m: {
-    margin: 20
-  }
+    margin: 20,
+  },
 });
