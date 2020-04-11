@@ -12,7 +12,7 @@ import { Layout, Button, Input, Text, Card } from "@ui-kitten/components";
 import ListItem from "../components/ListItem";
 import {
   addReply,
-  getReplies,
+  watchReplies,
   reportComment,
   getUser,
 } from "../utils/FirebaseUtils";
@@ -29,8 +29,9 @@ export default function Replies({ route, navigation }) {
   //const userId = user; // something like this would be done in reality
 
   useEffect(() => {
-    getReplies(commentId).then((data) => setReplies(data));
-  }, [replies]);
+    const unsubscribe = watchReplies(commentId, setReplies);
+    //return () => unsubscribe();
+  }, []);
 
   useEffect(() => {
     getUser(user).then((userData) => {
