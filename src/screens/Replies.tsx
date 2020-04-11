@@ -86,62 +86,64 @@ export default function Replies({ route, navigation }) {
         }}
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <FlatList
-            data={replies}
-            ListHeaderComponent={ReplyParent} // going to be comment
-            renderItem={({ item }) => {
-              const date =
-                item && item.timestamp
-                  ? item.timestamp.toDate().toLocaleDateString()
-                  : "";
-              return (
-                <ListItem
-                  userId={item.userId}
-                  text={item.text}
-                  onReport={() => reportComment(item.id)}
-                  date={date}
-                  onReply={() => {
-                    navigation.navigate("Replies", {
-                      user: item.userId,
-                      comment: item.text,
-                      commentId: item.id,
-                    });
-                  }}
-                  numReplies={item.numReplies}
-                />
-              );
-            }}
-            keyExtractor={(item) => item.id}
-          />
-          <Layout
-            style={{
-              justifyContent: "flex-end",
-              backgroundColor: "#F3EAFF",
-              flexDirection: "column",
-            }}
-          >
-            <Input
-              placeholder='Add comment'
-              value={value}
-              onChangeText={setValue}
-            />
-            <Button
-              onPress={() => {
-                addReply(commentId, {
-                  userId: userId,
-                  text: value,
-                  reports: 0,
-                  show: true,
-                  numReplies: 0,
-                });
-                setValue("");
+          <React.Fragment>
+            <FlatList
+              data={replies}
+              ListHeaderComponent={ReplyParent} // going to be comment
+              renderItem={({ item }) => {
+                const date =
+                  item && item.timestamp
+                    ? item.timestamp.toDate().toLocaleDateString()
+                    : "";
+                return (
+                  <ListItem
+                    userId={item.userId}
+                    text={item.text}
+                    onReport={() => reportComment(item.id)}
+                    date={date}
+                    onReply={() => {
+                      navigation.navigate("Replies", {
+                        user: item.userId,
+                        comment: item.text,
+                        commentId: item.id,
+                      });
+                    }}
+                    numReplies={item.numReplies}
+                  />
+                );
               }}
-              style={styles.mt0}
-              disabled={value === ""}
+              keyExtractor={(item) => item.id}
+            />
+            <Layout
+              style={{
+                justifyContent: "flex-end",
+                backgroundColor: "#F3EAFF",
+                flexDirection: "column",
+              }}
             >
-              Submit
-            </Button>
-          </Layout>
+              <Input
+                placeholder='Add comment'
+                value={value}
+                onChangeText={setValue}
+              />
+              <Button
+                onPress={() => {
+                  addReply(commentId, {
+                    userId: userId,
+                    text: value,
+                    reports: 0,
+                    show: true,
+                    numReplies: 0,
+                  });
+                  setValue("");
+                }}
+                style={styles.mt0}
+                disabled={value === ""}
+              >
+                Submit
+              </Button>
+            </Layout>
+          </React.Fragment>
         </TouchableWithoutFeedback>
       </SafeAreaView>
     </KeyboardAvoidingView>

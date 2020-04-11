@@ -1,19 +1,24 @@
 import React, { useState, useEffect } from "react";
 import {
-  StyleSheet, 
+  StyleSheet,
   SafeAreaView,
   FlatList,
   Image,
-  TextInput
+  TextInput,
 } from "react-native";
 import PropTypes from "prop-types";
-import { KeyboardAvoidingView, Platform, Keyboard, TouchableWithoutFeedback } from "react-native";
+import {
+  KeyboardAvoidingView,
+  Platform,
+  Keyboard,
+  TouchableWithoutFeedback,
+} from "react-native";
 import { Layout, Button, Input, Text } from "@ui-kitten/components";
 import ListItem from "../components/ListItem";
 import { addComment, getComments, reportComment } from "../utils/FirebaseUtils";
 import { WOMEN } from "../../Images";
 
-export default function Thread({ route, navigation}) {
+export default function Thread({ route, navigation }) {
   const [comments, setComments] = useState([]);
   const [value, setValue] = useState("");
   const { title, description } = route.params;
@@ -21,7 +26,8 @@ export default function Thread({ route, navigation}) {
   const userId = "ztKIibvRJFjoz26pztO4";
 
   useEffect(() => {
-    getComments().then(data => setComments(data));
+    getComments().then((data) => setComments(data));
+    console.log(comments);
   }, [comments]);
 
   const GroupTitle = () => (
@@ -34,17 +40,17 @@ export default function Thread({ route, navigation}) {
           alignItems: "center",
           backgroundColor: "#F3EAFF",
           marginTop: 15,
-          marginLeft: 40
+          marginLeft: 40,
         }}
       >
         <Layout
           style={{
             flexDirection: "column",
             marginLeft: 10,
-            backgroundColor: "#F3EAFF"
+            backgroundColor: "#F3EAFF",
           }}
         >
-          <Text category="h4"> {title} </Text>
+          <Text category='h4'> {title} </Text>
           <Text> {description}</Text>
         </Layout>
         <Layout style={{ backgroundColor: "#F3EAFF", maxHeight: 100 }}>
@@ -54,7 +60,7 @@ export default function Thread({ route, navigation}) {
               flexShrink: 1,
               maxWidth: 60,
               maxHeight: 60,
-              marginLeft: 15
+              marginLeft: 15,
             }}
           />
         </Layout>
@@ -63,72 +69,77 @@ export default function Thread({ route, navigation}) {
   );
 
   return (
-    <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : null} style={{ flex: 1 }}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : null}
+      style={{ flex: 1 }}
+    >
       <SafeAreaView
         style={{
           flex: 1,
           justifyContent: "flex-end",
-          backgroundColor: "#F3EAFF"
+          backgroundColor: "#F3EAFF",
         }}
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <FlatList
-            data={comments}
-            ListHeaderComponent={GroupTitle}
-            renderItem={({ item }) => {
-              const date =
-                item && item.timestamp
-                  ? item.timestamp.toDate().toLocaleDateString()
-                  : "";
-              return ( 
-                <ListItem
-                  userId={item.userId}
-                  text={item.text}
-                  onReply={() => {
-                    navigation.navigate("Replies", {
-                      user: item.userId,
-                      comment: item.text,
-                      commentId: item.id,
-                      date: date
-                    })
-                  }}
-                  onReport={() => reportComment(item.id)}
-                  date={date}
-                  numReplies={item.numReplies}
-                />
-              );
-            }}
-            keyExtractor={item => item.id}
-          />
-          <Layout
-            style={{
-              justifyContent: "flex-end",
-              backgroundColor: "#F3EAFF",
-              flexDirection: "column"
-            }}
-          >
-            <Input
-              placeholder="Add comment"
-              value={value}
-              onChangeText={setValue}
-            />
-            <Button
-              onPress={() => {
-                addComment({
-                  userId: userId,
-                  text: value,
-                  reports: 0,
-                  show: true,
-                  numReplies: 0
-                });
-                setValue("");
+          <React.Fragment>
+            <FlatList
+              data={comments}
+              ListHeaderComponent={GroupTitle}
+              renderItem={({ item }) => {
+                const date =
+                  item && item.timestamp
+                    ? item.timestamp.toDate().toLocaleDateString()
+                    : "";
+                return (
+                  <ListItem
+                    userId={item.userId}
+                    text={item.text}
+                    onReply={() => {
+                      navigation.navigate("Replies", {
+                        user: item.userId,
+                        comment: item.text,
+                        commentId: item.id,
+                        date: date,
+                      });
+                    }}
+                    onReport={() => reportComment(item.id)}
+                    date={date}
+                    numReplies={item.numReplies}
+                  />
+                );
               }}
-              style={styles.mt0}
-              disabled={value === ""}
+              keyExtractor={(item) => item.id}
+            />
+            <Layout
+              style={{
+                justifyContent: "flex-end",
+                backgroundColor: "#F3EAFF",
+                flexDirection: "column",
+              }}
             >
-              Submit
-            </Button>
-          </Layout>
+              <Input
+                placeholder='Add comment'
+                value={value}
+                onChangeText={setValue}
+              />
+              <Button
+                onPress={() => {
+                  addComment({
+                    userId: userId,
+                    text: value,
+                    reports: 0,
+                    show: true,
+                    numReplies: 0,
+                  });
+                  setValue("");
+                }}
+                style={styles.mt0}
+                disabled={value === ""}
+              >
+                Submit
+              </Button>
+            </Layout>
+          </React.Fragment>
         </TouchableWithoutFeedback>
       </SafeAreaView>
     </KeyboardAvoidingView>
@@ -136,27 +147,27 @@ export default function Thread({ route, navigation}) {
 }
 
 Thread.propTypes = {
-  route: PropTypes.object.isRequired
+  route: PropTypes.object.isRequired,
 };
 
 const styles = StyleSheet.create({
   footer: {
     justifyContent: "flex-end",
-    flex: 1
+    flex: 1,
   },
   flex: {
-    display: "flex"
+    display: "flex",
   },
   mt0: {
-    marginTop: 0
+    marginTop: 0,
   },
   mb: {
-    marginBottom: 20
+    marginBottom: 20,
   },
   mt: {
-    marginTop: 60
+    marginTop: 60,
   },
   bgColor: {
-    backgroundColor: "#F3EAFF"
-  }
+    backgroundColor: "#F3EAFF",
+  },
 });
