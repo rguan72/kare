@@ -15,7 +15,11 @@ import {
 } from "react-native";
 import { Layout, Button, Input, Text } from "@ui-kitten/components";
 import ListItem from "../components/ListItem";
-import { addComment, getComments, reportComment } from "../utils/FirebaseUtils";
+import {
+  addComment,
+  watchComments,
+  reportComment,
+} from "../utils/FirebaseUtils";
 import { WOMEN } from "../../Images";
 
 export default function Thread({ route, navigation }) {
@@ -26,9 +30,9 @@ export default function Thread({ route, navigation }) {
   const userId = "ztKIibvRJFjoz26pztO4";
 
   useEffect(() => {
-    getComments().then((data) => setComments(data));
-    console.log(comments);
-  }, [comments]);
+    const unsubscribe = watchComments(setComments);
+    return () => unsubscribe();
+  }, []);
 
   const GroupTitle = () => (
     <Layout style={[styles.mb, styles.bgColor, styles.mt]}>
