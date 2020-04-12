@@ -147,16 +147,11 @@ function addUser(user) {
 
 function watchGroups(setGroups) {
   console.log("getGroups read");
-  return db
-    .collection(collections.groups)
-    .get()
-    .then((querySnapshot) => {
-      const groups = [];
-      querySnapshot.forEach((doc) =>
-        groups.push({ id: doc.id, ...doc.data() })
-      );
-      return setGroups(groups);
-    });
+  return db.collection(collections.groups).onSnapshot((querySnapshot) => {
+    const groups = [];
+    querySnapshot.forEach((doc) => groups.push({ id: doc.id, ...doc.data() }));
+    return setGroups(groups);
+  });
 }
 
 export {

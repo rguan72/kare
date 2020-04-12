@@ -21,8 +21,10 @@ export default function UserComments({ route }) {
   // hard coded for demo
   const userId = "ztKIibvRJFjoz26pztO4";
 
-  getUser(userId).then((userData) => {
-    setName(userData.name);
+  useEffect(() => {
+    getUser(userId).then((userData) => {
+      setName(userData.name);
+    });
   }, []);
 
   useEffect(() => {

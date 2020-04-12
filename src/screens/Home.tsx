@@ -15,7 +15,7 @@ function HomeScreen({ navigation }) {
 
   useEffect(() => {
     const unsubscribe = watchGroups(setGroups);
-    return () => unsubscribe;
+    return () => unsubscribe();
   }, []);
 
   return (

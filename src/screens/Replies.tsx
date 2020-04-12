@@ -29,10 +29,8 @@ export default function Replies({ route, navigation }) {
   //const userId = user; // something like this would be done in reality
 
   useEffect(() => {
-    console.log("new reply");
     const unsubscribe = watchReplies(commentId, setReplies);
-    console.log("Did it read?");
-    return () => unsubscribe;
+    return () => unsubscribe();
   }, []);
 
   useEffect(() => {
