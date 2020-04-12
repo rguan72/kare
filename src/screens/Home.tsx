@@ -14,14 +14,14 @@ function HomeScreen({ navigation }) {
   const [groups, setGroups] = useState([]);
   useEffect(() => {
     getGroups()
-      .then(data => setGroups(data))
-      .catch(err => console.log(err));
-  }, [groups]);
+      .then((data) => setGroups(data))
+      .catch((err) => console.log(err));
+  }, []);
 
   return (
     <View style={{ marginTop: 30, backgroundColor: "#FFFDF4", flex: 1 }}>
       <View style={{ alignItems: "center", marginTop: 15 }}>
-        <Text category="h5">My Communities</Text>
+        <Text category='h5'>My Communities</Text>
       </View>
       <FlatList
         data={groups}
@@ -33,25 +33,25 @@ function HomeScreen({ navigation }) {
             onPress={() =>
               navigation.navigate("Thread", {
                 title: item.title,
-                description: item.description
+                description: item.description,
               })
             }
           />
         )}
-        keyExtractor={item => item.id}
+        keyExtractor={(item) => item.id}
       />
     </View>
   );
 }
 
-export default withStyles(HomeScreen, theme => ({
+export default withStyles(HomeScreen, (theme) => ({
   light: {
-    backgroundColor: theme["color-primary-100"]
-  }
+    backgroundColor: theme["color-primary-100"],
+  },
 }));
 
 const styles = StyleSheet.create({
   m: {
-    margin: 20
-  }
+    margin: 20,
+  },
 });

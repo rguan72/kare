@@ -5,6 +5,7 @@ import {
   FlatList,
   Image,
   TextInput,
+  SectionList,
 } from "react-native";
 import PropTypes from "prop-types";
 import {
@@ -24,6 +25,9 @@ import { WOMEN } from "../../Images";
 
 export default function Thread({ route, navigation }) {
   const [comments, setComments] = useState([]);
+  const [firstComments, setFirstComments] = useState([]);
+  const [restComments, setRestComments] = useState([]);
+  const [commentStructure, setCommentStructure] = useState([]);
   const [value, setValue] = useState("");
   const { title, description } = route.params;
   // hard coded for demo
@@ -31,8 +35,16 @@ export default function Thread({ route, navigation }) {
 
   useEffect(() => {
     const unsubscribe = watchComments(setComments);
+
     return () => unsubscribe();
   }, []);
+
+  useEffect(() => {
+    setCommentStructure([
+      { title: "Most Recent", data: comments.slice(0, 3) },
+      { title: "Older", data: comments.slice(4) },
+    ]);
+  }, [comments]);
 
   const GroupTitle = () => (
     <Layout style={[styles.mb, styles.bgColor, styles.mt]}>
@@ -86,8 +98,8 @@ export default function Thread({ route, navigation }) {
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <React.Fragment>
-            <FlatList
-              data={comments}
+            <SectionList
+              sections={commentStructure}
               ListHeaderComponent={GroupTitle}
               renderItem={({ item }) => {
                 const date =
@@ -113,6 +125,19 @@ export default function Thread({ route, navigation }) {
                 );
               }}
               keyExtractor={(item) => item.id}
+              renderSectionHeader={({ section: { title } }) =>
+                title == "Most Recent" ? (
+                  <Text style={{ marginLeft: 25, marginBottom: 3 }}>
+                    {title}
+                  </Text>
+                ) : (
+                  <Text
+                    style={{ marginLeft: 25, marginBottom: 3, marginTop: 10 }}
+                  >
+                    {title}
+                  </Text>
+                )
+              }
             />
             <Layout
               style={{

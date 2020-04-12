@@ -33,7 +33,7 @@ function addComment(comment: comment) {
       timestamp: firebaseApp.firestore.FieldValue.serverTimestamp(),
       numReplies: 0,
       parentId: "",
-      ...comment
+      ...comment,
     });
 }
 
@@ -43,16 +43,16 @@ function addReply(commentId, comment: comment) {
       timestamp: firebaseApp.firestore.FieldValue.serverTimestamp(),
       numReplies: 0,
       parentId: commentId,
-      ...comment
+      ...comment,
     })
-    .then(ref => {
+    .then((ref) => {
       db.collection(collections.comments) // then go into parent comment and update num replies and reply array
         .doc(commentId)
         .update({
           numReplies: firebaseApp.firestore.FieldValue.increment(1),
-          replies: firebaseApp.firestore.FieldValue.arrayUnion(ref.id)
-        })
-    }); 
+          replies: firebaseApp.firestore.FieldValue.arrayUnion(ref.id),
+        });
+    });
 }
 
 function reportComment(id: string) {
@@ -71,7 +71,7 @@ function watchComments(setComments) {
     .onSnapshot((querySnapshot) => {
       const comments = [];
       querySnapshot.forEach((doc) => {
-        comments.push({
+        comments.unshift({
           id: doc.id,
           ...doc.data(),
         });
@@ -91,7 +91,7 @@ function getUserComments(user) {
     .then((querySnapshot) => {
       const comments = [];
       querySnapshot.forEach((doc) => {
-        comments.push({
+        comments.unshift({
           id: doc.id,
           ...doc.data(),
         });
@@ -99,20 +99,20 @@ function getUserComments(user) {
       return comments;
     });
 }
-  
+
 function getReplies(commentId) {
   return db
     .collection(collections.comments)
-    .where("parentId", '==', commentId)
+    .where("parentId", "==", commentId)
     .where("show", "==", true)
     .orderBy("timestamp", "asc")
     .get()
-    .then(querySnapshot => {
+    .then((querySnapshot) => {
       const replies = [];
-      querySnapshot.forEach(doc => {
-        replies.push({
+      querySnapshot.forEach((doc) => {
+        replies.unshift({
           id: doc.id,
-          ...doc.data()
+          ...doc.data(),
         });
       });
       return replies;
@@ -151,5 +151,14 @@ function getGroups() {
     });
 }
 
-
-export { addComment, watchComments, reportComment, getGroups, getUser, addUser, getReplies, addReply, getUserComments };
+export {
+  addComment,
+  watchComments,
+  reportComment,
+  getGroups,
+  getUser,
+  addUser,
+  getReplies,
+  addReply,
+  getUserComments,
+};
