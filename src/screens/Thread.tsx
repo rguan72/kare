@@ -30,6 +30,7 @@ export default function Thread({ route, navigation }) {
   const userId = "ztKIibvRJFjoz26pztO4";
 
   useEffect(() => {
+    console.log("new comment");
     const unsubscribe = watchComments(setComments);
     return () => unsubscribe();
   }, []);

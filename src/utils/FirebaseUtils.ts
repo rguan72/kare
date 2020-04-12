@@ -56,8 +56,17 @@ function addReply(commentId, comment: comment) {
 }
 
 function reportComment(id: string) {
-  db.collection(collections.comments).doc(id).update({
-    show: false,
+  var comment = db.collection(collections.comments).doc(id);
+  comment.update({ show: false });
+  comment.get().then((badComment) => {
+    if (badComment.data().parentId) {
+      db.collection(collections.comments)
+        .doc(badComment.data().parentId)
+        .update({
+          numReplies: firebaseApp.firestore.FieldValue.increment(-1),
+          replies: firebaseApp.firestore.FieldValue.arrayRemove(badComment.id),
+        });
+    }
   });
 }
 
@@ -106,8 +115,7 @@ function watchReplies(commentId, setReplies) {
     .where("parentId", "==", commentId)
     .where("show", "==", true)
     .orderBy("timestamp", "asc")
-    .get()
-    .then((querySnapshot) => {
+    .onSnapshot((querySnapshot) => {
       const replies = [];
       querySnapshot.forEach((doc) => {
         replies.push({

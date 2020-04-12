@@ -27,7 +27,7 @@ export default function UserComments({ route }) {
 
   useEffect(() => {
     getUserComments(userId).then((data) => setComments(data));
-  }, [comments]);
+  }, []); // get once
 
   const GroupTitle = () => (
     <Layout style={[styles.mb, styles.bgColor, styles.mt]}>
@@ -49,7 +49,7 @@ export default function UserComments({ route }) {
             backgroundColor: "#F3EAFF",
           }}
         >
-          <Text category="h4">{name}</Text>
+          <Text category='h4'>{name}</Text>
           <Text>Comment Summary:</Text>
         </Layout>
         <Layout style={{ backgroundColor: "#F3EAFF", maxHeight: 100 }}></Layout>
@@ -58,7 +58,7 @@ export default function UserComments({ route }) {
   );
 
   return (
-    <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
+    <KeyboardAvoidingView behavior='padding' style={{ flex: 1 }}>
       <SafeAreaView
         style={{
           flex: 1,
