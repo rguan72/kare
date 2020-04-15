@@ -56,13 +56,21 @@ function addReply(commentId, comment: comment) {
 }
 
 function reportComment(id: string) {
-  db.collection(collections.comments).doc(id).update({
-    show: false,
+  var comment = db.collection(collections.comments).doc(id);
+  comment.update({ show: false });
+  comment.get().then((badComment) => {
+    if (badComment.data().parentId) {
+      db.collection(collections.comments)
+        .doc(badComment.data().parentId)
+        .update({
+          numReplies: firebaseApp.firestore.FieldValue.increment(-1),
+          replies: firebaseApp.firestore.FieldValue.arrayRemove(badComment.id),
+        });
+    }
   });
 }
 
 function watchComments(setComments) {
-  console.log("getComments read");
   return db
     .collection(collections.comments)
     .where("parentId", "==", "")
@@ -81,7 +89,6 @@ function watchComments(setComments) {
 }
 
 function getUserComments(user) {
-  console.log("getUserComments read");
   return db
     .collection(collections.comments)
     .where("userId", "==", user)
@@ -100,27 +107,26 @@ function getUserComments(user) {
     });
 }
 
-function getReplies(commentId) {
+
+function watchReplies(commentId, setReplies) {
   return db
     .collection(collections.comments)
     .where("parentId", "==", commentId)
     .where("show", "==", true)
     .orderBy("timestamp", "asc")
-    .get()
-    .then((querySnapshot) => {
+    .onSnapshot((querySnapshot) => {
       const replies = [];
       querySnapshot.forEach((doc) => {
-        replies.unshift({
+        replies.push({
           id: doc.id,
           ...doc.data(),
         });
       });
-      return replies;
+      setReplies(replies);
     });
 }
 
 function getUser(id) {
-  console.log("getUser read");
   return db
     .collection(collections.users)
     .doc(id)
@@ -137,28 +143,22 @@ function addUser(user) {
     });
 }
 
-function getGroups() {
-  console.log("getGroups read");
-  return db
-    .collection(collections.groups)
-    .get()
-    .then((querySnapshot) => {
-      const groups = [];
-      querySnapshot.forEach((doc) =>
-        groups.push({ id: doc.id, ...doc.data() })
-      );
-      return groups;
-    });
+function watchGroups(setGroups) {
+  return db.collection(collections.groups).onSnapshot((querySnapshot) => {
+    const groups = [];
+    querySnapshot.forEach((doc) => groups.push({ id: doc.id, ...doc.data() }));
+    return setGroups(groups);
+  });
 }
 
 export {
   addComment,
   watchComments,
   reportComment,
-  getGroups,
+  watchGroups,
   getUser,
   addUser,
-  getReplies,
+  watchReplies,
   addReply,
   getUserComments,
 };
