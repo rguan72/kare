@@ -20,7 +20,6 @@ function SetupSurvey({ navigation }) {
   const [userName, setUserName] = useState("");
   const [values, setValues] = useState(initialState);
   const [loading, setLoading] = useState(false);
-  //var loading = false;
 
   function handleEventChange(e, name) {
     console.log(values);
