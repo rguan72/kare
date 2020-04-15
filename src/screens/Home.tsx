@@ -2,7 +2,9 @@ import React, { useState, useEffect } from "react";
 import { StyleSheet, FlatList, View } from "react-native";
 import { Layout, Text, withStyles } from "@ui-kitten/components";
 import GroupItem from "../components/GroupItem";
+import { CommonActions } from "@react-navigation/native";
 import { watchGroups } from "../utils/FirebaseUtils";
+
 
 interface Group {
   title: String;

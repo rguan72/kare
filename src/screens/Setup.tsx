@@ -4,6 +4,7 @@ import { Card, Text, withStyles, Button, Input } from "@ui-kitten/components";
 import RNPickerSelect from "react-native-picker-select";
 import { ScrollView } from "react-native-gesture-handler";
 import { addUser } from "../utils/FirebaseUtils";
+import { CommonActions } from "@react-navigation/native";
 
 function SetupSurvey({ navigation }) {
   // initial state
@@ -18,13 +19,14 @@ function SetupSurvey({ navigation }) {
   const [color, setColor] = useState("");
   const [userName, setUserName] = useState("");
   const [values, setValues] = useState(initialState);
+  const [loading, setLoading] = useState(false);
 
   function handleEventChange(e, name) {
     console.log(values);
     setValues({ ...values, [name]: e.nativeEvent.text });
   }
 
-  const isEnabled =
+  var isEnabled =
     values["username"].length > 0 &&
     values["q1"].length > 0 &&
     values["q2"].length > 0 &&
@@ -32,6 +34,8 @@ function SetupSurvey({ navigation }) {
     values["q4"].length > 0 &&
     values["q5"].length > 0 &&
     color.length > 0;
+
+  var buttonText = !loading ? "Join Now!" : "Loading...";
 
   return (
     <View style={{ marginTop: 30, backgroundColor: "#F3EAFF", flex: 1 }}>
@@ -57,7 +61,9 @@ function SetupSurvey({ navigation }) {
           <Text category='h6'>What is your spirit animal? (Required)</Text>
           <Input
             value={values["username"]}
-            onChange={(e) => handleEventChange(e, "username")}
+            onChange={(e) => {
+              handleEventChange(e, "username");
+            }}
             onEndEditing={(e) => {
               var num1 = Math.floor(Math.random() * 900 + 100).toString(10); // to ensure 3 digits
               var num2 = Math.floor(Math.random() * 900 + 100).toString(10); // to ensure 3 digits
@@ -121,13 +127,23 @@ function SetupSurvey({ navigation }) {
         </Card>
         <Button
           onPress={() => {
+            setLoading(!loading);
             try {
-              addUser({ userName, color });
+              setTimeout(() => {
+                addUser({ userName, color });
+                navigation.dispatch(
+                  CommonActions.reset({
+                    index: 0,
+                    routes: [{ name: "Home" }],
+                  })
+                ); // routes to home and doesnt give option to go back
+              }, 2000); // keep the user loading for a bit
+
+              setLoading(!loading);
             } catch (err) {
               console.log(err); // in this case we just log it
               //navigation.navigate("Error"); // in reality we would nav to error page
             }
-            navigation.navigate("Home");
           }}
           disabled={!isEnabled}
           style={{
@@ -135,19 +151,21 @@ function SetupSurvey({ navigation }) {
             backgroundColor: "#5505BA",
           }}
         >
-          Join Now!
+          {buttonText}
         </Button>
-        <Button
-          onPress={() => {
-            navigation.navigate("Home");
-          }}
-          style={{
-            borderColor: "#5505BA",
-            backgroundColor: "#5505BA",
-          }}
-        >
-          Go to Home debug
-        </Button>
+        {
+          <Button
+            onPress={() => {
+              navigation.navigate("Home");
+            }}
+            style={{
+              borderColor: "#5505BA",
+              backgroundColor: "#5505BA",
+            }}
+          >
+            Go to Home debug
+          </Button>
+        }
       </ScrollView>
     </View>
   );
