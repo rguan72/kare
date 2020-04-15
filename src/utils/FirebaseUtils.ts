@@ -71,7 +71,6 @@ function reportComment(id: string) {
 }
 
 function watchComments(setComments) {
-  console.log("getComments read");
   return db
     .collection(collections.comments)
     .where("parentId", "==", "")
@@ -90,7 +89,6 @@ function watchComments(setComments) {
 }
 
 function getUserComments(user) {
-  console.log("getUserComments read");
   return db
     .collection(collections.comments)
     .where("userId", "==", user)
@@ -128,7 +126,6 @@ function watchReplies(commentId, setReplies) {
 }
 
 function getUser(id) {
-  console.log("getUser read");
   return db
     .collection(collections.users)
     .doc(id)
@@ -146,7 +143,6 @@ function addUser(user) {
 }
 
 function watchGroups(setGroups) {
-  console.log("getGroups read");
   return db.collection(collections.groups).onSnapshot((querySnapshot) => {
     const groups = [];
     querySnapshot.forEach((doc) => groups.push({ id: doc.id, ...doc.data() }));
