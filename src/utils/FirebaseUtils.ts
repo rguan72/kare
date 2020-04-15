@@ -79,7 +79,7 @@ function watchComments(setComments) {
     .onSnapshot((querySnapshot) => {
       const comments = [];
       querySnapshot.forEach((doc) => {
-        comments.push({
+        comments.unshift({
           id: doc.id,
           ...doc.data(),
         });
@@ -98,7 +98,7 @@ function getUserComments(user) {
     .then((querySnapshot) => {
       const comments = [];
       querySnapshot.forEach((doc) => {
-        comments.push({
+        comments.unshift({
           id: doc.id,
           ...doc.data(),
         });
@@ -106,6 +106,7 @@ function getUserComments(user) {
       return comments;
     });
 }
+
 
 function watchReplies(commentId, setReplies) {
   return db
