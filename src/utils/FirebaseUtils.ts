@@ -27,8 +27,10 @@ interface commentList {
 }
 
 function sendVerificationEmail(email: string) {
+  console.log("sendVerification");
   let actionCodeSettings = {
-    url: "https://codenames.co",
+    canHandleCodeInApp: false,
+    url: "kare-3.firebaseapp.com",
     handleCodeInApp: true,
     iOS: {
       bundleId: "com.kare.ios",
@@ -40,6 +42,7 @@ function sendVerificationEmail(email: string) {
     },
     dynamicLinkDomain: "example.page.link",
   };
+
   firebaseApp
     .auth()
     .sendSignInLinkToEmail(email, actionCodeSettings)
@@ -47,7 +50,7 @@ function sendVerificationEmail(email: string) {
       await AsyncStorage.setItem("emailForSignIn", email);
     })
     .catch((error) => {
-      console.log("error");
+      console.log(error);
     });
 }
 

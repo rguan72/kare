@@ -1,5 +1,6 @@
 import * as firebase from "firebase/app";
 import "firebase/firestore";
+import "firebase/auth";
 
 // const firebaseConfig = {
 //   apiKey: "AIzaSyCtTpKft_RsbH1qkIM0njqldFGjNxbt1ZA",
@@ -28,7 +29,7 @@ var firebaseConfig = {
   projectId: "kare-3",
   storageBucket: "kare-3.appspot.com",
   messagingSenderId: "777284393355",
-  appId: "1:777284393355:web:53e7c0b1ffb9fc11c7378e"
+  appId: "1:777284393355:web:53e7c0b1ffb9fc11c7378e",
 };
 
 if (!firebase.apps.length) {
