@@ -33,7 +33,7 @@ function addComment(comment: comment) {
       timestamp: firebaseApp.firestore.FieldValue.serverTimestamp(),
       numReplies: 0,
       parentId: "",
-      ...comment
+      ...comment,
     });
 }
 
@@ -43,26 +43,34 @@ function addReply(commentId, comment: comment) {
       timestamp: firebaseApp.firestore.FieldValue.serverTimestamp(),
       numReplies: 0,
       parentId: commentId,
-      ...comment
+      ...comment,
     })
-    .then(ref => {
+    .then((ref) => {
       db.collection(collections.comments) // then go into parent comment and update num replies and reply array
         .doc(commentId)
         .update({
           numReplies: firebaseApp.firestore.FieldValue.increment(1),
-          replies: firebaseApp.firestore.FieldValue.arrayUnion(ref.id)
-        })
-    }); 
+          replies: firebaseApp.firestore.FieldValue.arrayUnion(ref.id),
+        });
+    });
 }
 
 function reportComment(id: string) {
-  db.collection(collections.comments).doc(id).update({
-    show: false,
+  var comment = db.collection(collections.comments).doc(id);
+  comment.update({ show: false });
+  comment.get().then((badComment) => {
+    if (badComment.data().parentId) {
+      db.collection(collections.comments)
+        .doc(badComment.data().parentId)
+        .update({
+          numReplies: firebaseApp.firestore.FieldValue.increment(-1),
+          replies: firebaseApp.firestore.FieldValue.arrayRemove(badComment.id),
+        });
+    }
   });
 }
 
 function watchComments(setComments) {
-  console.log("getComments read");
   return db
     .collection(collections.comments)
     .where("parentId", "==", "")
@@ -81,7 +89,6 @@ function watchComments(setComments) {
 }
 
 function getUserComments(user) {
-  console.log("getUserComments read");
   return db
     .collection(collections.comments)
     .where("userId", "==", user)
@@ -99,28 +106,26 @@ function getUserComments(user) {
       return comments;
     });
 }
-  
-function getReplies(commentId) {
+
+function watchReplies(commentId, setReplies) {
   return db
     .collection(collections.comments)
-    .where("parentId", '==', commentId)
+    .where("parentId", "==", commentId)
     .where("show", "==", true)
     .orderBy("timestamp", "asc")
-    .get()
-    .then(querySnapshot => {
+    .onSnapshot((querySnapshot) => {
       const replies = [];
-      querySnapshot.forEach(doc => {
+      querySnapshot.forEach((doc) => {
         replies.push({
           id: doc.id,
-          ...doc.data()
+          ...doc.data(),
         });
       });
-      return replies;
+      setReplies(replies);
     });
 }
 
 function getUser(id) {
-  console.log("getUser read");
   return db
     .collection(collections.users)
     .doc(id)
@@ -137,19 +142,22 @@ function addUser(user) {
     });
 }
 
-function getGroups() {
-  console.log("getGroups read");
-  return db
-    .collection(collections.groups)
-    .get()
-    .then((querySnapshot) => {
-      const groups = [];
-      querySnapshot.forEach((doc) =>
-        groups.push({ id: doc.id, ...doc.data() })
-      );
-      return groups;
-    });
+function watchGroups(setGroups) {
+  return db.collection(collections.groups).onSnapshot((querySnapshot) => {
+    const groups = [];
+    querySnapshot.forEach((doc) => groups.push({ id: doc.id, ...doc.data() }));
+    return setGroups(groups);
+  });
 }
 
-
-export { addComment, watchComments, reportComment, getGroups, getUser, addUser, getReplies, addReply, getUserComments };
+export {
+  addComment,
+  watchComments,
+  reportComment,
+  watchGroups,
+  getUser,
+  addUser,
+  watchReplies,
+  addReply,
+  getUserComments,
+};
