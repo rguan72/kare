@@ -10,14 +10,10 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { LOGO } from "./Images";
 import HomeScreen from "./src/screens/Home";
 import Thread from "./src/screens/Thread";
-<<<<<<< HEAD
 import SetupSurvey from "./src/screens/Setup";
 import VerifyEmailScreen from "./src/screens/Verify";
-=======
 import Replies from "./src/screens/Replies";
-import SetupSurvey from './src/screens/Setup';
 
->>>>>>> master
 import UserComments from "./src/screens/UserComments";
 
 // Firebase bug workaround: https://stackoverflow.com/questions/60361519/cant-find-a-variable-atob
@@ -44,14 +40,11 @@ export default function App() {
       <ApplicationProvider mapping={mapping} theme={lightTheme}>
         <Stack.Navigator>
           <Stack.Screen
-<<<<<<< HEAD
             name="VerifyEmail"
             component={VerifyEmailScreen}
             options={{ title: "", headerTransparent: true }}
           />
           <Stack.Screen
-=======
->>>>>>> master
             name="SetupSurvey"
             component={SetupSurvey}
             options={{ title: "", headerTransparent: true }}
@@ -75,8 +68,6 @@ export default function App() {
             options={{
               headerTitle: "",
               headerTransparent: true,
-<<<<<<< HEAD
-=======
             }}
           />
           <Stack.Screen
@@ -85,7 +76,6 @@ export default function App() {
             options={{
               headerTitle: "",
               headerTransparent: true
->>>>>>> master
             }}
           />
         </Stack.Navigator>
