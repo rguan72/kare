@@ -3,12 +3,19 @@ import { StyleSheet, View } from "react-native";
 import { Card, Text, withStyles, Button, Input } from "@ui-kitten/components";
 import RNPickerSelect from "react-native-picker-select";
 import { ScrollView } from "react-native-gesture-handler";
-import { addUser, sendVerificationEmail } from "../utils/FirebaseUtils";
+import {
+  addUser,
+  sendVerificationEmail,
+  getCurrentUser,
+} from "../utils/FirebaseUtils";
+import { getEmailExtension } from "../utils/Parse";
+import whitelist from "../constants/emailWhitelist";
 
 function SetupSurvey({ navigation }) {
   // initial state
   const initialState = {
     username: "",
+    email: "",
     q1: "",
     q2: "",
     q3: "",
@@ -17,6 +24,7 @@ function SetupSurvey({ navigation }) {
   };
   const [color, setColor] = useState("");
   const [userName, setUserName] = useState("");
+  const [emailValid, setEmailValid] = useState(false);
   const [values, setValues] = useState(initialState);
 
   function handleEventChange(e, name) {
@@ -26,12 +34,17 @@ function SetupSurvey({ navigation }) {
 
   const isEnabled =
     values["username"].length > 0 &&
+    values["email"].length > 0 &&
     values["q1"].length > 0 &&
     values["q2"].length > 0 &&
     values["q3"].length > 0 &&
     values["q4"].length > 0 &&
     values["q5"].length > 0 &&
-    color.length > 0;
+    color.length > 0 &&
+    emailValid;
+
+  if (getCurrentUser() && getCurrentUser().emailVerified)
+    navigation.navigate("Home");
 
   return (
     <View style={{ marginTop: 30, backgroundColor: "#F3EAFF", flex: 1 }}>
@@ -52,6 +65,19 @@ function SetupSurvey({ navigation }) {
               { label: "Green", value: "green" },
             ]}
           />
+        </Card>
+        <Card style={styles.card}>
+          <Text category="h6">What is your email? (Required)</Text>
+          <Input
+            value={values["email"]}
+            onChange={(e) => handleEventChange(e, "email")}
+            onEndEditing={(e) => {
+              console.log(e);
+              const email = values["email"];
+              setEmailValid(whitelist.includes(getEmailExtension(email)));
+            }}
+          />
+          {!emailValid && <Text> Need valid .edu email to sign up </Text>}
         </Card>
         <Card style={styles.card}>
           <Text category="h6">What is your spirit animal? (Required)</Text>
@@ -122,8 +148,9 @@ function SetupSurvey({ navigation }) {
         <Button
           onPress={() => {
             try {
-              sendVerificationEmail("guanr@umich.edu");
-              addUser({ userName, color });
+              addUser(values["email"], "password").then(() =>
+                sendVerificationEmail()
+              );
             } catch (err) {
               console.log(err); // in this case we just log it
               //navigation.navigate("Error"); // in reality we would nav to error page

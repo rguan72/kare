@@ -26,32 +26,23 @@ interface commentList {
   [index: number]: returnComment;
 }
 
-function sendVerificationEmail(email: string) {
-  console.log("sendVerification");
-  let actionCodeSettings = {
-    canHandleCodeInApp: false,
-    url: "kare-3.firebaseapp.com",
-    handleCodeInApp: true,
-    iOS: {
-      bundleId: "com.kare.ios",
-    },
-    android: {
-      packageName: "com.kare.android",
-      installApp: true,
-      minimumVersion: "12",
-    },
-    dynamicLinkDomain: "example.page.link",
-  };
-
+function sendVerificationEmail() {
   firebaseApp
     .auth()
-    .sendSignInLinkToEmail(email, actionCodeSettings)
-    .then(async () => {
-      await AsyncStorage.setItem("emailForSignIn", email);
+    .currentUser.sendEmailVerification({
+      url: "http://codenames.co",
     })
     .catch((error) => {
       console.log(error);
     });
+}
+
+function getCurrentUser() {
+  return firebaseApp.auth().currentUser;
+}
+
+function addUser(email: string, password: string) {
+  return firebaseApp.auth().createUserWithEmailAndPassword(email, password);
 }
 
 function addComment(comment: comment) {
@@ -114,14 +105,14 @@ function getUser(id) {
     .then((ref) => ref.data());
 }
 
-function addUser(user) {
-  db.collection(collections.users)
-    .doc()
-    .set({
-      timestamp: firebaseApp.firestore.FieldValue.serverTimestamp(),
-      ...user,
-    });
-}
+// function addUser(user) {
+//   db.collection(collections.users)
+//     .doc()
+//     .set({
+//       timestamp: firebaseApp.firestore.FieldValue.serverTimestamp(),
+//       ...user,
+//     });
+// }
 
 function getGroups() {
   return db
@@ -145,4 +136,5 @@ export {
   addUser,
   getUserComments,
   sendVerificationEmail,
+  getCurrentUser,
 };
