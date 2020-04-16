@@ -25,6 +25,7 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.kare.kare",
       "buildNumber": "1.0.0"
-    }
+    },
+    "scheme": "kare"
   }
 }

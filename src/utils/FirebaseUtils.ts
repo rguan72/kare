@@ -1,5 +1,6 @@
 import firebaseApp from "firebase/app";
 import firebase from "../constants/Firebase";
+import { Linking } from "expo";
 import { AsyncStorage } from "react-native";
 import { collections } from "../constants/FirebaseStrings";
 import { community } from "../constants/community";
@@ -25,20 +26,22 @@ interface returnComment extends comment {
 interface commentList {
   [index: number]: returnComment;
 }
-
-function sendVerificationEmail() {
-  firebaseApp
-    .auth()
-    .currentUser.sendEmailVerification({
-      url: "http://codenames.co",
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-}
-
 function getCurrentUser() {
   return firebaseApp.auth().currentUser;
+}
+
+function sendVerificationEmail() {
+  const user = getCurrentUser();
+  console.log(user);
+  if (user) {
+    user
+      .sendEmailVerification({
+        url: Linking.makeUrl(),
+      })
+      .catch((error) => console.log(error));
+  } else {
+    console.log("user not signed in");
+  }
 }
 
 function addUser(email: string, password: string) {

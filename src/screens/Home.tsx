@@ -18,9 +18,10 @@ function HomeScreen({ navigation }) {
       .catch((err) => console.log(err));
   }, []);
 
-  if (!getCurrentUser() || !getCurrentUser().emailVerified) {
-    return <Text> You must verify your email before proceeding </Text>;
+  if (getCurrentUser() && !getCurrentUser().emailVerified) {
+    navigation.navigate("VerifyEmail");
   }
+
   return (
     <View style={{ marginTop: 30, backgroundColor: "#FFFDF4", flex: 1 }}>
       <View style={{ alignItems: "center", marginTop: 15 }}>

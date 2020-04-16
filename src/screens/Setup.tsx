@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, TouchableOpacity } from "react-native";
 import { Card, Text, withStyles, Button, Input } from "@ui-kitten/components";
 import RNPickerSelect from "react-native-picker-select";
 import { ScrollView } from "react-native-gesture-handler";
@@ -43,8 +43,9 @@ function SetupSurvey({ navigation }) {
     color.length > 0 &&
     emailValid;
 
-  if (getCurrentUser() && getCurrentUser().emailVerified)
-    navigation.navigate("Home");
+  // TODO #7 login screen ui
+  // if (getCurrentUser() && getCurrentUser().emailVerified)
+  //   navigation.navigate("Home");
 
   return (
     <View style={{ marginTop: 30, backgroundColor: "#F3EAFF", flex: 1 }}>
@@ -70,6 +71,7 @@ function SetupSurvey({ navigation }) {
           <Text category="h6">What is your email? (Required)</Text>
           <Input
             value={values["email"]}
+            autoCapitalize="none"
             onChange={(e) => handleEventChange(e, "email")}
             onEndEditing={(e) => {
               console.log(e);
@@ -157,13 +159,25 @@ function SetupSurvey({ navigation }) {
             }
             navigation.navigate("Home");
           }}
-          disabled={!isEnabled}
-          style={{
-            borderColor: "#5505BA",
-            backgroundColor: "#5505BA",
-          }}
+          // disabled={!isEnabled}
+          // style={{
+          //   // borderColor: "#5505BA",
+          //   // backgroundColor: "#5505BA",
+          // }}
         >
-          Join Now!
+          Next
+        </Button>
+        <Button
+          onPress={() => {
+            navigation.navigate("Home");
+          }}
+          // disabled={!isEnabled}
+          // style={{
+          //   // borderColor: "#5505BA",
+          //   // backgroundColor: "#5505BA",
+          // }}
+        >
+          Go to home debug
         </Button>
       </ScrollView>
     </View>
