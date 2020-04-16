@@ -10,6 +10,8 @@ import {
 } from "../utils/FirebaseUtils";
 import { getEmailExtension } from "../utils/Parse";
 import whitelist from "../constants/emailWhitelist";
+import { addUser } from "../utils/FirebaseUtils";
+import { CommonActions } from "@react-navigation/native";
 
 function SetupSurvey({ navigation }) {
   // initial state
@@ -26,15 +28,16 @@ function SetupSurvey({ navigation }) {
   const [userName, setUserName] = useState("");
   const [emailValid, setEmailValid] = useState(false);
   const [values, setValues] = useState(initialState);
+  const [values, setValues] = useState(initialState);
+  const [loading, setLoading] = useState(false);
 
   function handleEventChange(e, name) {
     console.log(values);
     setValues({ ...values, [name]: e.nativeEvent.text });
   }
 
-  const isEnabled =
+  var isEnabled =
     values["username"].length > 0 &&
-    values["email"].length > 0 &&
     values["q1"].length > 0 &&
     values["q2"].length > 0 &&
     values["q3"].length > 0 &&
@@ -42,6 +45,8 @@ function SetupSurvey({ navigation }) {
     values["q5"].length > 0 &&
     color.length > 0 &&
     emailValid;
+
+  const buttonText = !loading ? "Join Now!" : "Loading...";
 
   // TODO #7 login screen ui
   // if (getCurrentUser() && getCurrentUser().emailVerified)
@@ -137,48 +142,47 @@ function SetupSurvey({ navigation }) {
             }} // placeholder for what we actually should do
           />
         </Card>
-        <Card style={styles.card}>
-          <Text category="h6">Question 5: (Required)</Text>
-          <Input
-            value={values["q5"]}
-            onChange={(e) => handleEventChange(e, "q5")}
-            onEndEditing={(e) => {
-              console.log(e);
-            }} // placeholder for what we actually should do
-          />
-        </Card>
         <Button
           onPress={() => {
+            setLoading(!loading);
             try {
-              addUser(values["email"], "password").then(() =>
-                sendVerificationEmail()
-              );
+              setTimeout(() => {
+                addUser({ userName, color });
+                navigation.dispatch(
+                  CommonActions.reset({
+                    index: 0,
+                    routes: [{ name: "Home" }],
+                  })
+                ); // routes to home and doesnt give option to go back
+              }, 2000); // keep the user loading for a bit
+
+              setLoading(!loading);
             } catch (err) {
               console.log(err); // in this case we just log it
               //navigation.navigate("Error"); // in reality we would nav to error page
             }
-            navigation.navigate("Home");
           }}
-          // disabled={!isEnabled}
-          // style={{
-          //   // borderColor: "#5505BA",
-          //   // backgroundColor: "#5505BA",
-          // }}
-        >
-          Next
-        </Button>
-        <Button
-          onPress={() => {
-            navigation.navigate("Home");
+          disabled={!isEnabled}
+          style={{
+            borderColor: "#5505BA",
+            backgroundColor: "#5505BA",
           }}
-          // disabled={!isEnabled}
-          // style={{
-          //   // borderColor: "#5505BA",
-          //   // backgroundColor: "#5505BA",
-          // }}
         >
-          Go to home debug
+          {buttonText}
         </Button>
+        {
+          <Button
+            onPress={() => {
+              navigation.navigate("Home");
+            }}
+            style={{
+              borderColor: "#5505BA",
+              backgroundColor: "#5505BA",
+            }}
+          >
+            Go to Home debug
+          </Button>
+        }
       </ScrollView>
     </View>
   );

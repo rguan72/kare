@@ -2,7 +2,9 @@ import React, { useState, useEffect } from "react";
 import { StyleSheet, FlatList, View } from "react-native";
 import { Layout, Text, withStyles } from "@ui-kitten/components";
 import GroupItem from "../components/GroupItem";
-import { getGroups, getCurrentUser } from "../utils/FirebaseUtils";
+import { getCurrentUser } from "../utils/FirebaseUtils";
+import { CommonActions } from "@react-navigation/native";
+import { watchGroups } from "../utils/FirebaseUtils";
 
 interface Group {
   title: String;
@@ -12,10 +14,10 @@ interface Group {
 
 function HomeScreen({ navigation }) {
   const [groups, setGroups] = useState([]);
+
   useEffect(() => {
-    getGroups()
-      .then((data) => setGroups(data))
-      .catch((err) => console.log(err));
+    const unsubscribe = watchGroups(setGroups);
+    return () => unsubscribe();
   }, []);
 
   if (getCurrentUser() && !getCurrentUser().emailVerified) {
