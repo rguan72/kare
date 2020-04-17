@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import {
-  StyleSheet,
   SafeAreaView,
   FlatList,
   Image,
@@ -23,6 +22,7 @@ import {
 } from "../utils/FirebaseUtils";
 import { WOMEN } from "../../Images";
 import analytics from "../utils/analytics";
+import ThreadStyles from "../StyleSheets/ThreadStyles"
 
 export default function Thread({ route, navigation }) {
   const [comments, setComments] = useState([]);
@@ -48,54 +48,31 @@ export default function Thread({ route, navigation }) {
   }, [comments]);
 
   const GroupTitle = () => (
-    <Layout style={[styles.mb, styles.bgColor, styles.mt]}>
-      <Layout
-        style={{
-          display: "flex",
-          flexDirection: "row-reverse",
-          justifyContent: "flex-end",
-          alignItems: "center",
-          backgroundColor: "#F3EAFF",
-          marginTop: 15,
-          marginLeft: 40,
-        }}
-      >
+    <Layout style={ThreadStyles.header}>
+      {/* text box */}
         <Layout
-          style={{
-            flexDirection: "column",
-            marginLeft: 10,
-            backgroundColor: "#F3EAFF",
-          }}
+          style={ThreadStyles.headerTextBox}
         >
           <Text category="h4"> {title} </Text>
           <Text> {description}</Text>
         </Layout>
+        {/* image box */}
         <Layout style={{ backgroundColor: "#F3EAFF", maxHeight: 100 }}>
           <Image
             source={WOMEN}
-            style={{
-              flexShrink: 1,
-              maxWidth: 60,
-              maxHeight: 60,
-              marginLeft: 15,
-            }}
+            style={ThreadStyles.icon}
           />
         </Layout>
-      </Layout>
     </Layout>
   );
 
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : null}
-      style={{ flex: 1 }}
+      style={ThreadStyles.keyboardAvoidingView}
     >
       <SafeAreaView
-        style={{
-          flex: 1,
-          justifyContent: "flex-end",
-          backgroundColor: "#F3EAFF",
-        }}
+        style={ThreadStyles.safeAreaView}
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <React.Fragment>
@@ -127,25 +104,11 @@ export default function Thread({ route, navigation }) {
               }}
               keyExtractor={(item) => item.id}
               renderSectionHeader={({ section: { title } }) =>
-                title == "Most Recent" ? (
-                  <Text style={{ marginLeft: 25, marginBottom: 3 }}>
-                    {title}
-                  </Text>
-                ) : (
-                  <Text
-                    style={{ marginLeft: 25, marginBottom: 3, marginTop: 10 }}
-                  >
-                    {title}
-                  </Text>
-                )
+                (<Text style={ThreadStyles.sectionHeader}> {title} </Text>)
               }
             />
             <Layout
-              style={{
-                justifyContent: "flex-end",
-                backgroundColor: "#F3EAFF",
-                flexDirection: "column",
-              }}
+              style={ThreadStyles.commentBox}
             >
               <Input
                 placeholder="Add comment"
@@ -164,7 +127,7 @@ export default function Thread({ route, navigation }) {
                   });
                   setValue("");
                 }}
-                style={styles.mt0}
+                style={ThreadStyles.submitButton}
                 disabled={value === ""}
               >
                 Submit
@@ -180,25 +143,3 @@ export default function Thread({ route, navigation }) {
 Thread.propTypes = {
   route: PropTypes.object.isRequired,
 };
-
-const styles = StyleSheet.create({
-  footer: {
-    justifyContent: "flex-end",
-    flex: 1,
-  },
-  flex: {
-    display: "flex",
-  },
-  mt0: {
-    marginTop: 0,
-  },
-  mb: {
-    marginBottom: 20,
-  },
-  mt: {
-    marginTop: 60,
-  },
-  bgColor: {
-    backgroundColor: "#F3EAFF",
-  },
-});
