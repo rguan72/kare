@@ -42,6 +42,7 @@ export default function ListItem({ userId, text, onReport, date, onReply, numRep
         </TouchableOpacity>
         <TouchableOpacity onPress={onReport}>
           <Text > {Emojis.flag()} Flag </Text>
+          <Text style={ListItemStyles.report}> Report</Text>
         </TouchableOpacity>
       </View>
     </Card>
