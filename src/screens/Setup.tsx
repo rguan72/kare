@@ -5,6 +5,7 @@ import RNPickerSelect from "react-native-picker-select";
 import { ScrollView } from "react-native-gesture-handler";
 import { addUser } from "../utils/FirebaseUtils";
 import { CommonActions } from "@react-navigation/native";
+import analytics from "../utils/analytics";
 
 function SetupSurvey({ navigation }) {
   // initial state
@@ -41,10 +42,10 @@ function SetupSurvey({ navigation }) {
     <View style={{ marginTop: 30, backgroundColor: "#F3EAFF", flex: 1 }}>
       <ScrollView>
         <View style={{ alignItems: "center", marginTop: 15, marginBottom: 15 }}>
-          <Text category='h4'>Setup Survey</Text>
+          <Text category="h4">Setup Survey</Text>
         </View>
         <Card style={styles.card}>
-          <Text category='h6'>Select your favorite Color: (Required)</Text>
+          <Text category="h6">Select your favorite Color: (Required)</Text>
           <RNPickerSelect
             style={pickerSelectStyles}
             onValueChange={(value) => setColor(value)}
@@ -58,7 +59,7 @@ function SetupSurvey({ navigation }) {
           />
         </Card>
         <Card style={styles.card}>
-          <Text category='h6'>What is your spirit animal? (Required)</Text>
+          <Text category="h6">What is your spirit animal? (Required)</Text>
           <Input
             value={values["username"]}
             onChange={(e) => {
@@ -76,7 +77,7 @@ function SetupSurvey({ navigation }) {
           <Text>{userName}</Text>
         </Card>
         <Card style={styles.card}>
-          <Text category='h6'>Question 1: (Required)</Text>
+          <Text category="h6">Question 1: (Required)</Text>
           <Input
             value={values["q1"]}
             onChange={(e) => handleEventChange(e, "q1")}
@@ -86,7 +87,7 @@ function SetupSurvey({ navigation }) {
           />
         </Card>
         <Card style={styles.card}>
-          <Text category='h6'>Question 2: (Required)</Text>
+          <Text category="h6">Question 2: (Required)</Text>
           <Input
             value={values["q2"]}
             onChange={(e) => handleEventChange(e, "q2")}
@@ -96,7 +97,7 @@ function SetupSurvey({ navigation }) {
           />
         </Card>
         <Card style={styles.card}>
-          <Text category='h6'>Question 3: (Required)</Text>
+          <Text category="h6">Question 3: (Required)</Text>
           <Input
             value={values["q3"]}
             onChange={(e) => handleEventChange(e, "q3")}
@@ -106,7 +107,7 @@ function SetupSurvey({ navigation }) {
           />
         </Card>
         <Card style={styles.card}>
-          <Text category='h6'>Question 4: (Required)</Text>
+          <Text category="h6">Question 4: (Required)</Text>
           <Input
             value={values["q4"]}
             onChange={(e) => handleEventChange(e, "q4")}
@@ -116,7 +117,7 @@ function SetupSurvey({ navigation }) {
           />
         </Card>
         <Card style={styles.card}>
-          <Text category='h6'>Question 5: (Required)</Text>
+          <Text category="h6">Question 5: (Required)</Text>
           <Input
             value={values["q5"]}
             onChange={(e) => handleEventChange(e, "q5")}
@@ -128,6 +129,7 @@ function SetupSurvey({ navigation }) {
         <Button
           onPress={() => {
             setLoading(!loading);
+            analytics.logSignup();
             try {
               setTimeout(() => {
                 addUser({ userName, color });
@@ -157,6 +159,7 @@ function SetupSurvey({ navigation }) {
           <Button
             onPress={() => {
               navigation.navigate("Home");
+              analytics.logSignup();
             }}
             style={{
               borderColor: "#5505BA",

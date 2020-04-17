@@ -22,6 +22,7 @@ import {
   reportComment,
 } from "../utils/FirebaseUtils";
 import { WOMEN } from "../../Images";
+import analytics from "../utils/analytics";
 
 export default function Thread({ route, navigation }) {
   const [comments, setComments] = useState([]);
@@ -66,7 +67,7 @@ export default function Thread({ route, navigation }) {
             backgroundColor: "#F3EAFF",
           }}
         >
-          <Text category='h4'> {title} </Text>
+          <Text category="h4"> {title} </Text>
           <Text> {description}</Text>
         </Layout>
         <Layout style={{ backgroundColor: "#F3EAFF", maxHeight: 100 }}>
@@ -147,12 +148,13 @@ export default function Thread({ route, navigation }) {
               }}
             >
               <Input
-                placeholder='Add comment'
+                placeholder="Add comment"
                 value={value}
                 onChangeText={setValue}
               />
               <Button
                 onPress={() => {
+                  analytics.logComment();
                   addComment({
                     userId: userId,
                     text: value,
