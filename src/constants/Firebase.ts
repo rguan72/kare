@@ -1,5 +1,6 @@
 import * as firebase from "firebase/app";
 import "firebase/firestore";
+import "firebase/analytics";
 import "firebase/auth";
 
 // const firebaseConfig = {
@@ -30,6 +31,7 @@ var firebaseConfig = {
   storageBucket: "kare-3.appspot.com",
   messagingSenderId: "777284393355",
   appId: "1:777284393355:web:53e7c0b1ffb9fc11c7378e",
+  measurementId: "G-FSL56NGH61",
 };
 
 if (!firebase.apps.length) {

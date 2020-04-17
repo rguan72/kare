@@ -11,6 +11,7 @@ import {
 import { getEmailExtension } from "../utils/Parse";
 import whitelist from "../constants/emailWhitelist";
 import { CommonActions } from "@react-navigation/native";
+import analytics from "../utils/analytics";
 import SetupStyles from "../StyleSheets/SetupStyles";
 
 export default function SetupSurvey({ navigation }) {
@@ -142,6 +143,7 @@ export default function SetupSurvey({ navigation }) {
         <Button
           onPress={async () => {
             setLoading(!loading);
+            analytics.logSignup();
             try {
               await addUser(values["email"], "password");
               sendVerificationEmail();
@@ -166,6 +168,7 @@ export default function SetupSurvey({ navigation }) {
           <Button
             onPress={() => {
               navigation.navigate("Home");
+              analytics.logSignup();
             }}
             style={SetupStyles.button}
           >
