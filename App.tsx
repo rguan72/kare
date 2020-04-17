@@ -2,9 +2,9 @@ import React from "react";
 import "react-native-gesture-handler";
 import { Image } from "react-native";
 import { ApplicationProvider, Text } from "@ui-kitten/components";
-import { StyleSheet, YellowBox, View } from "react-native";
+import { YellowBox, View } from "react-native";
 import { decode, encode } from "base-64";
-import { mapping, light as lightTheme } from "@eva-design/eva";
+import { mapping, light as lightTheme} from "@eva-design/eva";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { LOGO } from "./Images";
@@ -13,6 +13,9 @@ import Thread from "./src/screens/Thread";
 import SetupSurvey from "./src/screens/Setup";
 import VerifyEmailScreen from "./src/screens/Verify";
 import Replies from "./src/screens/Replies";
+import SetupSurvey from './src/screens/Setup';
+import AppStyles from './src/StyleSheets/AppStyles';
+
 
 import UserComments from "./src/screens/UserComments";
 
@@ -28,7 +31,7 @@ if (!global.atob) {
 const Stack = createStackNavigator();
 
 function LogoTitle() {
-  return <Image style={{ width: 60, height: 60 }} source={LOGO} />;
+  return <Image style={AppStyles.logo} source={LOGO} />;
 }
 
 export default function App() {
@@ -83,15 +86,3 @@ export default function App() {
     </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  m: {
-    margin: 20,
-  },
-});

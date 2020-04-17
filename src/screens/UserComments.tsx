@@ -13,6 +13,7 @@ import {
   reportComment,
   getUser,
 } from "../utils/FirebaseUtils";
+import UserCommentsStyles from "../StyleSheets/UserCommentsStyles"
 
 export default function UserComments({ route }) {
   const [comments, setComments] = useState([]);
@@ -32,42 +33,18 @@ export default function UserComments({ route }) {
   }, []); // get once
 
   const GroupTitle = () => (
-    <Layout style={[styles.mb, styles.bgColor, styles.mt]}>
-      <Layout
-        style={{
-          display: "flex",
-          flexDirection: "row-reverse",
-          justifyContent: "flex-end",
-          alignItems: "center",
-          backgroundColor: "#F3EAFF",
-          marginTop: 15,
-          marginLeft: 40,
-        }}
-      >
-        <Layout
-          style={{
-            flexDirection: "column",
-            marginLeft: 10,
-            backgroundColor: "#F3EAFF",
-          }}
-        >
-          <Text category='h4'>{name}</Text>
-          <Text>Comment Summary:</Text>
-        </Layout>
-        <Layout style={{ backgroundColor: "#F3EAFF", maxHeight: 100 }}></Layout>
+    <Layout style={UserCommentsStyles.header}>
+      <Layout style={UserCommentsStyles.headerTextbox}>
+        <Text category='h4'>{name}</Text>
+        <Text>Comment Summary:</Text>
       </Layout>
+      <Layout style={{ backgroundColor: "#F3EAFF", maxHeight: 100 }}></Layout>
     </Layout>
   );
 
   return (
     <KeyboardAvoidingView behavior='padding' style={{ flex: 1 }}>
-      <SafeAreaView
-        style={{
-          flex: 1,
-          justifyContent: "flex-end",
-          backgroundColor: "#F3EAFF",
-        }}
-      >
+      <SafeAreaView style={UserCommentsStyles.safeAreaView}>
         {/* <ScrollView keyboardShouldPersistTaps="always"> */}
         <FlatList
           data={comments}
@@ -89,13 +66,7 @@ export default function UserComments({ route }) {
           keyExtractor={(item) => item.id}
         />
         {/* </ScrollView> */}
-        <Layout
-          style={{
-            justifyContent: "flex-end",
-            backgroundColor: "#F3EAFF",
-            flexDirection: "column",
-          }}
-        ></Layout>
+        <Layout style={UserCommentsStyles.commentBox}></Layout>
       </SafeAreaView>
     </KeyboardAvoidingView>
   );
@@ -104,25 +75,3 @@ export default function UserComments({ route }) {
 UserComments.propTypes = {
   route: PropTypes.object.isRequired,
 };
-
-const styles = StyleSheet.create({
-  footer: {
-    justifyContent: "flex-end",
-    flex: 1,
-  },
-  flex: {
-    display: "flex",
-  },
-  mt0: {
-    marginTop: 0,
-  },
-  mb: {
-    marginBottom: 20,
-  },
-  mt: {
-    marginTop: 60,
-  },
-  bgColor: {
-    backgroundColor: "#F3EAFF",
-  },
-});

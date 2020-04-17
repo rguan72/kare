@@ -11,8 +11,9 @@ import {
 import { getEmailExtension } from "../utils/Parse";
 import whitelist from "../constants/emailWhitelist";
 import { CommonActions } from "@react-navigation/native";
+import SetupStyles from "../StyleSheets/SetupStyles";
 
-function SetupSurvey({ navigation }) {
+export default function SetupSurvey({ navigation }) {
   // initial state
   const initialState = {
     username: "",
@@ -49,15 +50,15 @@ function SetupSurvey({ navigation }) {
   //   navigation.navigate("Home");
 
   return (
-    <View style={{ marginTop: 30, backgroundColor: "#F3EAFF", flex: 1 }}>
+    <View style={SetupStyles.container}>
       <ScrollView>
-        <View style={{ alignItems: "center", marginTop: 15, marginBottom: 15 }}>
-          <Text category="h4">Setup Survey</Text>
+        <View style={SetupStyles.header}>
+          <Text category='h4'>Setup Survey</Text>
         </View>
-        <Card style={styles.card}>
-          <Text category="h6">Select your favorite Color: (Required)</Text>
+        <Card style={SetupStyles.card}>
+          <Text category='h6'>Select your favorite Color: (Required)</Text>
           <RNPickerSelect
-            style={pickerSelectStyles}
+            style={SetupStyles}
             onValueChange={(value) => setColor(value)}
             items={[
               { label: "Beige", value: "beige" },
@@ -68,8 +69,8 @@ function SetupSurvey({ navigation }) {
             ]}
           />
         </Card>
-        <Card style={styles.card}>
-          <Text category="h6">What is your email? (Required)</Text>
+        <Card style={SetupStyles.card}>
+          <Text category='h6'>What is your spirit animal? (Required)</Text>
           <Input
             value={values["email"]}
             autoCapitalize="none"
@@ -98,8 +99,8 @@ function SetupSurvey({ navigation }) {
           <Text>Your random username will be</Text>
           <Text>{userName}</Text>
         </Card>
-        <Card style={styles.card}>
-          <Text category="h6">Question 1: (Required)</Text>
+        <Card style={SetupStyles.card}>
+          <Text category='h6'>Question 1: (Required)</Text>
           <Input
             value={values["q1"]}
             onChange={(e) => handleEventChange(e, "q1")}
@@ -108,8 +109,8 @@ function SetupSurvey({ navigation }) {
             }} // placeholder for what we actually should do
           />
         </Card>
-        <Card style={styles.card}>
-          <Text category="h6">Question 2: (Required)</Text>
+        <Card style={SetupStyles.card}>
+          <Text category='h6'>Question 2: (Required)</Text>
           <Input
             value={values["q2"]}
             onChange={(e) => handleEventChange(e, "q2")}
@@ -118,8 +119,8 @@ function SetupSurvey({ navigation }) {
             }} // placeholder for what we actually should do
           />
         </Card>
-        <Card style={styles.card}>
-          <Text category="h6">Question 3: (Required)</Text>
+        <Card style={SetupStyles.card}>
+          <Text category='h6'>Question 3: (Required)</Text>
           <Input
             value={values["q3"]}
             onChange={(e) => handleEventChange(e, "q3")}
@@ -128,8 +129,8 @@ function SetupSurvey({ navigation }) {
             }} // placeholder for what we actually should do
           />
         </Card>
-        <Card style={styles.card}>
-          <Text category="h6">Question 4: (Required)</Text>
+        <Card style={SetupStyles.card}>
+          <Text category='h6'>Question 4: (Required)</Text>
           <Input
             value={values["q4"]}
             onChange={(e) => handleEventChange(e, "q4")}
@@ -157,10 +158,7 @@ function SetupSurvey({ navigation }) {
             }
           }}
           disabled={!isEnabled}
-          style={{
-            borderColor: "#5505BA",
-            backgroundColor: "#5505BA",
-          }}
+          style={SetupStyles.button}
         >
           {buttonText}
         </Button>
@@ -169,10 +167,7 @@ function SetupSurvey({ navigation }) {
             onPress={() => {
               navigation.navigate("Home");
             }}
-            style={{
-              borderColor: "#5505BA",
-              backgroundColor: "#5505BA",
-            }}
+            style={SetupStyles.button}
           >
             Go to Home debug
           </Button>
@@ -192,48 +187,3 @@ function SetupSurvey({ navigation }) {
     </View>
   );
 }
-
-export default withStyles(SetupSurvey, (theme) => ({
-  light: {
-    backgroundColor: theme["color-primary-100"],
-  },
-}));
-
-const styles = StyleSheet.create({
-  card: {
-    marginLeft: 10,
-    marginRight: 10,
-    marginBottom: 10,
-    borderRadius: 20,
-    backgroundColor: "#FFFDF4",
-  },
-  mt: {
-    marginTop: 20,
-  },
-  mb: {
-    marginBottom: 10,
-  },
-});
-
-const pickerSelectStyles = StyleSheet.create({
-  inputIOS: {
-    fontSize: 16,
-    paddingVertical: 12,
-    paddingHorizontal: 10,
-    borderWidth: 1,
-    borderColor: "gray",
-    borderRadius: 4,
-    color: "black",
-    paddingRight: 30, // to ensure the text is never behind the icon
-  },
-  inputAndroid: {
-    fontSize: 16,
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-    borderWidth: 0.5,
-    borderColor: "purple",
-    borderRadius: 8,
-    color: "black",
-    paddingRight: 30, // to ensure the text is never behind the icon
-  },
-});
