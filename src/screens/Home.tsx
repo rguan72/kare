@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 import { FlatList, View } from "react-native";
 import { Layout, Text, withStyles } from "@ui-kitten/components";
 import GroupItem from "../components/GroupItem";
+import { getCurrentUser } from "../utils/FirebaseUtils";
 import { CommonActions } from "@react-navigation/native";
 import { watchGroups } from "../utils/FirebaseUtils";
 import HomeStyles from '../StyleSheets/HomeStyles';
-
 
 interface Group {
   title: String;
@@ -20,6 +20,11 @@ export default function HomeScreen({ navigation }) {
     const unsubscribe = watchGroups(setGroups);
     return () => unsubscribe();
   }, []);
+
+  // Testing only. Will be reworked with #7 login ui
+  if (getCurrentUser() && !getCurrentUser().emailVerified) {
+    navigation.navigate("VerifyEmail");
+  }
 
   return (
     <View style={HomeStyles.container}>
