@@ -40,13 +40,13 @@ export default function App() {
       <ApplicationProvider mapping={mapping} theme={lightTheme}>
         <Stack.Navigator>
           <Stack.Screen
-            name="VerifyEmail"
-            component={VerifyEmailScreen}
+            name="SetupSurvey"
+            component={SetupSurvey}
             options={{ title: "", headerTransparent: true }}
           />
           <Stack.Screen
-            name="SetupSurvey"
-            component={SetupSurvey}
+            name="VerifyEmail"
+            component={VerifyEmailScreen}
             options={{ title: "", headerTransparent: true }}
           />
           <Stack.Screen
@@ -75,7 +75,7 @@ export default function App() {
             component={Replies}
             options={{
               headerTitle: "",
-              headerTransparent: true
+              headerTransparent: true,
             }}
           />
         </Stack.Navigator>

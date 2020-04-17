@@ -20,6 +20,7 @@ function HomeScreen({ navigation }) {
     return () => unsubscribe();
   }, []);
 
+  // Testing only. Will be reworked with #7 login ui
   if (getCurrentUser() && !getCurrentUser().emailVerified) {
     navigation.navigate("VerifyEmail");
   }

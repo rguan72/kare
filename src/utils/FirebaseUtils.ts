@@ -37,7 +37,7 @@ function sendVerificationEmail() {
   if (user) {
     user
       .sendEmailVerification({
-        url: Linking.makeUrl(),
+        url: "https://myapp.io",
       })
       .catch((error) => console.log(error));
   } else {
@@ -58,12 +58,6 @@ function addComment(comment: comment) {
       parentId: "",
       ...comment,
     });
-}
-
-function reportComment(id: string) {
-  db.collection(collections.comments).doc(id).update({
-    show: false,
-  });
 }
 
 function addReply(commentId, comment: comment) {
@@ -162,15 +156,6 @@ function getUser(id) {
     .then((ref) => ref.data());
 }
 
-function addUser(user) {
-  db.collection(collections.users)
-    .doc()
-    .set({
-      timestamp: firebaseApp.firestore.FieldValue.serverTimestamp(),
-      ...user,
-    });
-}
-
 function watchGroups(setGroups) {
   return db.collection(collections.groups).onSnapshot((querySnapshot) => {
     const groups = [];
@@ -190,4 +175,5 @@ export {
   addReply,
   getUserComments,
   sendVerificationEmail,
+  getCurrentUser,
 };

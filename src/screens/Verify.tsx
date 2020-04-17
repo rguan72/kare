@@ -13,6 +13,7 @@ export default function VerifyEmail({ navigation }) {
   if (!user) {
     // TODO: navigate to sign in/sign up page
     console.log("not signed in");
+    // hard coded for testing
     firebase.auth().signInWithEmailAndPassword("guanr@umich.edu", "password");
     email = "hi";
   } else {

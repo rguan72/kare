@@ -10,7 +10,6 @@ import {
 } from "../utils/FirebaseUtils";
 import { getEmailExtension } from "../utils/Parse";
 import whitelist from "../constants/emailWhitelist";
-import { addUser } from "../utils/FirebaseUtils";
 import { CommonActions } from "@react-navigation/native";
 
 function SetupSurvey({ navigation }) {
@@ -27,7 +26,6 @@ function SetupSurvey({ navigation }) {
   const [color, setColor] = useState("");
   const [userName, setUserName] = useState("");
   const [emailValid, setEmailValid] = useState(false);
-  const [values, setValues] = useState(initialState);
   const [values, setValues] = useState(initialState);
   const [loading, setLoading] = useState(false);
 
@@ -46,7 +44,7 @@ function SetupSurvey({ navigation }) {
     color.length > 0 &&
     emailValid;
 
-  const buttonText = !loading ? "Join Now!" : "Loading...";
+  const buttonText = !loading ? "Next" : "Loading...";
 
   // TODO #7 login screen ui
   // if (getCurrentUser() && getCurrentUser().emailVerified)
@@ -147,7 +145,7 @@ function SetupSurvey({ navigation }) {
             setLoading(!loading);
             try {
               setTimeout(() => {
-                addUser({ userName, color });
+                addUser(values["email"], "password");
                 navigation.dispatch(
                   CommonActions.reset({
                     index: 0,
@@ -183,6 +181,17 @@ function SetupSurvey({ navigation }) {
             Go to Home debug
           </Button>
         }
+        <Button
+          onPress={() => {
+            navigation.navigate("VerifyEmail");
+          }}
+          style={{
+            borderColor: "#5505BA",
+            backgroundColor: "#5505BA",
+          }}
+        >
+          Go to Verify Email debug
+        </Button>
       </ScrollView>
     </View>
   );
