@@ -10,9 +10,12 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { LOGO } from "./Images";
 import HomeScreen from "./src/screens/Home";
 import Thread from "./src/screens/Thread";
+import SetupSurvey from "./src/screens/Setup";
+import VerifyEmailScreen from "./src/screens/Verify";
 import Replies from "./src/screens/Replies";
 import SetupSurvey from './src/screens/Setup';
 import AppStyles from './src/StyleSheets/AppStyles';
+
 
 import UserComments from "./src/screens/UserComments";
 
@@ -45,6 +48,11 @@ export default function App() {
             options={{ title: "", headerTransparent: true }}
           />
           <Stack.Screen
+            name="VerifyEmail"
+            component={VerifyEmailScreen}
+            options={{ title: "", headerTransparent: true }}
+          />
+          <Stack.Screen
             name="Home"
             component={HomeScreen}
             options={{ title: "", headerTransparent: true }}
@@ -70,7 +78,7 @@ export default function App() {
             component={Replies}
             options={{
               headerTitle: "",
-              headerTransparent: true
+              headerTransparent: true,
             }}
           />
         </Stack.Navigator>
