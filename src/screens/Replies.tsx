@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, SafeAreaView, FlatList } from "react-native";
+import { SafeAreaView, FlatList } from "react-native";
 import PropTypes from "prop-types";
 import {
   KeyboardAvoidingView,
@@ -17,6 +17,7 @@ import {
   getUser,
 } from "../utils/FirebaseUtils";
 import Colors from "../constants/userColors";
+import RepliesStyles from "../StyleSheets/RepliesStyles";
 
 export default function Replies({ route, navigation }) {
   const [replies, setReplies] = useState([]);
@@ -41,7 +42,7 @@ export default function Replies({ route, navigation }) {
   }, []); // so it only runs once
 
   const ReplyParent = () => (
-    <Layout style={[styles.mb, styles.bgColor, styles.mt]}>
+    <Layout style={[RepliesStyles.mb, RepliesStyles.bgColor, RepliesStyles.mt]}>
       <Layout
         style={{
           backgroundColor: "#F3EAFF",
@@ -53,15 +54,15 @@ export default function Replies({ route, navigation }) {
             backgroundColor: "#F3EAFF",
           }}
         >
-          <Card style={styles.card}>
+          <Card style={RepliesStyles.card}>
             <View style={{ flexDirection: "row" }}>
               <View
                 style={[
-                  styles.square,
+                  RepliesStyles.square,
                   { backgroundColor: userColor, marginRight: 5 },
                 ]}
               />
-              <Text style={styles.mb}> {name}</Text>
+              <Text style={RepliesStyles.mb}> {name}</Text>
               <Text style={{ color: "rgba(0, 0, 0, 0.3)" }}>
                 {" * "}
                 {date}
@@ -138,7 +139,7 @@ export default function Replies({ route, navigation }) {
                   });
                   setValue("");
                 }}
-                style={styles.mt0}
+                style={RepliesStyles.mt0}
                 disabled={value === ""}
               >
                 Submit
@@ -154,42 +155,3 @@ export default function Replies({ route, navigation }) {
 Replies.propTypes = {
   route: PropTypes.object.isRequired,
 };
-
-const styles = StyleSheet.create({
-  footer: {
-    justifyContent: "flex-end",
-    flex: 1,
-  },
-  flex: {
-    display: "flex",
-  },
-  mt0: {
-    marginTop: 0,
-  },
-  mb: {
-    marginBottom: 20,
-  },
-  mt: {
-    marginTop: 80,
-  },
-  bgColor: {
-    backgroundColor: "#F3EAFF",
-  },
-  card: {
-    marginLeft: 10,
-    marginRight: 10,
-    marginBottom: 10,
-    borderRadius: 20,
-  },
-  circle: {
-    width: 44,
-    height: 44,
-    borderRadius: 44 / 2,
-  },
-  square: {
-    width: 20,
-    height: 20,
-    borderRadius: 5,
-    overflow: "hidden",
-  },
-});
