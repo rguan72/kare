@@ -44,7 +44,7 @@ export default function ListItem({ userId, text, onReport, date, onReply, numRep
           <Text style={styles.mt}>{numReplies ? numReplies : 0} Replies </Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={onReport}>
-          <Text style={styles.mt}> {Emojis.flag()} Flag </Text>
+          <Text style={styles.report}> Report</Text>
         </TouchableOpacity>
       </View>
     </Card>
@@ -67,7 +67,14 @@ const styles = StyleSheet.create({
     borderRadius: 20
   },
   mt: {
-    marginTop: 20
+    fontSize: 13,
+    marginTop: 20,
+
+  },
+  report: {
+    fontSize: 13,
+    marginTop: 20, 
+    opacity: .5
   },
   mb: {
     marginBottom: 10
