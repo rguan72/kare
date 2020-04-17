@@ -17,6 +17,7 @@ export default StyleSheet.create({
         flexDirection: "row-reverse",
         justifyContent: "flex-end",
         alignItems: "center",
+        padding: '5%',
     },
     textBox: {
         flexDirection: "column",
@@ -28,7 +29,7 @@ export default StyleSheet.create({
         marginRight: 10,
     },
     image: {
-        flexShrink: 1,
+        resizeMode: 'contain',
         width: 60,
         height: 60
     }
