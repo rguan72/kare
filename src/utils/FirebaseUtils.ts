@@ -33,13 +33,22 @@ function getCurrentUser() {
 
 function sendVerificationEmail() {
   const user = getCurrentUser();
+  // TODO: Deep linking with Firebase Dynamic Linking
+  const actionCodeSettings = {
+    url: "https://codenames.co",
+    iOS: {
+      bundleId: "com.kare.kare",
+    },
+    android: {
+      packageName: "com.kare.kare",
+      installApp: true,
+      minimumVersion: "12",
+    },
+    handleCodeInApp: true,
+  };
   console.log(user);
   if (user) {
-    user
-      .sendEmailVerification({
-        url: "https://myapp.io",
-      })
-      .catch((error) => console.log(error));
+    user.sendEmailVerification().catch((error) => console.log(error));
   } else {
     console.log("user not signed in");
   }

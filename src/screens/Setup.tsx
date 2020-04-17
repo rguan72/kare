@@ -21,7 +21,6 @@ function SetupSurvey({ navigation }) {
     q2: "",
     q3: "",
     q4: "",
-    q5: "",
   };
   const [color, setColor] = useState("");
   const [userName, setUserName] = useState("");
@@ -40,7 +39,6 @@ function SetupSurvey({ navigation }) {
     values["q2"].length > 0 &&
     values["q3"].length > 0 &&
     values["q4"].length > 0 &&
-    values["q5"].length > 0 &&
     color.length > 0 &&
     emailValid;
 
@@ -141,20 +139,18 @@ function SetupSurvey({ navigation }) {
           />
         </Card>
         <Button
-          onPress={() => {
+          onPress={async () => {
             setLoading(!loading);
             try {
-              setTimeout(() => {
-                addUser(values["email"], "password");
-                navigation.dispatch(
-                  CommonActions.reset({
-                    index: 0,
-                    routes: [{ name: "Home" }],
-                  })
-                ); // routes to home and doesnt give option to go back
-              }, 2000); // keep the user loading for a bit
-
+              await addUser(values["email"], "password");
+              sendVerificationEmail();
               setLoading(!loading);
+              navigation.dispatch(
+                CommonActions.reset({
+                  index: 0,
+                  routes: [{ name: "VerifyEmail" }],
+                })
+              ); // routes to home and doesnt give option to go back
             } catch (err) {
               console.log(err); // in this case we just log it
               //navigation.navigate("Error"); // in reality we would nav to error page
