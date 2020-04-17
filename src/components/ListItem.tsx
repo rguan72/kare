@@ -6,6 +6,7 @@ import PropTypes from "prop-types";
 import Emojis from "../constants/emojis";
 import Colors from "../constants/userColors"
 import { getUser } from "../utils/FirebaseUtils";
+import ListItemStyles from "../StyleSheets/ListItemStyles"
 
 export default function ListItem({ userId, text, onReport, date, onReply, numReplies }) {
   const [name, setName] = useState("");
@@ -21,30 +22,27 @@ export default function ListItem({ userId, text, onReport, date, onReply, numRep
   const userColor = Colors[color];
 
   return (
-    <Card style={styles.card} >
+    <Card style={ListItemStyles.card} >
       <View style={{ flexDirection: "row" }}>
-        <View style={[styles.square, {backgroundColor: userColor, marginRight: 5}]} /> 
-        <Text style={styles.mb}>
+        <View style={[ListItemStyles.square, {backgroundColor: userColor}]} /> 
+        <Text style={ListItemStyles.userName}>
           {" "} 
           {name}
         </Text> 
-        <Text style={{ color: "rgba(0, 0, 0, 0.3)" }}>
+        <Text style={ListItemStyles.date}>
           {" * "}
           {date}
         </Text>
       </View>
       {/* </View> */}
       <Text category="h6"> {text} </Text>
-      <View style={{
-          flex: 1,
-          flexDirection: "row",
-          justifyContent: 'space-between'
-        }} >
+      <View style={ListItemStyles.bottomRow} >
         <TouchableOpacity onPress={onReply}>
-          <Text style={styles.mt}>{numReplies ? numReplies : 0} Replies </Text>
+          <Text >{numReplies ? numReplies : 0} Replies </Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={onReport}>
-          <Text style={styles.report}> Report</Text>
+          <Text > {Emojis.flag()} Flag </Text>
+          <Text style={ListItemStyles.report}> Report</Text>
         </TouchableOpacity>
       </View>
     </Card>
@@ -58,36 +56,3 @@ ListItem.propTypes = {
   onReport: PropTypes.func.isRequired,
   onReply: PropTypes.func.isRequired
 };
-
-const styles = StyleSheet.create({
-  card: {
-    marginLeft: 10,
-    marginRight: 10,
-    marginBottom: 10,
-    borderRadius: 20
-  },
-  mt: {
-    fontSize: 13,
-    marginTop: 20,
-
-  },
-  report: {
-    fontSize: 13,
-    marginTop: 20, 
-    opacity: .5
-  },
-  mb: {
-    marginBottom: 10
-  },
-  circle: {
-    width: 44,
-    height: 44,
-    borderRadius: 44 / 2
-  },
-  square: {
-    width: 20,
-    height: 20,
-    borderRadius: 5,
-    overflow: "hidden"
-  }
-});
