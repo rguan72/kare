@@ -29,7 +29,7 @@ export default StyleSheet.create({
     },
     image: {
         flexShrink: 1,
-        maxWidth: 60,
-        maxHeight: 60
+        width: 60,
+        height: 60
     }
 });

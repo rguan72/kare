@@ -4,6 +4,7 @@ import { collections } from "../constants/FirebaseStrings";
 import { community } from "../constants/community";
 
 const db = firebase.firestore();
+const imageStorage = firebase.storage();
 
 interface comment {
   userId: String;

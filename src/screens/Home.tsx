@@ -31,6 +31,7 @@ export default function HomeScreen({ navigation }) {
         renderItem={({ item }) => (
           <GroupItem
             title={item.title}
+            image={item.imageURL}
             description={item.description}
             text={item.text}
             onPress={() =>
