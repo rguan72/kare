@@ -21,6 +21,7 @@ import {
   reportComment,
 } from "../utils/FirebaseUtils";
 import { WOMEN } from "../../Images";
+import analytics from "../utils/analytics";
 import ThreadStyles from "../StyleSheets/ThreadStyles"
 
 export default function Thread({ route, navigation }) {
@@ -52,7 +53,7 @@ export default function Thread({ route, navigation }) {
         <Layout
           style={ThreadStyles.headerTextBox}
         >
-          <Text category='h4'> {title} </Text>
+          <Text category="h4"> {title} </Text>
           <Text> {description}</Text>
         </Layout>
         {/* image box */}
@@ -110,12 +111,13 @@ export default function Thread({ route, navigation }) {
               style={ThreadStyles.commentBox}
             >
               <Input
-                placeholder='Add comment'
+                placeholder="Add comment"
                 value={value}
                 onChangeText={setValue}
               />
               <Button
                 onPress={() => {
+                  analytics.logComment();
                   addComment({
                     userId: userId,
                     text: value,

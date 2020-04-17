@@ -19,12 +19,26 @@
     "assetBundlePatterns": ["**/*"],
     "android": {
       "package": "com.kare.kare",
-      "versionCode": 1
+      "versionCode": 1,
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "data": [
+            {
+              "scheme": "https",
+              "host": "*.myapp.io",
+              "pathPrefix": "/records"
+            }
+          ],
+          "category": ["BROWSABLE", "DEFAULT"]
+        }
+      ]
     },
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.kare.kare",
       "buildNumber": "1.0.0"
-    }
+    },
+    "scheme": "kare"
   }
 }

@@ -1,24 +1,32 @@
 import React, { useState } from "react";
-import { View } from "react-native";
-import { Card, Text, Button, Input } from "@ui-kitten/components";
+import { StyleSheet, View, TouchableOpacity } from "react-native";
+import { Card, Text, withStyles, Button, Input } from "@ui-kitten/components";
 import RNPickerSelect from "react-native-picker-select";
 import { ScrollView } from "react-native-gesture-handler";
-import { addUser } from "../utils/FirebaseUtils";
+import {
+  addUser,
+  sendVerificationEmail,
+  getCurrentUser,
+} from "../utils/FirebaseUtils";
+import { getEmailExtension } from "../utils/Parse";
+import whitelist from "../constants/emailWhitelist";
 import { CommonActions } from "@react-navigation/native";
+import analytics from "../utils/analytics";
 import SetupStyles from "../StyleSheets/SetupStyles";
 
 export default function SetupSurvey({ navigation }) {
   // initial state
   const initialState = {
     username: "",
+    email: "",
     q1: "",
     q2: "",
     q3: "",
     q4: "",
-    q5: "",
   };
   const [color, setColor] = useState("");
   const [userName, setUserName] = useState("");
+  const [emailValid, setEmailValid] = useState(false);
   const [values, setValues] = useState(initialState);
   const [loading, setLoading] = useState(false);
 
@@ -33,10 +41,14 @@ export default function SetupSurvey({ navigation }) {
     values["q2"].length > 0 &&
     values["q3"].length > 0 &&
     values["q4"].length > 0 &&
-    values["q5"].length > 0 &&
-    color.length > 0;
+    color.length > 0 &&
+    emailValid;
 
-  var buttonText = !loading ? "Join Now!" : "Loading...";
+  const buttonText = !loading ? "Next" : "Loading...";
+
+  // TODO #7 login screen ui
+  // if (getCurrentUser() && getCurrentUser().emailVerified)
+  //   navigation.navigate("Home");
 
   return (
     <View style={SetupStyles.container}>
@@ -61,10 +73,22 @@ export default function SetupSurvey({ navigation }) {
         <Card style={SetupStyles.card}>
           <Text category='h6'>What is your spirit animal? (Required)</Text>
           <Input
-            value={values["username"]}
-            onChange={(e) => {
-              handleEventChange(e, "username");
+            value={values["email"]}
+            autoCapitalize="none"
+            onChange={(e) => handleEventChange(e, "email")}
+            onEndEditing={(e) => {
+              console.log(e);
+              const email = values["email"];
+              setEmailValid(whitelist.includes(getEmailExtension(email)));
             }}
+          />
+          {!emailValid && <Text> Need valid .edu email to sign up </Text>}
+        </Card>
+        <Card style={styles.card}>
+          <Text category="h6">What is your spirit animal? (Required)</Text>
+          <Input
+            value={values["username"]}
+            onChange={(e) => handleEventChange(e, "username")}
             onEndEditing={(e) => {
               var num1 = Math.floor(Math.random() * 900 + 100).toString(10); // to ensure 3 digits
               var num2 = Math.floor(Math.random() * 900 + 100).toString(10); // to ensure 3 digits
@@ -116,31 +140,20 @@ export default function SetupSurvey({ navigation }) {
             }} // placeholder for what we actually should do
           />
         </Card>
-        <Card style={SetupStyles.card}>
-          <Text category='h6'>Question 5: (Required)</Text>
-          <Input
-            value={values["q5"]}
-            onChange={(e) => handleEventChange(e, "q5")}
-            onEndEditing={(e) => {
-              console.log(e);
-            }} // placeholder for what we actually should do
-          />
-        </Card>
         <Button
-          onPress={() => {
+          onPress={async () => {
             setLoading(!loading);
+            analytics.logSignup();
             try {
-              setTimeout(() => {
-                addUser({ userName, color });
-                navigation.dispatch(
-                  CommonActions.reset({
-                    index: 0,
-                    routes: [{ name: "Home" }],
-                  })
-                ); // routes to home and doesnt give option to go back
-              }, 2000); // keep the user loading for a bit
-
+              await addUser(values["email"], "password");
+              sendVerificationEmail();
               setLoading(!loading);
+              navigation.dispatch(
+                CommonActions.reset({
+                  index: 0,
+                  routes: [{ name: "VerifyEmail" }],
+                })
+              ); // routes to home and doesnt give option to go back
             } catch (err) {
               console.log(err); // in this case we just log it
               //navigation.navigate("Error"); // in reality we would nav to error page
@@ -155,12 +168,24 @@ export default function SetupSurvey({ navigation }) {
           <Button
             onPress={() => {
               navigation.navigate("Home");
+              analytics.logSignup();
             }}
             style={SetupStyles.button}
           >
             Go to Home debug
           </Button>
         }
+        <Button
+          onPress={() => {
+            navigation.navigate("VerifyEmail");
+          }}
+          style={{
+            borderColor: "#5505BA",
+            backgroundColor: "#5505BA",
+          }}
+        >
+          Go to Verify Email debug
+        </Button>
       </ScrollView>
     </View>
   );

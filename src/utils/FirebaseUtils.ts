@@ -1,5 +1,7 @@
 import firebaseApp from "firebase/app";
 import firebase from "../constants/Firebase";
+import { Linking } from "expo";
+import { AsyncStorage } from "react-native";
 import { collections } from "../constants/FirebaseStrings";
 import { community } from "../constants/community";
 
@@ -25,6 +27,36 @@ interface returnComment extends comment {
 
 interface commentList {
   [index: number]: returnComment;
+}
+function getCurrentUser() {
+  return firebaseApp.auth().currentUser;
+}
+
+function sendVerificationEmail() {
+  const user = getCurrentUser();
+  // TODO: Deep linking with Firebase Dynamic Linking
+  const actionCodeSettings = {
+    url: "https://codenames.co",
+    iOS: {
+      bundleId: "com.kare.kare",
+    },
+    android: {
+      packageName: "com.kare.kare",
+      installApp: true,
+      minimumVersion: "12",
+    },
+    handleCodeInApp: true,
+  };
+  console.log(user);
+  if (user) {
+    user.sendEmailVerification().catch((error) => console.log(error));
+  } else {
+    console.log("user not signed in");
+  }
+}
+
+function addUser(email: string, password: string) {
+  return firebaseApp.auth().createUserWithEmailAndPassword(email, password);
 }
 
 function addComment(comment: comment) {
@@ -108,7 +140,6 @@ function getUserComments(user) {
     });
 }
 
-
 function watchReplies(commentId, setReplies) {
   return db
     .collection(collections.comments)
@@ -135,15 +166,6 @@ function getUser(id) {
     .then((ref) => ref.data());
 }
 
-function addUser(user) {
-  db.collection(collections.users)
-    .doc()
-    .set({
-      timestamp: firebaseApp.firestore.FieldValue.serverTimestamp(),
-      ...user,
-    });
-}
-
 function watchGroups(setGroups) {
   return db.collection(collections.groups).onSnapshot((querySnapshot) => {
     const groups = [];
@@ -162,4 +184,6 @@ export {
   watchReplies,
   addReply,
   getUserComments,
+  sendVerificationEmail,
+  getCurrentUser,
 };
