@@ -50,7 +50,7 @@ function LoginScreen({ navigation }) {
       var errorCode = error.code;
       email.error = error.message;
       setVisible(true);
-      return true;
+      return;
     });
   };
 
