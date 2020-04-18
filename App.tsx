@@ -4,18 +4,16 @@ import { Image } from "react-native";
 import { ApplicationProvider, Text } from "@ui-kitten/components";
 import { YellowBox, View } from "react-native";
 import { decode, encode } from "base-64";
-import { mapping, light as lightTheme} from "@eva-design/eva";
+import { mapping, light as lightTheme } from "@eva-design/eva";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { LOGO } from "./Images";
 import HomeScreen from "./src/screens/Home";
 import Thread from "./src/screens/Thread";
-import SetupSurvey from "./src/screens/Setup";
 import VerifyEmailScreen from "./src/screens/Verify";
 import Replies from "./src/screens/Replies";
-import SetupSurvey from './src/screens/Setup';
-import AppStyles from './src/StyleSheets/AppStyles';
-
+import SetupSurvey from "./src/screens/Setup";
+import AppStyles from "./src/StyleSheets/AppStyles";
 
 import UserComments from "./src/screens/UserComments";
 
@@ -43,22 +41,22 @@ export default function App() {
       <ApplicationProvider mapping={mapping} theme={lightTheme}>
         <Stack.Navigator>
           <Stack.Screen
-            name="SetupSurvey"
+            name='SetupSurvey'
             component={SetupSurvey}
             options={{ title: "", headerTransparent: true }}
           />
           <Stack.Screen
-            name="VerifyEmail"
+            name='VerifyEmail'
             component={VerifyEmailScreen}
             options={{ title: "", headerTransparent: true }}
           />
           <Stack.Screen
-            name="Home"
+            name='Home'
             component={HomeScreen}
             options={{ title: "", headerTransparent: true }}
           />
           <Stack.Screen
-            name="UserComments"
+            name='UserComments'
             component={UserComments}
             options={{
               headerTitle: "",
@@ -66,7 +64,7 @@ export default function App() {
             }}
           />
           <Stack.Screen
-            name="Thread"
+            name='Thread'
             component={Thread}
             options={{
               headerTitle: "",
@@ -74,7 +72,7 @@ export default function App() {
             }}
           />
           <Stack.Screen
-            name="Replies"
+            name='Replies'
             component={Replies}
             options={{
               headerTitle: "",

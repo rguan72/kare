@@ -21,8 +21,8 @@ import {
   reportComment,
 } from "../utils/FirebaseUtils";
 import { WOMEN } from "../../Images";
-import analytics from "../utils/analytics";
-import ThreadStyles from "../StyleSheets/ThreadStyles"
+//import analytics from "../utils/analytics";
+import ThreadStyles from "../StyleSheets/ThreadStyles";
 
 export default function Thread({ route, navigation }) {
   const [comments, setComments] = useState([]);
@@ -50,19 +50,14 @@ export default function Thread({ route, navigation }) {
   const GroupTitle = () => (
     <Layout style={ThreadStyles.header}>
       {/* text box */}
-        <Layout
-          style={ThreadStyles.headerTextBox}
-        >
-          <Text category="h4"> {title} </Text>
-          <Text> {description}</Text>
-        </Layout>
-        {/* image box */}
-        <Layout style={{ backgroundColor: "#F3EAFF", maxHeight: 100 }}>
-          <Image
-            source={WOMEN}
-            style={ThreadStyles.icon}
-          />
-        </Layout>
+      <Layout style={ThreadStyles.headerTextBox}>
+        <Text category='h4'> {title} </Text>
+        <Text> {description}</Text>
+      </Layout>
+      {/* image box */}
+      <Layout style={{ backgroundColor: "#F3EAFF", maxHeight: 100 }}>
+        <Image source={WOMEN} style={ThreadStyles.icon} />
+      </Layout>
     </Layout>
   );
 
@@ -71,9 +66,7 @@ export default function Thread({ route, navigation }) {
       behavior={Platform.OS === "ios" ? "padding" : null}
       style={ThreadStyles.keyboardAvoidingView}
     >
-      <SafeAreaView
-        style={ThreadStyles.safeAreaView}
-      >
+      <SafeAreaView style={ThreadStyles.safeAreaView}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <React.Fragment>
             <SectionList
@@ -103,21 +96,19 @@ export default function Thread({ route, navigation }) {
                 );
               }}
               keyExtractor={(item) => item.id}
-              renderSectionHeader={({ section: { title } }) =>
-                (<Text style={ThreadStyles.sectionHeader}> {title} </Text>)
-              }
+              renderSectionHeader={({ section: { title } }) => (
+                <Text style={ThreadStyles.sectionHeader}> {title} </Text>
+              )}
             />
-            <Layout
-              style={ThreadStyles.commentBox}
-            >
+            <Layout style={ThreadStyles.commentBox}>
               <Input
-                placeholder="Add comment"
+                placeholder='Add comment'
                 value={value}
                 onChangeText={setValue}
               />
               <Button
                 onPress={() => {
-                  analytics.logComment();
+                  //analytics.logComment();
                   addComment({
                     userId: userId,
                     text: value,
