@@ -16,6 +16,7 @@ import {
   reportComment,
   getUser,
 } from "../utils/FirebaseUtils";
+import screens from "../constants/screenNames";
 import Colors from "../constants/userColors";
 import RepliesStyles from "../StyleSheets/RepliesStyles";
 
@@ -68,7 +69,7 @@ export default function Replies({ route, navigation }) {
                 {date}
               </Text>
             </View>
-            <Text category='h6'> {comment} </Text>
+            <Text category="h6"> {comment} </Text>
           </Card>
         </Layout>
       </Layout>
@@ -104,7 +105,7 @@ export default function Replies({ route, navigation }) {
                     onReport={() => reportComment(item.id)}
                     date={date}
                     onReply={() => {
-                      navigation.navigate("Replies", {
+                      navigation.navigate(screens.replies, {
                         user: item.userId,
                         comment: item.text,
                         commentId: item.id,
@@ -124,7 +125,7 @@ export default function Replies({ route, navigation }) {
               }}
             >
               <Input
-                placeholder='Add comment'
+                placeholder="Add comment"
                 value={value}
                 onChangeText={setValue}
               />

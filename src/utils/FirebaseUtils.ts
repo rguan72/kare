@@ -2,8 +2,11 @@ import firebaseApp, { auth } from "firebase/app";
 import firebase from "../constants/Firebase";
 import { Linking } from "expo";
 import { AsyncStorage } from "react-native";
+import { CommonActions } from "@react-navigation/native";
 import { collections } from "../constants/FirebaseStrings";
 import { community } from "../constants/community";
+import { func } from "prop-types";
+import screens from "../constants/screenNames";
 
 const db = firebase.firestore();
 const imageStorage = firebase.storage();
@@ -28,6 +31,13 @@ interface returnComment extends comment {
 interface commentList {
   [index: number]: returnComment;
 }
+
+enum AuthState {
+  loggedin,
+  emailverify,
+  loggedout,
+}
+
 function getCurrentUser() {
   return firebaseApp.auth().currentUser;
 }
@@ -178,7 +188,7 @@ function watchGroups(setGroups) {
   });
 }
 
-function onAuthUserListener(signedInFunc, notSignedInFunc, notVerifiedFunc) {
+function onAuthUserListener(next, fallback) {
   firebaseApp.auth().onAuthStateChanged((authUser) => {
     if (authUser) {
       db.collection(collections.users)
@@ -193,11 +203,55 @@ function onAuthUserListener(signedInFunc, notSignedInFunc, notVerifiedFunc) {
             providerData: authUser.providerData,
             ...dbUser,
           };
-          if (authUser.emailVerified) signedInFunc(mergedUser);
-          else notVerifiedFunc(mergedUser);
+          if (authUser.emailVerified) next(mergedUser);
+          // else notVerifiedFunc(mergedUser);
         });
     } else {
-      notSignedInFunc();
+      fallback();
+    }
+  });
+}
+
+function authNav(navigation, expectedState: AuthState) {
+  function navHome() {
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{ name: screens.home }],
+      })
+    );
+  }
+
+  function navVerifyEmail() {
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{ name: screens.verifyEmail }],
+      })
+    );
+  }
+
+  function navSignup() {
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{ name: screens.signup }],
+      })
+    );
+  }
+
+  firebaseApp.auth().onAuthStateChanged((authUser) => {
+    let currentState;
+    if (authUser) {
+      if (authUser.emailVerified) currentState = AuthState.loggedin;
+      else currentState = AuthState.emailverify;
+    } else {
+      currentState = AuthState.loggedout;
+    }
+    if (expectedState !== currentState) {
+      if (currentState === AuthState.emailverify) navVerifyEmail();
+      else if (currentState === AuthState.loggedin) navHome();
+      else navSignup();
     }
   });
 }
@@ -215,4 +269,6 @@ export {
   sendVerificationEmail,
   getCurrentUser,
   onAuthUserListener,
+  AuthState,
+  authNav,
 };

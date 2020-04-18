@@ -22,6 +22,7 @@ import {
 } from "../utils/FirebaseUtils";
 import { WOMEN } from "../../Images";
 import ThreadStyles from "../StyleSheets/ThreadStyles";
+import screens from "../constants/screenNames";
 
 export default function Thread({ route, navigation }) {
   const [comments, setComments] = useState([]);
@@ -81,7 +82,7 @@ export default function Thread({ route, navigation }) {
                     userId={item.userId}
                     text={item.text}
                     onReply={() => {
-                      navigation.navigate("Replies", {
+                      navigation.navigate(screens.replies, {
                         user: item.userId,
                         comment: item.text,
                         commentId: item.id,

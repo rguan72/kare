@@ -4,7 +4,9 @@ import { Layout, Text, withStyles } from "@ui-kitten/components";
 import GroupItem from "../components/GroupItem";
 import { getCurrentUser } from "../utils/FirebaseUtils";
 import { CommonActions } from "@react-navigation/native";
-import { watchGroups, onAuthUserListener } from "../utils/FirebaseUtils";
+import { watchGroups, authNav, AuthState } from "../utils/FirebaseUtils";
+import screens from "../constants/screenNames";
+
 import HomeStyles from "../StyleSheets/HomeStyles";
 
 interface Group {
@@ -21,26 +23,7 @@ export default function HomeScreen({ navigation }) {
     return () => unsubscribe();
   }, []);
 
-  // Testing only. Will be reworked with #7 login ui
-  function navSignup() {
-    navigation.dispatch(
-      CommonActions.reset({
-        index: 0,
-        routes: [{ name: "SignupScreen" }],
-      })
-    );
-  }
-
-  function navVerifyEmail() {
-    navigation.dispatch(
-      CommonActions.reset({
-        index: 0,
-        routes: [{ name: "Verify Email" }],
-      })
-    );
-  }
-
-  onAuthUserListener(() => console.log("at home"), navSignup, navVerifyEmail);
+  authNav(navigation, AuthState.loggedin);
 
   return (
     <View style={HomeStyles.container}>
@@ -56,7 +39,7 @@ export default function HomeScreen({ navigation }) {
             description={item.description}
             text={item.text}
             onPress={() =>
-              navigation.navigate("Thread", {
+              navigation.navigate(screens.thread, {
                 title: item.title,
                 description: item.description,
               })

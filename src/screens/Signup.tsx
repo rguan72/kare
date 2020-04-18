@@ -1,15 +1,14 @@
 import React, { memo, useState } from "react";
-import { TouchableOpacity, StyleSheet, View } from "react-native";
-import { CommonActions } from "@react-navigation/native";
 import {
-  Icon,
-  Card,
-  Text,
-  withStyles,
-  Button,
-  Input,
-} from "@ui-kitten/components";
-import { addUser, onAuthUserListener } from "../utils/FirebaseUtils";
+  TouchableOpacity,
+  StyleSheet,
+  View,
+  TouchableWithoutFeedback,
+} from "react-native";
+import { Text, withStyles, Button, Input } from "@ui-kitten/components";
+import { Ionicons } from "@expo/vector-icons";
+import { addUser, authNav, AuthState } from "../utils/FirebaseUtils";
+import screens from "../constants/screenNames";
 
 function SignupScreen({ navigation }) {
   const [name, setName] = useState({ value: "", error: "" });
@@ -23,42 +22,15 @@ function SignupScreen({ navigation }) {
 
   const renderIcon = (style) => (
     <TouchableWithoutFeedback onPress={onIconPress}>
-      <Icon
-        {...style}
-        name={secureTextEntry ? "eye-off-outline" : "eye-outline"}
-      />
+      <Ionicons name={secureTextEntry ? "ios-eye-off" : "ios-eye"} />
     </TouchableWithoutFeedback>
-  );
-
-  function navHome() {
-    navigation.dispatch(
-      CommonActions.reset({
-        index: 0,
-        routes: [{ name: "Home" }],
-      })
-    );
-  }
-
-  function navVerifyEmail() {
-    navigation.dispatch(
-      CommonActions.reset({
-        index: 0,
-        routes: [{ name: "Verify Email" }],
-      })
-    );
-  }
-
-  onAuthUserListener(
-    navHome,
-    () => console.log("not signed in"),
-    navVerifyEmail
   );
 
   const _onSignUpPressed = () => {
     addUser(email.value, password.value)
       .then(() => {
         console.log("User account created & signed in!");
-        navigation.navigate("SetupSurvey");
+        navigation.navigate(screens.setup);
       })
       .catch((error) => {
         if (error.code === "auth/email-already-in-use") {
@@ -73,6 +45,7 @@ function SignupScreen({ navigation }) {
       });
   };
 
+  authNav(navigation, AuthState.loggedout);
   return (
     <View style={{ marginTop: 30, backgroundColor: "#F3EAFF", flex: 1 }}>
       {/* <BackButton goBack={() => navigation.navigate('HomeScreen')} /> */}
@@ -119,7 +92,7 @@ function SignupScreen({ navigation }) {
 
       <View style={styles.row}>
         <Text style={styles.label}>Already have an account? </Text>
-        <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+        <TouchableOpacity onPress={() => navigation.navigate(screens.login)}>
           <Text style={styles.link}>Login</Text>
         </TouchableOpacity>
       </View>
