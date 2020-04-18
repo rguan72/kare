@@ -29,7 +29,6 @@ export default function SetupSurvey({ navigation }) {
   };
   const [color, setColor] = useState("");
   const [userName, setUserName] = useState("");
-  const [emailValid, setEmailValid] = useState(false);
   const [values, setValues] = useState(initialState);
   const [loading, setLoading] = useState(false);
   const [selectedIndexOne, setSelectedIndexOne] = useState([]);
@@ -75,7 +74,7 @@ export default function SetupSurvey({ navigation }) {
     values["username"].length > 0 &&
     selectedIndexOne.length >= 2 &&
     selectedIndexTwo.length >= 3 &&
-    color.length > 0 
+    color.length > 0;
 
   const buttonText = !loading ? "Next" : "Loading...";
 
