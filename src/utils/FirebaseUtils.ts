@@ -194,7 +194,7 @@ function watchGroups(setGroups) {
   });
 }
 
-function onAuthUserListener(next, fallback) {
+function onAuthUserListener(next, fallback, notVerifiedFunc) {
   firebaseApp.auth().onAuthStateChanged((authUser) => {
     if (authUser) {
       db.collection(collections.users)
@@ -210,7 +210,7 @@ function onAuthUserListener(next, fallback) {
             ...dbUser,
           };
           if (authUser.emailVerified) next(mergedUser);
-          // else notVerifiedFunc(mergedUser);
+          else notVerifiedFunc(mergedUser);
         });
     } else {
       fallback();
@@ -232,4 +232,5 @@ export {
   getCurrentUser,
   onAuthUserListener,
   updateUser,
+  AuthState,
 };

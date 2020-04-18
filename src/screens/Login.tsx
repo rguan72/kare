@@ -8,7 +8,7 @@ import {
 import { CommonActions } from "@react-navigation/native";
 import { authNav, AuthState } from "../utils/FirebaseUtils";
 import screens from "../constants/screenNames";
-import firebase from 'firebase';
+import firebase from "firebase";
 import {
   Modal,
   Card,
@@ -36,22 +36,19 @@ function LoginScreen({ navigation }) {
   );
 
   const _onLoginPressed = () => {
-    firebase.auth().signInWithEmailAndPassword(email.value, password.value)
-    .then(function() {
-      navigation.dispatch(
-        CommonActions.reset({
-          index: 0,
-          routes: [{ name: screens.home }],
-        })
-      )
-    })
-    .catch(function(error) {
-      console.log("Login Error")
-      var errorCode = error.code;
-      email.error = error.message;
-      setVisible(true);
-      return;
-    });
+    firebase
+      .auth()
+      .signInWithEmailAndPassword(email.value, password.value)
+      .then(function () {
+        navigation.navigate(screens.home);
+      })
+      .catch(function (error) {
+        console.log("Login Error");
+        var errorCode = error.code;
+        email.error = error.message;
+        setVisible(true);
+        return;
+      });
   };
 
   return (
@@ -109,9 +106,7 @@ function LoginScreen({ navigation }) {
       <Modal visible={visible}>
         <Card disabled={true}>
           <Text> {email.error} </Text>
-          <Button onPress={() => setVisible(false)}>
-            CLOSE
-          </Button>
+          <Button onPress={() => setVisible(false)}>CLOSE</Button>
         </Card>
       </Modal>
 

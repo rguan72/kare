@@ -240,7 +240,7 @@ export default function SetupSurvey({ navigation }) {
           onPress={() => {
             setLoading(!loading);
             try {
-              updateUser(allUserInformation); // this will be subbed for creating the linked user db entry
+              updateUser(allUserInformation()); // this will be subbed for creating the linked user db entry
               sendVerificationEmail();
               setLoading(!loading);
               navigation.dispatch(

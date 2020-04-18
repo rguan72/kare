@@ -19,7 +19,8 @@ import SetupSurvey from "./src/screens/Setup";
 import VerifyEmailScreen from "./src/screens/Verify";
 import Error from "./src/screens/Error";
 import screens from "./src/constants/screenNames";
-import firebase from "firebase";
+import firebase from "firebase/app";
+import { onAuthUserListener, AuthState } from "./src/utils/FirebaseUtils";
 import AppStyles from "./src/StyleSheets/AppStyles";
 
 import UserComments from "./src/screens/UserComments";
@@ -39,8 +40,29 @@ export default function App() {
   // Ignore Firebase timer issues
   YellowBox.ignoreWarnings(["Setting a timer"]);
   console.ignoredYellowBox = ["Setting a timer"];
-  const user = firebase.auth().currentUser;
+  // Set an initializing state whilst Firebase connects
+  const [initializing, setInitializing] = useState(true);
+  const [user, setUser] = useState();
 
+  // Handle user state changes
+  function onAuthStateChanged(user) {
+    setUser(user);
+    if (initializing) setInitializing(false);
+  }
+
+  useEffect(() => {
+    const subscriber = firebase.auth().onAuthStateChanged(onAuthStateChanged);
+    return subscriber; // unsubscribe on unmount
+  }, []);
+
+  if (initializing) return null;
+
+  useEffect(() => {
+    const subscriber = firebase.auth().onAuthStateChanged(onAuthStateChanged);
+    return subscriber; // unsubscribe on unmount
+  }, []);
+
+  if (initializing) return null;
   return (
     <NavigationContainer>
       <ApplicationProvider mapping={mapping} theme={lightTheme}>
