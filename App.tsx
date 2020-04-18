@@ -1,4 +1,4 @@
-import React, {useState, useEffect}from "react";
+import React, {useState, useEffect} from "react";
 import "react-native-gesture-handler";
 import { Image } from "react-native";
 import * as eva from '@eva-design/eva';
@@ -6,7 +6,7 @@ import { ApplicationProvider, Text } from "@ui-kitten/components";
 import { EvaIconsPack } from '@ui-kitten/eva-icons';
 import { StyleSheet, YellowBox, View } from "react-native";
 import { decode, encode } from "base-64";
-import { mapping, light as lightTheme } from "@eva-design/eva";
+import { mapping, light as lightTheme} from "@eva-design/eva";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { LOGO } from "./Images";
@@ -14,11 +14,19 @@ import HomeScreen from "./src/screens/Home";
 import LoginScreen from "./src/screens/Login";
 import SignupScreen from "./src/screens/Signup";
 import Thread from "./src/screens/Thread";
+<<<<<<< HEAD
 import Replies from "./src/screens/Replies";
 import SetupSurvey from './src/screens/Setup';
 import VerifyEmailScreen from "./src/screens/Verify";
 import firebase from 'firebase';
 import AppStyles from './src/StyleSheets/AppStyles';
+=======
+import VerifyEmailScreen from "./src/screens/Verify";
+import Replies from "./src/screens/Replies";
+import SetupSurvey from "./src/screens/Setup";
+import AppStyles from "./src/StyleSheets/AppStyles";
+
+>>>>>>> origin/master
 import UserComments from "./src/screens/UserComments";
 
 // Firebase bug workaround: https://stackoverflow.com/questions/60361519/cant-find-a-variable-atob
@@ -33,7 +41,7 @@ if (!global.atob) {
 const Stack = createStackNavigator();
 
 function LogoTitle() {
-  return <Image style={{ width: 60, height: 60 }} source={LOGO} />;
+  return <Image style={AppStyles.logo} source={LOGO} />;
 }
 
 export default function App() {
@@ -110,6 +118,7 @@ export default function App() {
       <ApplicationProvider mapping={mapping} theme={lightTheme}>
         <Stack.Navigator>
           <Stack.Screen
+<<<<<<< HEAD
             name="Login"
             component={LoginScreen}
             options={{ title: "", headerTransparent: true }}
@@ -121,21 +130,24 @@ export default function App() {
           />
           <Stack.Screen
             name="SetupSurvey"
+=======
+            name='SetupSurvey'
+>>>>>>> origin/master
             component={SetupSurvey}
             options={{ title: "", headerTransparent: true }}
           />
           <Stack.Screen
-            name="VerifyEmail"
+            name='VerifyEmail'
             component={VerifyEmailScreen}
             options={{ title: "", headerTransparent: true }}
           />
           <Stack.Screen
-            name="Home"
+            name='Home'
             component={HomeScreen}
             options={{ title: "", headerTransparent: true }}
           />
           <Stack.Screen
-            name="UserComments"
+            name='UserComments'
             component={UserComments}
             options={{
               headerTitle: "",
@@ -143,7 +155,7 @@ export default function App() {
             }}
           />
           <Stack.Screen
-            name="Thread"
+            name='Thread'
             component={Thread}
             options={{
               headerTitle: "",
@@ -151,7 +163,7 @@ export default function App() {
             }}
           />
           <Stack.Screen
-            name="Replies"
+            name='Replies'
             component={Replies}
             options={{
               headerTitle: "",
@@ -169,7 +181,7 @@ export default function App() {
         </Stack.Navigator>
       </ApplicationProvider>
     </NavigationContainer>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
