@@ -26,6 +26,14 @@ export default function HomeScreen({ navigation }) {
     navigation.navigate("VerifyEmail");
   }
 
+  const _onSignOut = () => {
+    firebase.auth().signOut().then(function() {
+      navigation.navigate('Login');
+    }).catch(function(error) {
+      console.log(error.message)
+    });
+  };
+
   return (
     <View style={HomeStyles.container}>
       <View style={HomeStyles.Heading}>
@@ -49,6 +57,9 @@ export default function HomeScreen({ navigation }) {
         )}
         keyExtractor={(item) => item.id}
       />
+      <Button onPress={_onSignOut} style={HomeStyles.SignOut}>
+        Sign Out
+      </Button>
     </View>
   );
 }

@@ -1,12 +1,13 @@
 import React, { memo, useState } from 'react';
 import { TouchableOpacity, TouchableWithoutFeedback, StyleSheet, View } from 'react-native';
-import { Icon, Card, Text, withStyles, Button, Input } from "@ui-kitten/components";
-
+import { Modal, Icon, Card, Text, withStyles, Button, Input } from "@ui-kitten/components";
+import firebase from 'firebase';
 
 function LoginScreen ({ navigation }) {
   const [email, setEmail] = useState({ value: '', error: '' });
   const [password, setPassword] = useState({ value: '', error: '' });
   const [secureTextEntry, setSecureTextEntry] = useState(true);
+  const [visible, setVisible] = useState(false);
 
   const onIconPress = () => {
     setSecureTextEntry(!secureTextEntry);
@@ -19,14 +20,12 @@ function LoginScreen ({ navigation }) {
   );
 
   const _onLoginPressed = () => {
-    const emailError = emailValidator(email.value);
-    const passwordError = passwordValidator(password.value);
-
-    if (emailError || passwordError) {
-      setEmail({ ...email, error: emailError });
-      setPassword({ ...password, error: passwordError });
-      return;
-    }
+    firebase.auth().signInWithEmailAndPassword(email.value, password.value).catch(function(error) {
+      var errorCode = error.code;
+      email.error = error.message;
+      setVisible(true);
+      navigation.navigate('Login');
+    });
 
     navigation.navigate('Home');
   };
@@ -78,6 +77,15 @@ function LoginScreen ({ navigation }) {
       <Button mode="contained" onPress={_onLoginPressed} style={{borderColor: "#5505BA", backgroundColor: "#5505BA"}}>
         Login
       </Button>
+
+      <Modal visible={visible}>
+        <Card disabled={true}>
+          <Text> {email.error} </Text>
+          <Button onPress={() => setVisible(false)}>
+            CLOSE
+          </Button>
+        </Card>
+      </Modal>
 
       <View style={styles.row}>
         <Text style={styles.label}>Don’t have an account? </Text>
