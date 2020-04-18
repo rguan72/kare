@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FlatList, View } from "react-native";
-import { Layout, Text, withStyles } from "@ui-kitten/components";
+import { Button, Layout, Text, withStyles } from "@ui-kitten/components";
 import GroupItem from "../components/GroupItem";
 import { getCurrentUser } from "../utils/FirebaseUtils";
 import { CommonActions } from "@react-navigation/native";
@@ -17,6 +17,14 @@ interface Group {
 
 export default function HomeScreen({ navigation }) {
   const [groups, setGroups] = useState([]);
+
+  const _onSignOut = () => {
+    firebase.auth().signOut().then(function() {
+      navigation.navigate(screens.login);
+    }).catch(function(error) {
+      console.log(error.message)
+    });
+  };
 
   useEffect(() => {
     const unsubscribe = watchGroups(setGroups);
@@ -48,6 +56,9 @@ export default function HomeScreen({ navigation }) {
         )}
         keyExtractor={(item) => item.id}
       />
+      <Button onPress={_onSignOut} style={HomeStyles.SignOut}>
+        Sign Out
+      </Button>
     </View>
   );
 }

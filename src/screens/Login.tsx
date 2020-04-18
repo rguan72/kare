@@ -8,19 +8,22 @@ import {
 import { CommonActions } from "@react-navigation/native";
 import { authNav, AuthState } from "../utils/FirebaseUtils";
 import screens from "../constants/screenNames";
+import firebase from 'firebase';
 import {
-  Icon,
+  Modal,
   Card,
   Text,
   withStyles,
   Button,
   Input,
 } from "@ui-kitten/components";
+import { Ionicons } from "@expo/vector-icons";
 
 function LoginScreen({ navigation }) {
   const [email, setEmail] = useState({ value: "", error: "" });
   const [password, setPassword] = useState({ value: "", error: "" });
   const [secureTextEntry, setSecureTextEntry] = useState(true);
+  const [visible, setVisible] = useState(false);
 
   const onIconPress = () => {
     setSecureTextEntry(!secureTextEntry);
@@ -28,29 +31,27 @@ function LoginScreen({ navigation }) {
 
   const renderIcon = (style) => (
     <TouchableWithoutFeedback onPress={onIconPress}>
-      <Icon
-        {...style}
-        name={secureTextEntry ? "eye-off-outline" : "eye-outline"}
-      />
+      <Ionicons name={secureTextEntry ? "ios-eye-off" : "ios-eye"} />
     </TouchableWithoutFeedback>
   );
 
   const _onLoginPressed = () => {
-    const emailError = emailValidator(email.value);
-    const passwordError = passwordValidator(password.value);
-
-    if (emailError || passwordError) {
-      setEmail({ ...email, error: emailError });
-      setPassword({ ...password, error: passwordError });
-      return;
-    }
-
-    navigation.dispatch(
-      CommonActions.reset({
-        index: 0,
-        routes: [{ name: screens.home }],
-      })
-    );
+    firebase.auth().signInWithEmailAndPassword(email.value, password.value)
+    .then(function() {
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{ name: screens.home }],
+        })
+      )
+    })
+    .catch(function(error) {
+      console.log("Login Error")
+      var errorCode = error.code;
+      email.error = error.message;
+      setVisible(true);
+      return true;
+    });
   };
 
   authNav(navigation, AuthState.loggedout);
@@ -106,6 +107,15 @@ function LoginScreen({ navigation }) {
       >
         Login
       </Button>
+
+      <Modal visible={visible}>
+        <Card disabled={true}>
+          <Text> {email.error} </Text>
+          <Button onPress={() => setVisible(false)}>
+            CLOSE
+          </Button>
+        </Card>
+      </Modal>
 
       <View style={styles.row}>
         <Text style={styles.label}>Don’t have an account? </Text>
