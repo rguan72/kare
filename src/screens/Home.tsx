@@ -23,9 +23,6 @@ export default function HomeScreen({ navigation }) {
     firebase
       .auth()
       .signOut()
-      .then(function () {
-        navigation.navigate(screens.login);
-      })
       .catch(function (error) {
         console.log(error.message);
       });

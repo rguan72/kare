@@ -46,7 +46,9 @@ export default function App() {
 
   // Handle user state changes
   function onAuthStateChanged(user) {
+    console.log("onAuthStateChanged");
     setUser(user);
+    console.log("user: " + user);
     if (initializing) setInitializing(false);
   }
 

@@ -243,12 +243,6 @@ export default function SetupSurvey({ navigation }) {
               updateUser(allUserInformation()); // this will be subbed for creating the linked user db entry
               sendVerificationEmail();
               setLoading(!loading);
-              navigation.dispatch(
-                CommonActions.reset({
-                  index: 0,
-                  routes: [{ name: screens.verifyEmail }],
-                })
-              ); // routes to home and doesnt give option to go back
             } catch (err) {
               console.log(err); // in this case we just log it
               navigation.navigate(screens.error);

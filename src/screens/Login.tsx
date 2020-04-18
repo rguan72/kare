@@ -39,9 +39,6 @@ function LoginScreen({ navigation }) {
     firebase
       .auth()
       .signInWithEmailAndPassword(email.value, password.value)
-      .then(function () {
-        navigation.navigate(screens.home);
-      })
       .catch(function (error) {
         console.log("Login Error");
         var errorCode = error.code;
