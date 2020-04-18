@@ -3,15 +3,14 @@ import { TouchableOpacity } from "react-native";
 import { Card, Text, Layout } from "@ui-kitten/components";
 import { StyleSheet, View } from "react-native";
 import PropTypes from "prop-types";
-import Emojis from "../constants/emojis";
 import Colors from "../constants/userColors"
 import { getUser } from "../utils/FirebaseUtils";
 
-export default function ListItem({ userId, text, onReport, date, onReply, numReplies }) {
+export default function UserListItem({ userId, text, onReport, date }) {
   const [name, setName] = useState("");
-  const [color, setColor] = useState(Colors["purple"]); //defualt purple
+  const [color, setColor] = useState(Colors["purple"]); //default purple
   useEffect(() => {
-    if (userId) { 
+    if (userId) {
       getUser(userId).then(userData => {
         setName(userData.name);
         setColor(userData.color);
@@ -21,7 +20,17 @@ export default function ListItem({ userId, text, onReport, date, onReply, numRep
   const userColor = Colors[color];
 
   return (
-    <Card style={styles.card} >
+    <Card style={styles.card}>
+      {/* <View
+        style={{
+          width: 55,
+          height: 55,
+          borderRadius: 55 / 2,
+          backgroundColor: Colors["red"],
+          alignItems: "center",
+          justifyContent: "center"
+        }}
+      > */}
       <View style={{ flexDirection: "row" }}>
         <View style={[styles.square, {backgroundColor: userColor, marginRight: 5}]} /> 
         <Text style={styles.mb}>
@@ -35,28 +44,18 @@ export default function ListItem({ userId, text, onReport, date, onReply, numRep
       </View>
       {/* </View> */}
       <Text category="h6"> {text} </Text>
-      <View style={{
-          flex: 1,
-          flexDirection: "row",
-          justifyContent: 'space-between'
-        }} >
-        <TouchableOpacity onPress={onReply}>
-          <Text style={styles.mt}>{numReplies ? numReplies : 0} Replies </Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={onReport}>
-          <Text style={styles.mt}> {Emojis.flag()} Flag </Text>
-        </TouchableOpacity>
-      </View>
+      <TouchableOpacity onPress={onReport}>
+        <Text style={styles.mt}> Delete Comment </Text>
+      </TouchableOpacity>
     </Card>
   );
 }
 
-ListItem.propTypes = {
+UserListItem.propTypes = {
   userId: PropTypes.string.isRequired,
   text: PropTypes.string.isRequired,
   date: PropTypes.string.isRequired,
-  onReport: PropTypes.func.isRequired,
-  onReply: PropTypes.func.isRequired
+  onReport: PropTypes.func.isRequired
 };
 
 const styles = StyleSheet.create({

@@ -1,84 +1,74 @@
 import React, { useState, useEffect } from "react";
-import {
-  StyleSheet,
-  SafeAreaView,
-  FlatList,
-  Image,
-  TextInput,
-  SectionList,
-} from "react-native";
+import { StyleSheet, SafeAreaView, FlatList } from "react-native";
 import PropTypes from "prop-types";
 import {
   KeyboardAvoidingView,
+  View,
   Platform,
   Keyboard,
   TouchableWithoutFeedback,
 } from "react-native";
-import { Layout, Button, Input, Text } from "@ui-kitten/components";
+import { Layout, Button, Input, Text, Card } from "@ui-kitten/components";
 import ListItem from "../components/ListItem";
 import {
-  addComment,
-  watchComments,
+  addReply,
+  watchReplies,
   reportComment,
+  getUser,
 } from "../utils/FirebaseUtils";
-import { WOMEN } from "../../Images";
+import Colors from "../constants/userColors";
 
-export default function Thread({ route, navigation }) {
-  const [comments, setComments] = useState([]);
-  const [firstComments, setFirstComments] = useState([]);
-  const [restComments, setRestComments] = useState([]);
-  const [commentStructure, setCommentStructure] = useState([]);
+export default function Replies({ route, navigation }) {
+  const [replies, setReplies] = useState([]);
   const [value, setValue] = useState("");
-  const { title, description } = route.params;
+  const [name, setName] = useState("");
+  const [userColor, setUserColor] = useState(Colors["purple"]); // default
+  const { user, comment, commentId, date } = route.params;
   // hard coded for demo
   const userId = "ztKIibvRJFjoz26pztO4";
+  //const userId = user; // something like this would be done in reality
 
   useEffect(() => {
-    const unsubscribe = watchComments(setComments);
-
+    const unsubscribe = watchReplies(commentId, setReplies);
     return () => unsubscribe();
   }, []);
 
   useEffect(() => {
-    setCommentStructure([
-      { title: "Most Recent", data: comments.slice(0, 3) },
-      { title: "Older", data: comments.slice(4) },
-    ]);
-  }, [comments]);
+    getUser(user).then((userData) => {
+      setName(userData.name);
+      setUserColor(Colors[userData.color]);
+    });
+  }, []); // so it only runs once
 
-  const GroupTitle = () => (
+  const ReplyParent = () => (
     <Layout style={[styles.mb, styles.bgColor, styles.mt]}>
       <Layout
         style={{
-          display: "flex",
-          flexDirection: "row-reverse",
-          justifyContent: "flex-end",
-          alignItems: "center",
           backgroundColor: "#F3EAFF",
-          marginTop: 15,
-          marginLeft: 40,
         }}
       >
         <Layout
           style={{
             flexDirection: "column",
-            marginLeft: 10,
             backgroundColor: "#F3EAFF",
           }}
         >
-          <Text category='h4'> {title} </Text>
-          <Text> {description}</Text>
-        </Layout>
-        <Layout style={{ backgroundColor: "#F3EAFF", maxHeight: 100 }}>
-          <Image
-            source={WOMEN}
-            style={{
-              flexShrink: 1,
-              maxWidth: 60,
-              maxHeight: 60,
-              marginLeft: 15,
-            }}
-          />
+          <Card style={styles.card}>
+            <View style={{ flexDirection: "row" }}>
+              <View
+                style={[
+                  styles.square,
+                  { backgroundColor: userColor, marginRight: 5 },
+                ]}
+              />
+              <Text style={styles.mb}> {name}</Text>
+              <Text style={{ color: "rgba(0, 0, 0, 0.3)" }}>
+                {" * "}
+                {date}
+              </Text>
+            </View>
+            <Text category='h6'> {comment} </Text>
+          </Card>
         </Layout>
       </Layout>
     </Layout>
@@ -98,9 +88,9 @@ export default function Thread({ route, navigation }) {
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <React.Fragment>
-            <SectionList
-              sections={commentStructure}
-              ListHeaderComponent={GroupTitle}
+            <FlatList
+              data={replies}
+              ListHeaderComponent={ReplyParent} // going to be comment
               renderItem={({ item }) => {
                 const date =
                   item && item.timestamp
@@ -110,34 +100,20 @@ export default function Thread({ route, navigation }) {
                   <ListItem
                     userId={item.userId}
                     text={item.text}
+                    onReport={() => reportComment(item.id)}
+                    date={date}
                     onReply={() => {
                       navigation.navigate("Replies", {
                         user: item.userId,
                         comment: item.text,
                         commentId: item.id,
-                        date: date,
                       });
                     }}
-                    onReport={() => reportComment(item.id)}
-                    date={date}
                     numReplies={item.numReplies}
                   />
                 );
               }}
               keyExtractor={(item) => item.id}
-              renderSectionHeader={({ section: { title } }) =>
-                title == "Most Recent" ? (
-                  <Text style={{ marginLeft: 25, marginBottom: 3 }}>
-                    {title}
-                  </Text>
-                ) : (
-                  <Text
-                    style={{ marginLeft: 25, marginBottom: 3, marginTop: 10 }}
-                  >
-                    {title}
-                  </Text>
-                )
-              }
             />
             <Layout
               style={{
@@ -153,7 +129,7 @@ export default function Thread({ route, navigation }) {
               />
               <Button
                 onPress={() => {
-                  addComment({
+                  addReply(commentId, {
                     userId: userId,
                     text: value,
                     reports: 0,
@@ -175,7 +151,7 @@ export default function Thread({ route, navigation }) {
   );
 }
 
-Thread.propTypes = {
+Replies.propTypes = {
   route: PropTypes.object.isRequired,
 };
 
@@ -194,9 +170,26 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   mt: {
-    marginTop: 60,
+    marginTop: 80,
   },
   bgColor: {
     backgroundColor: "#F3EAFF",
+  },
+  card: {
+    marginLeft: 10,
+    marginRight: 10,
+    marginBottom: 10,
+    borderRadius: 20,
+  },
+  circle: {
+    width: 44,
+    height: 44,
+    borderRadius: 44 / 2,
+  },
+  square: {
+    width: 20,
+    height: 20,
+    borderRadius: 5,
+    overflow: "hidden",
   },
 });
