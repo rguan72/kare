@@ -16,8 +16,9 @@ import SignupScreen from "./src/screens/Signup";
 import Thread from "./src/screens/Thread";
 import Replies from "./src/screens/Replies";
 import SetupSurvey from './src/screens/Setup';
+import VerifyEmailScreen from "./src/screens/Verify";
 import firebase from 'firebase';
-
+import AppStyles from './src/StyleSheets/AppStyles';
 import UserComments from "./src/screens/UserComments";
 
 // Firebase bug workaround: https://stackoverflow.com/questions/60361519/cant-find-a-variable-atob
