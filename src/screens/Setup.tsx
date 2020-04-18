@@ -10,12 +10,7 @@ import {
 } from "@ui-kitten/components";
 import RNPickerSelect from "react-native-picker-select";
 import { ScrollView } from "react-native-gesture-handler";
-import {
-  addUser,
-  sendVerificationEmail,
-  authNav,
-  AuthState,
-} from "../utils/FirebaseUtils";
+import { sendVerificationEmail, updateUser } from "../utils/FirebaseUtils";
 import screens from "../constants/screenNames";
 import { getEmailExtension } from "../utils/Parse";
 import whitelist from "../constants/emailWhitelist";
@@ -28,7 +23,6 @@ export default function SetupSurvey({ navigation }) {
   // initial state
   const initialState = {
     username: "",
-    email: "",
     val1: 5,
     val2: 5,
     val3: 5,
@@ -81,12 +75,9 @@ export default function SetupSurvey({ navigation }) {
     values["username"].length > 0 &&
     selectedIndexOne.length >= 2 &&
     selectedIndexTwo.length >= 3 &&
-    color.length > 0 &&
-    emailValid;
+    color.length > 0 
 
   const buttonText = !loading ? "Next" : "Loading...";
-
-  authNav(navigation, AuthState.loggedout);
 
   return (
     <View style={SetupStyles.container}>
@@ -108,20 +99,6 @@ export default function SetupSurvey({ navigation }) {
               { label: "Green", value: "green" },
             ]}
           />
-        </Card>
-        <Card style={SetupStyles.card}>
-          <Text category="h6">What is your student email? </Text>
-          <Text style={{ paddingTop: 2, paddingBottom: 2 }}>(required)</Text>
-          <Input
-            value={values["email"]}
-            autoCapitalize="none"
-            onChange={(e) => handleEventChange(e, "email")}
-            onEndEditing={(e) => {
-              const email = values["email"];
-              setEmailValid(whitelist.includes(getEmailExtension(email)));
-            }}
-          />
-          {!emailValid && <Text> Need valid .edu email to sign up </Text>}
         </Card>
         <Card style={SetupStyles.card}>
           <Text category="h6">What is your spirit animal? </Text>
@@ -261,11 +238,10 @@ export default function SetupSurvey({ navigation }) {
         </Card>
 
         <Button
-          onPress={async () => {
+          onPress={() => {
             setLoading(!loading);
             try {
-              await addUser(values["email"], "password");
-              await console.log(allUserInformation); // this will be subbed for creating the linked user db entry
+              updateUser(allUserInformation); // this will be subbed for creating the linked user db entry
               sendVerificationEmail();
               setLoading(!loading);
               navigation.dispatch(
@@ -276,7 +252,7 @@ export default function SetupSurvey({ navigation }) {
               ); // routes to home and doesnt give option to go back
             } catch (err) {
               console.log(err); // in this case we just log it
-              //navigation.navigate("Error"); // in reality we would nav to error page
+              navigation.navigate(screens.error);
             }
           }}
           disabled={!((isEnabled && !loading) || (!isEnabled && loading))}

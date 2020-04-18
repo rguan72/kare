@@ -26,7 +26,7 @@ function SignupScreen({ navigation }) {
     </TouchableWithoutFeedback>
   );
 
-  const _onSignUpPressed = () => {
+  const _onSignUpPressed = async () => {
     addUser(email.value, password.value)
       .then(() => {
         console.log("User account created & signed in!");
@@ -45,7 +45,6 @@ function SignupScreen({ navigation }) {
       });
   };
 
-  authNav(navigation, AuthState.loggedout);
   return (
     <View style={{ marginTop: 30, backgroundColor: "#F3EAFF", flex: 1 }}>
       {/* <BackButton goBack={() => navigation.navigate('HomeScreen')} /> */}
@@ -56,6 +55,7 @@ function SignupScreen({ navigation }) {
 
       <Input
         placeholder="Email"
+        autoCapitalize="none"
         value={email.value}
         onChangeText={(text) => setEmail({ value: text, error: "" })}
         error={!!email.error}
@@ -86,7 +86,13 @@ function SignupScreen({ navigation }) {
         secureTextEntry={secureTextEntry}
       />
 
-      <Button mode="contained" onPress={_onSignUpPressed} style={styles.button}>
+      <Button
+        mode="contained"
+        onPress={async () => {
+          await _onSignUpPressed();
+        }}
+        style={styles.button}
+      >
         Sign Up
       </Button>
 
