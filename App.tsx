@@ -79,6 +79,14 @@ export default function App() {
               headerTransparent: true,
             }}
           />
+          <Stack.Screen
+            name="Error"
+            component={Error}
+            options={{
+              headerTitle: "",
+              headerTransparent: true
+            }}
+          />
         </Stack.Navigator>
       </ApplicationProvider>
     </NavigationContainer>

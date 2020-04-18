@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import { WOMEN } from "../../Images";
 import GroupItemStyles from "../StyleSheets/GroupItemStyles"
 
-export default function GroupItem({ title, description, text, onPress }) {
+export default function GroupItem({ title, image, description, text, onPress }) {
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -24,10 +24,10 @@ export default function GroupItem({ title, description, text, onPress }) {
           style={GroupItemStyles.imageBox}
         >
           <Image
-            source={WOMEN}
             style={GroupItemStyles.image}
+            source={{uri: image}}
           />
-        </View>
+         </View>
       </View>
     </TouchableOpacity>
   );
@@ -35,6 +35,7 @@ export default function GroupItem({ title, description, text, onPress }) {
 
 GroupItem.propTypes = {
   title: PropTypes.string.isRequired,
+  image: PropTypes.string.isRequired,
   text: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
   onPress: PropTypes.func.isRequired
