@@ -1,12 +1,20 @@
-import React, { memo, useState } from 'react';
-import { TouchableOpacity, StyleSheet, View } from 'react-native';
-import { Icon, Card, Text, withStyles, Button, Input } from "@ui-kitten/components";
-import firebase from 'firebase';
+import React, { memo, useState } from "react";
+import { TouchableOpacity, StyleSheet, View } from "react-native";
+import { CommonActions } from "@react-navigation/native";
+import {
+  Icon,
+  Card,
+  Text,
+  withStyles,
+  Button,
+  Input,
+} from "@ui-kitten/components";
+import { addUser, onAuthUserListener } from "../utils/FirebaseUtils";
 
-function SignupScreen({ navigation }){
-  const [name, setName] = useState({ value: '', error: '' });
-  const [email, setEmail] = useState({ value: '', error: '' });
-  const [password, setPassword] = useState({ value: '', error: '' });
+function SignupScreen({ navigation }) {
+  const [name, setName] = useState({ value: "", error: "" });
+  const [email, setEmail] = useState({ value: "", error: "" });
+  const [password, setPassword] = useState({ value: "", error: "" });
   const [secureTextEntry, setSecureTextEntry] = useState(true);
 
   const onIconPress = () => {
@@ -15,24 +23,50 @@ function SignupScreen({ navigation }){
 
   const renderIcon = (style) => (
     <TouchableWithoutFeedback onPress={onIconPress}>
-      <Icon {...style} name={secureTextEntry ? 'eye-off-outline' : 'eye-outline'}/>
+      <Icon
+        {...style}
+        name={secureTextEntry ? "eye-off-outline" : "eye-outline"}
+      />
     </TouchableWithoutFeedback>
   );
 
-  const _onSignUpPressed = () => {
-    firebase.auth()
-      .createUserWithEmailAndPassword(email.value, password.value)
-      .then(()=> {
-        console.log('User account created & signed in!');
-        navigation.navigate('Home');
+  function navHome() {
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{ name: "Home" }],
       })
-      .catch(error => {
-        if (error.code === 'auth/email-already-in-use') {
-          console.log('That email address is already in use!');
+    );
+  }
+
+  function navVerifyEmail() {
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{ name: "Verify Email" }],
+      })
+    );
+  }
+
+  onAuthUserListener(
+    navHome,
+    () => console.log("not signed in"),
+    navVerifyEmail
+  );
+
+  const _onSignUpPressed = () => {
+    addUser(email.value, password.value)
+      .then(() => {
+        console.log("User account created & signed in!");
+        navigation.navigate("SetupSurvey");
+      })
+      .catch((error) => {
+        if (error.code === "auth/email-already-in-use") {
+          console.log("That email address is already in use!");
         }
 
-        if (error.code === 'auth/invalid-email') {
-          console.log('That email address is invalid!');
+        if (error.code === "auth/invalid-email") {
+          console.log("That email address is invalid!");
         }
 
         console.error(error);
@@ -45,13 +79,12 @@ function SignupScreen({ navigation }){
 
       {/* <Logo /> */}
 
-      <Text category='h1'>Create Account</Text>
-
+      <Text category="h1">Create Account</Text>
 
       <Input
         placeholder="Email"
         value={email.value}
-        onChangeText={text => setEmail({ value: text, error: '' })}
+        onChangeText={(text) => setEmail({ value: text, error: "" })}
         error={!!email.error}
         errorText={email.error}
       />
@@ -59,10 +92,10 @@ function SignupScreen({ navigation }){
       <Input
         returnKeyType="done"
         value={password.value}
-        placeholder='Password'
+        placeholder="Password"
         accessoryRight={renderIcon}
-        caption='instructions'
-        onChangeText={text => setPassword({ value: text, error: '' })}
+        caption="instructions"
+        onChangeText={(text) => setPassword({ value: text, error: "" })}
         error={!!password.error}
         errorText={password.error}
         secureTextEntry={secureTextEntry}
@@ -71,10 +104,10 @@ function SignupScreen({ navigation }){
       <Input
         returnKeyType="done"
         value={password.value}
-        placeholder='Retype Password'
+        placeholder="Retype Password"
         accessoryRight={renderIcon}
-        caption='instructions'
-        onChangeText={text => setPassword({ value: text, error: '' })}
+        caption="instructions"
+        onChangeText={(text) => setPassword({ value: text, error: "" })}
         error={!!password.error}
         errorText={password.error}
         secureTextEntry={secureTextEntry}
@@ -86,33 +119,33 @@ function SignupScreen({ navigation }){
 
       <View style={styles.row}>
         <Text style={styles.label}>Already have an account? </Text>
-        <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+        <TouchableOpacity onPress={() => navigation.navigate("Login")}>
           <Text style={styles.link}>Login</Text>
         </TouchableOpacity>
       </View>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   label: {
-    color: 'black',
+    color: "black",
   },
   button: {
     marginTop: 24,
   },
   row: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginTop: 4,
   },
   link: {
-    fontWeight: 'bold',
-    color: 'mediumpurple',
+    fontWeight: "bold",
+    color: "mediumpurple",
   },
 });
 
-export default withStyles(SignupScreen, theme => ({
+export default withStyles(SignupScreen, (theme) => ({
   light: {
-    backgroundColor: theme["color-primary-100"]
-  }
+    backgroundColor: theme["color-primary-100"],
+  },
 }));
