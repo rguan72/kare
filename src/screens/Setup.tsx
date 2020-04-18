@@ -1,13 +1,10 @@
 import React, { useState } from "react";
-import { StyleSheet, View, TouchableOpacity } from "react-native";
+import { View } from "react-native";
 import {
   Card,
   Text,
-  CheckBox,
   Button,
   Input,
-  IndexPath,
-  Layout,
   Select,
   SelectItem,
 } from "@ui-kitten/components";
@@ -21,7 +18,8 @@ import {
 import { getEmailExtension } from "../utils/Parse";
 import whitelist from "../constants/emailWhitelist";
 import { CommonActions } from "@react-navigation/native";
-//import analytics from "../utils/analytics";
+import analytics from "../utils/analytics";
+import { groupOptions, stressOptions } from "../constants/community";
 import SetupStyles from "../StyleSheets/SetupStyles";
 import { Slider } from "react-native";
 
@@ -39,42 +37,17 @@ export default function SetupSurvey({ navigation }) {
   const [emailValid, setEmailValid] = useState(false);
   const [values, setValues] = useState(initialState);
   const [loading, setLoading] = useState(false);
-  const [selectedIndexOne, setSelectedIndexOne] = React.useState([]);
-  const [selectedIndexTwo, setSelectedIndexTwo] = React.useState([]);
-
-  const groupedDataOne = [
-    "Academics",
-    "Relationships",
-    "Family Conflict",
-    "Career",
-    "Drug or Alcohol Misuse",
-    "Social Isolation",
-    "Existing Health Conditions",
-    "Trauma from event(s)",
-    "Social disadvantage, poverty, or debt",
-    "Other",
-  ];
+  const [selectedIndexOne, setSelectedIndexOne] = useState([]);
+  const [selectedIndexTwo, setSelectedIndexTwo] = useState([]);
 
   const renderOption = (title) => <SelectItem title={title} key={title} />;
 
   const groupOneDisplayValues = selectedIndexOne.map((index) => {
-    return groupedDataOne[index.row];
+    return stressOptions[index.row];
   });
 
-  const groupedDataTwo = [
-    "JUST QUARANTINE THINGS: everything and anything COVID related",
-    "MICHIGAN WOLVERINES",
-    "NEW HABITS WHO THIS: find a new home workout, recipe, video game, book/podcast, and etc",
-    "MUSIC",
-    "ENTERTAINMENT: talk about your favorite movies, shows, youtubers, and etc.",
-    "SPORTS",
-    "Existing Health Conditions",
-    "FASHION and BEAUTY",
-    "FOOD FOR THOUGHT",
-  ];
-
   const groupTwoDisplayValues = selectedIndexTwo.map((index) => {
-    return groupedDataTwo[index.row];
+    return groupOptions[index.row];
   });
 
   const makeArray = (groupData, selectedIndex) => {
@@ -98,8 +71,8 @@ export default function SetupSurvey({ navigation }) {
       support: values["val1"],
       voice: values["val2"],
       consider: values["val3"],
-      stress: makeArray(groupedDataOne, selectedIndexOne),
-      groups: makeArray(groupedDataTwo, selectedIndexTwo),
+      stress: makeArray(stressOptions, selectedIndexOne),
+      groups: makeArray(groupOptions, selectedIndexTwo),
     };
   };
 
@@ -120,10 +93,10 @@ export default function SetupSurvey({ navigation }) {
     <View style={SetupStyles.container}>
       <ScrollView>
         <View style={SetupStyles.header}>
-          <Text category='h4'>Setup Survey</Text>
+          <Text category="h4">Setup Survey</Text>
         </View>
         <Card style={SetupStyles.card}>
-          <Text category='h6'>Select your favorite Color:</Text>
+          <Text category="h6">Select your favorite Color:</Text>
           <Text style={{ paddingTop: 2, paddingBottom: 2 }}>(required)</Text>
           <RNPickerSelect
             style={SetupStyles}
@@ -138,11 +111,11 @@ export default function SetupSurvey({ navigation }) {
           />
         </Card>
         <Card style={SetupStyles.card}>
-          <Text category='h6'>What is your student email? </Text>
+          <Text category="h6">What is your student email? </Text>
           <Text style={{ paddingTop: 2, paddingBottom: 2 }}>(required)</Text>
           <Input
             value={values["email"]}
-            autoCapitalize='none'
+            autoCapitalize="none"
             onChange={(e) => handleEventChange(e, "email")}
             onEndEditing={(e) => {
               const email = values["email"];
@@ -152,7 +125,7 @@ export default function SetupSurvey({ navigation }) {
           {!emailValid && <Text> Need valid .edu email to sign up </Text>}
         </Card>
         <Card style={SetupStyles.card}>
-          <Text category='h6'>What is your spirit animal? </Text>
+          <Text category="h6">What is your spirit animal? </Text>
           <Text style={{ paddingTop: 2, paddingBottom: 2 }}>(required)</Text>
           <Input
             value={values["username"]}
@@ -169,7 +142,7 @@ export default function SetupSurvey({ navigation }) {
           <Text>{userName}</Text>
         </Card>
         <Card style={SetupStyles.card}>
-          <Text category='h6'>How supported do you currently feel?</Text>
+          <Text category="h6">How supported do you currently feel?</Text>
           <Text style={{ paddingTop: 2, paddingBottom: 2 }}>(required)</Text>
           <View
             style={{
@@ -183,8 +156,8 @@ export default function SetupSurvey({ navigation }) {
               style={{ width: 200, height: 40 }}
               minimumValue={0}
               maximumValue={10}
-              minimumTrackTintColor='#000000'
-              maximumTrackTintColor='#000000'
+              minimumTrackTintColor="#000000"
+              maximumTrackTintColor="#000000"
               onSlidingComplete={(e) => {
                 setValues({ ...values, ["val1"]: Math.floor(e) });
                 //console.log(values);
@@ -195,7 +168,7 @@ export default function SetupSurvey({ navigation }) {
         </Card>
 
         <Card style={SetupStyles.card}>
-          <Text category='h6'>
+          <Text category="h6">
             No matter what I am facing, I have somewhere to voice my concerns
           </Text>
           <Text style={{ paddingTop: 2, paddingBottom: 2 }}>(required)</Text>
@@ -211,8 +184,8 @@ export default function SetupSurvey({ navigation }) {
               style={{ width: 200, height: 40 }}
               minimumValue={0}
               maximumValue={10}
-              minimumTrackTintColor='#000000'
-              maximumTrackTintColor='#000000'
+              minimumTrackTintColor="#000000"
+              maximumTrackTintColor="#000000"
               onSlidingComplete={(e) => {
                 setValues({ ...values, ["val2"]: Math.floor(e) });
               }}
@@ -221,7 +194,7 @@ export default function SetupSurvey({ navigation }) {
           </View>
         </Card>
         <Card style={SetupStyles.card}>
-          <Text category='h6'>I consider myself </Text>
+          <Text category="h6">I consider myself </Text>
           <Text style={{ paddingTop: 2, paddingBottom: 2 }}>(required)</Text>
           <View
             style={{
@@ -235,8 +208,8 @@ export default function SetupSurvey({ navigation }) {
               style={{ width: 200, height: 40 }}
               minimumValue={0}
               maximumValue={10}
-              minimumTrackTintColor='#000000'
-              maximumTrackTintColor='#000000'
+              minimumTrackTintColor="#000000"
+              maximumTrackTintColor="#000000"
               onSlidingComplete={(e) => {
                 setValues({ ...values, ["val3"]: Math.floor(e) });
                 //console.log(values);
@@ -246,7 +219,7 @@ export default function SetupSurvey({ navigation }) {
           </View>
         </Card>
         <Card style={SetupStyles.card}>
-          <Text category='h6'>
+          <Text category="h6">
             What are the leading causes of your stress? Please select TWO that
             most impact you. (This information will remain confidential.)
           </Text>
@@ -258,16 +231,16 @@ export default function SetupSurvey({ navigation }) {
             onSelect={(index) => {
               setSelectedIndexOne(index);
             }}
-            placeholder='Select TWO or more'
+            placeholder="Select TWO or more"
             caption={`Select ${
               selectedIndexOne.length < 2 ? 2 - selectedIndexOne.length : "any"
             } more`}
           >
-            {groupedDataOne.map(renderOption)}
+            {stressOptions.map(renderOption)}
           </Select>
         </Card>
         <Card style={SetupStyles.card}>
-          <Text category='h6'>
+          <Text category="h6">
             Which communities within Kare would you like to join? Please choose
             at least 3. (This information will remain confidential.)
           </Text>
@@ -279,19 +252,19 @@ export default function SetupSurvey({ navigation }) {
             onSelect={(index) => {
               setSelectedIndexTwo(index);
             }}
-            placeholder='Select THREE or more'
+            placeholder="Select THREE or more"
             caption={`Select ${
               selectedIndexTwo.length < 3 ? 3 - selectedIndexTwo.length : "any"
             } more`}
           >
-            {groupedDataTwo.map(renderOption)}
+            {groupOptions.map(renderOption)}
           </Select>
         </Card>
 
         <Button
           onPress={async () => {
             setLoading(!loading);
-            //analytics.logSignup();
+            analytics.logSignup();
             try {
               await addUser(values["email"], "password");
               await console.log(allUserInformation); // this will be subbed for creating the linked user db entry
