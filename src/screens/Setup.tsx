@@ -13,8 +13,10 @@ import { ScrollView } from "react-native-gesture-handler";
 import {
   addUser,
   sendVerificationEmail,
-  onAuthUserListener,
+  authNav,
+  AuthState,
 } from "../utils/FirebaseUtils";
+import screens from "../constants/screenNames";
 import { getEmailExtension } from "../utils/Parse";
 import whitelist from "../constants/emailWhitelist";
 import { CommonActions } from "@react-navigation/native";
@@ -84,30 +86,7 @@ export default function SetupSurvey({ navigation }) {
 
   const buttonText = !loading ? "Next" : "Loading...";
 
-  // TODO #7 login screen ui
-  function navHome() {
-    navigation.dispatch(
-      CommonActions.reset({
-        index: 0,
-        routes: [{ name: "Home" }],
-      })
-    );
-  }
-
-  function navVerifyEmail() {
-    navigation.dispatch(
-      CommonActions.reset({
-        index: 0,
-        routes: [{ name: "Verify Email" }],
-      })
-    );
-  }
-
-  onAuthUserListener(
-    navHome,
-    () => console.log("not signed in"),
-    navVerifyEmail
-  );
+  authNav(navigation, AuthState.loggedout);
 
   return (
     <View style={SetupStyles.container}>
@@ -292,7 +271,7 @@ export default function SetupSurvey({ navigation }) {
               navigation.dispatch(
                 CommonActions.reset({
                   index: 0,
-                  routes: [{ name: "VerifyEmail" }],
+                  routes: [{ name: screens.verifyEmail }],
                 })
               ); // routes to home and doesnt give option to go back
             } catch (err) {
@@ -308,7 +287,7 @@ export default function SetupSurvey({ navigation }) {
         {
           <Button
             onPress={() => {
-              navigation.navigate("Home");
+              navigation.navigate(screens.home);
             }}
             style={SetupStyles.button}
           >
@@ -317,7 +296,7 @@ export default function SetupSurvey({ navigation }) {
         }
         <Button
           onPress={() => {
-            navigation.navigate("VerifyEmail");
+            navigation.navigate(screens.verifyEmail);
           }}
           style={{
             borderColor: "#5505BA",

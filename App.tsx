@@ -18,6 +18,7 @@ import Replies from "./src/screens/Replies";
 import SetupSurvey from "./src/screens/Setup";
 import VerifyEmailScreen from "./src/screens/Verify";
 import Error from "./src/screens/Error";
+import screens from "./src/constants/screenNames";
 import firebase from "firebase";
 import AppStyles from "./src/StyleSheets/AppStyles";
 
@@ -42,34 +43,34 @@ export default function App() {
   return (
     <NavigationContainer>
       <ApplicationProvider mapping={mapping} theme={lightTheme}>
-        <Stack.Navigator initialRouteName="SignupScreen">
+        <Stack.Navigator initialRouteName={screens.signup}>
           <Stack.Screen
-            name="Home"
+            name={screens.home}
             component={HomeScreen}
             options={{ title: "", headerTransparent: true }}
           />
           <Stack.Screen
-            name="SetupSurvey"
+            name={screens.setup}
             component={SetupSurvey}
             options={{ title: "", headerTransparent: true }}
           />
           <Stack.Screen
-            name="SignupScreen"
+            name={screens.signup}
             component={SignupScreen}
             options={{ title: "", headerTransparent: true }}
           />
           <Stack.Screen
-            name="LoginScreen"
+            name={screens.login}
             component={LoginScreen}
             options={{ title: "", headerTransparent: true }}
           />
           <Stack.Screen
-            name="VerifyEmailScreen"
+            name={screens.verifyEmail}
             component={VerifyEmailScreen}
             options={{ title: "", headerTransparent: true }}
           />
           <Stack.Screen
-            name="UserComments"
+            name={screens.userComments}
             component={UserComments}
             options={{
               headerTitle: "",
@@ -77,7 +78,7 @@ export default function App() {
             }}
           />
           <Stack.Screen
-            name="Thread"
+            name={screens.thread}
             component={Thread}
             options={{
               headerTitle: "",
@@ -85,7 +86,7 @@ export default function App() {
             }}
           />
           <Stack.Screen
-            name="Replies"
+            name={screens.replies}
             component={Replies}
             options={{
               headerTitle: "",
@@ -93,7 +94,7 @@ export default function App() {
             }}
           />
           <Stack.Screen
-            name="Error"
+            name={screens.error}
             component={Error}
             options={{
               headerTitle: "",

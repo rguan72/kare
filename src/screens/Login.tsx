@@ -6,7 +6,8 @@ import {
   View,
 } from "react-native";
 import { CommonActions } from "@react-navigation/native";
-import { onAuthUserListener } from "../utils/FirebaseUtils";
+import { authNav, AuthState } from "../utils/FirebaseUtils";
+import screens from "../constants/screenNames";
 import {
   Icon,
   Card,
@@ -34,30 +35,6 @@ function LoginScreen({ navigation }) {
     </TouchableWithoutFeedback>
   );
 
-  function navHome() {
-    navigation.dispatch(
-      CommonActions.reset({
-        index: 0,
-        routes: [{ name: "Home" }],
-      })
-    );
-  }
-
-  function navVerifyEmail() {
-    navigation.dispatch(
-      CommonActions.reset({
-        index: 0,
-        routes: [{ name: "Verify Email" }],
-      })
-    );
-  }
-
-  onAuthUserListener(
-    navHome,
-    () => console.log("not signed in"),
-    navVerifyEmail
-  );
-
   const _onLoginPressed = () => {
     const emailError = emailValidator(email.value);
     const passwordError = passwordValidator(password.value);
@@ -68,8 +45,15 @@ function LoginScreen({ navigation }) {
       return;
     }
 
-    navHome();
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{ name: screens.home }],
+      })
+    );
   };
+
+  authNav(navigation, AuthState.loggedout);
 
   return (
     <View style={{ marginTop: 30, backgroundColor: "#F3EAFF", flex: 1 }}>
@@ -125,7 +109,7 @@ function LoginScreen({ navigation }) {
 
       <View style={styles.row}>
         <Text style={styles.label}>Don’t have an account? </Text>
-        <TouchableOpacity onPress={() => navigation.navigate("Signup")}>
+        <TouchableOpacity onPress={() => navigation.navigate(screens.signup)}>
           <Text style={styles.link}>Sign up</Text>
         </TouchableOpacity>
       </View>
