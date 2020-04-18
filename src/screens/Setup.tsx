@@ -18,7 +18,6 @@ import {
 import { getEmailExtension } from "../utils/Parse";
 import whitelist from "../constants/emailWhitelist";
 import { CommonActions } from "@react-navigation/native";
-import analytics from "../utils/analytics";
 import { groupOptions, stressOptions } from "../constants/community";
 import SetupStyles from "../StyleSheets/SetupStyles";
 import { Slider } from "react-native";
@@ -264,7 +263,6 @@ export default function SetupSurvey({ navigation }) {
         <Button
           onPress={async () => {
             setLoading(!loading);
-            analytics.logSignup();
             try {
               await addUser(values["email"], "password");
               await console.log(allUserInformation); // this will be subbed for creating the linked user db entry
@@ -290,7 +288,6 @@ export default function SetupSurvey({ navigation }) {
           <Button
             onPress={() => {
               navigation.navigate("Home");
-              //analytics.logSignup();
             }}
             style={SetupStyles.button}
           >

@@ -21,7 +21,6 @@ import {
   reportComment,
 } from "../utils/FirebaseUtils";
 import { WOMEN } from "../../Images";
-import analytics from "../utils/analytics";
 import ThreadStyles from "../StyleSheets/ThreadStyles";
 
 export default function Thread({ route, navigation }) {
@@ -108,7 +107,6 @@ export default function Thread({ route, navigation }) {
               />
               <Button
                 onPress={() => {
-                  analytics.logComment();
                   addComment({
                     userId: userId,
                     text: value,
