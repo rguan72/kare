@@ -14,19 +14,12 @@ import HomeScreen from "./src/screens/Home";
 import LoginScreen from "./src/screens/Login";
 import SignupScreen from "./src/screens/Signup";
 import Thread from "./src/screens/Thread";
-<<<<<<< HEAD
 import Replies from "./src/screens/Replies";
 import SetupSurvey from './src/screens/Setup';
 import VerifyEmailScreen from "./src/screens/Verify";
 import firebase from 'firebase';
 import AppStyles from './src/StyleSheets/AppStyles';
-=======
-import VerifyEmailScreen from "./src/screens/Verify";
-import Replies from "./src/screens/Replies";
-import SetupSurvey from "./src/screens/Setup";
-import AppStyles from "./src/StyleSheets/AppStyles";
 
->>>>>>> origin/master
 import UserComments from "./src/screens/UserComments";
 
 // Firebase bug workaround: https://stackoverflow.com/questions/60361519/cant-find-a-variable-atob
@@ -118,7 +111,6 @@ export default function App() {
       <ApplicationProvider mapping={mapping} theme={lightTheme}>
         <Stack.Navigator>
           <Stack.Screen
-<<<<<<< HEAD
             name="Login"
             component={LoginScreen}
             options={{ title: "", headerTransparent: true }}
@@ -130,9 +122,6 @@ export default function App() {
           />
           <Stack.Screen
             name="SetupSurvey"
-=======
-            name='SetupSurvey'
->>>>>>> origin/master
             component={SetupSurvey}
             options={{ title: "", headerTransparent: true }}
           />
