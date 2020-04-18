@@ -56,13 +56,6 @@ export default function App() {
   }, []);
 
   if (initializing) return null;
-
-  useEffect(() => {
-    const subscriber = firebase.auth().onAuthStateChanged(onAuthStateChanged);
-    return subscriber; // unsubscribe on unmount
-  }, []);
-
-  if (initializing) return null;
   return (
     <NavigationContainer>
       <ApplicationProvider mapping={mapping} theme={lightTheme}>

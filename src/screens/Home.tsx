@@ -6,6 +6,7 @@ import { getCurrentUser } from "../utils/FirebaseUtils";
 import { CommonActions } from "@react-navigation/native";
 import { watchGroups, authNav, AuthState } from "../utils/FirebaseUtils";
 import screens from "../constants/screenNames";
+import firebase from "firebase/app";
 
 import HomeStyles from "../StyleSheets/HomeStyles";
 
@@ -19,11 +20,15 @@ export default function HomeScreen({ navigation }) {
   const [groups, setGroups] = useState([]);
 
   const _onSignOut = () => {
-    firebase.auth().signOut().then(function() {
-      navigation.navigate(screens.login);
-    }).catch(function(error) {
-      console.log(error.message)
-    });
+    firebase
+      .auth()
+      .signOut()
+      .then(function () {
+        navigation.navigate(screens.login);
+      })
+      .catch(function (error) {
+        console.log(error.message);
+      });
   };
 
   useEffect(() => {
