@@ -1,3 +1,4 @@
+import React from "react";
 import firebaseApp, { auth } from "firebase/app";
 import firebase from "../constants/Firebase";
 import { Linking } from "expo";
@@ -71,6 +72,11 @@ async function addUser(email: string, password: string) {
   db.collection(collections.users)
     .doc(user.uid)
     .set({ timestamp: firebaseApp.firestore.FieldValue.serverTimestamp() });
+}
+
+function updateUser(allUserInformation) {
+  const user = firebaseApp.auth().currentUser;
+  db.collection(collections.users).doc(user.uid).update(allUserInformation);
 }
 
 function addComment(comment: comment) {
@@ -212,50 +218,6 @@ function onAuthUserListener(next, fallback) {
   });
 }
 
-function authNav(navigation, expectedState: AuthState) {
-  function navHome() {
-    navigation.dispatch(
-      CommonActions.reset({
-        index: 0,
-        routes: [{ name: screens.home }],
-      })
-    );
-  }
-
-  function navVerifyEmail() {
-    navigation.dispatch(
-      CommonActions.reset({
-        index: 0,
-        routes: [{ name: screens.verifyEmail }],
-      })
-    );
-  }
-
-  function navSignup() {
-    navigation.dispatch(
-      CommonActions.reset({
-        index: 0,
-        routes: [{ name: screens.signup }],
-      })
-    );
-  }
-
-  firebaseApp.auth().onAuthStateChanged((authUser) => {
-    let currentState;
-    if (authUser) {
-      if (authUser.emailVerified) currentState = AuthState.loggedin;
-      else currentState = AuthState.emailverify;
-    } else {
-      currentState = AuthState.loggedout;
-    }
-    if (expectedState !== currentState) {
-      if (currentState === AuthState.emailverify) navVerifyEmail();
-      else if (currentState === AuthState.loggedin) navHome();
-      else navSignup();
-    }
-  });
-}
-
 export {
   addComment,
   watchComments,
@@ -269,6 +231,5 @@ export {
   sendVerificationEmail,
   getCurrentUser,
   onAuthUserListener,
-  AuthState,
-  authNav,
+  updateUser,
 };

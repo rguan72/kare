@@ -23,8 +23,6 @@ export default function HomeScreen({ navigation }) {
     return () => unsubscribe();
   }, []);
 
-  authNav(navigation, AuthState.loggedin);
-
   return (
     <View style={HomeStyles.container}>
       <View style={HomeStyles.Heading}>

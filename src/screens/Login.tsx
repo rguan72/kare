@@ -53,8 +53,6 @@ function LoginScreen({ navigation }) {
     );
   };
 
-  authNav(navigation, AuthState.loggedout);
-
   return (
     <View style={{ marginTop: 30, backgroundColor: "#F3EAFF", flex: 1 }}>
       {/*<BackButton goBack={() => navigation.navigate('Home')} /> */}

@@ -12,9 +12,8 @@ import colors from "../constants/userColors";
 
 export default function VerifyEmail({ navigation }) {
   let email;
-
-  authNav(navigation, AuthState.emailverify);
-
+  const user = getCurrentUser();
+  if (user) email = user.email;
   return (
     <View
       style={{

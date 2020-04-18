@@ -39,68 +39,95 @@ export default function App() {
   // Ignore Firebase timer issues
   YellowBox.ignoreWarnings(["Setting a timer"]);
   console.ignoredYellowBox = ["Setting a timer"];
+  const user = firebase.auth().currentUser;
 
   return (
     <NavigationContainer>
       <ApplicationProvider mapping={mapping} theme={lightTheme}>
-        <Stack.Navigator initialRouteName={screens.signup}>
-          <Stack.Screen
-            name={screens.home}
-            component={HomeScreen}
-            options={{ title: "", headerTransparent: true }}
-          />
-          <Stack.Screen
-            name={screens.setup}
-            component={SetupSurvey}
-            options={{ title: "", headerTransparent: true }}
-          />
-          <Stack.Screen
-            name={screens.signup}
-            component={SignupScreen}
-            options={{ title: "", headerTransparent: true }}
-          />
-          <Stack.Screen
-            name={screens.login}
-            component={LoginScreen}
-            options={{ title: "", headerTransparent: true }}
-          />
-          <Stack.Screen
-            name={screens.verifyEmail}
-            component={VerifyEmailScreen}
-            options={{ title: "", headerTransparent: true }}
-          />
-          <Stack.Screen
-            name={screens.userComments}
-            component={UserComments}
-            options={{
-              headerTitle: "",
-              headerTransparent: true,
-            }}
-          />
-          <Stack.Screen
-            name={screens.thread}
-            component={Thread}
-            options={{
-              headerTitle: "",
-              headerTransparent: true,
-            }}
-          />
-          <Stack.Screen
-            name={screens.replies}
-            component={Replies}
-            options={{
-              headerTitle: "",
-              headerTransparent: true,
-            }}
-          />
-          <Stack.Screen
-            name={screens.error}
-            component={Error}
-            options={{
-              headerTitle: "",
-              headerTransparent: true,
-            }}
-          />
+        <Stack.Navigator>
+          {!user ? (
+            <>
+              <Stack.Screen
+                name={screens.signup}
+                component={SignupScreen}
+                options={{ title: "", headerTransparent: true }}
+              />
+              <Stack.Screen
+                name={screens.login}
+                component={LoginScreen}
+                options={{ title: "", headerTransparent: true }}
+              />
+              <Stack.Screen
+                name={screens.setup}
+                component={SetupSurvey}
+                options={{ title: "", headerTransparent: true }}
+              />
+              <Stack.Screen
+                name={screens.error}
+                component={Error}
+                options={{
+                  headerTitle: "",
+                  headerTransparent: true,
+                }}
+              />
+            </>
+          ) : user.emailVerified ? (
+            <>
+              <Stack.Screen
+                name={screens.home}
+                component={HomeScreen}
+                options={{ title: "", headerTransparent: true }}
+              />
+              <Stack.Screen
+                name={screens.userComments}
+                component={UserComments}
+                options={{
+                  headerTitle: "",
+                  headerTransparent: true,
+                }}
+              />
+              <Stack.Screen
+                name={screens.thread}
+                component={Thread}
+                options={{
+                  headerTitle: "",
+                  headerTransparent: true,
+                }}
+              />
+              <Stack.Screen
+                name={screens.replies}
+                component={Replies}
+                options={{
+                  headerTitle: "",
+                  headerTransparent: true,
+                }}
+              />
+              <Stack.Screen
+                name={screens.error}
+                component={Error}
+                options={{
+                  headerTitle: "",
+                  headerTransparent: true,
+                }}
+              />
+            </>
+          ) : (
+            <>
+              <Stack.Screen
+                name={screens.verifyEmail}
+                component={VerifyEmailScreen}
+                options={{ title: "", headerTransparent: true }}
+              />
+              <Stack.Screen
+                name={screens.error}
+                component={Error}
+                options={{
+                  headerTitle: "",
+                  headerTransparent: true,
+                }}
+              />
+            </>
+          )}
         </Stack.Navigator>
       </ApplicationProvider>
     </NavigationContainer>
