@@ -10,7 +10,7 @@ function ErrorScreen({ navigation }) {
     <View style={{backgroundColor: "#FFFDF4", flex: 1, justifyContent: 'center',  }}>
       <View style={styles.m}>
         <Text category='h1'> v( ‘.’ )v {"\n"} </Text>
-	<Text category='h6'> Connection issues! </Text>
+	<Text category='h6'> An unexpected error occurred! </Text>
         <Text category='h6'> Make sure you're connected to wifi </Text>
       </View>
     </View>
