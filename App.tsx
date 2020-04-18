@@ -109,6 +109,16 @@ export default function App() {
       <ApplicationProvider mapping={mapping} theme={lightTheme}>
         <Stack.Navigator>
           <Stack.Screen
+            name="Login"
+            component={LoginScreen}
+            options={{ title: "", headerTransparent: true }}
+          />
+          <Stack.Screen
+            name="Signup"
+            component={SignupScreen}
+            options={{ title: "", headerTransparent: true }}
+          />
+          <Stack.Screen
             name="SetupSurvey"
             component={SetupSurvey}
             options={{ title: "", headerTransparent: true }}
