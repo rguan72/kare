@@ -4,8 +4,8 @@ import { Layout, Text, withStyles } from "@ui-kitten/components";
 import GroupItem from "../components/GroupItem";
 import { getCurrentUser } from "../utils/FirebaseUtils";
 import { CommonActions } from "@react-navigation/native";
-import { watchGroups } from "../utils/FirebaseUtils";
-import HomeStyles from '../StyleSheets/HomeStyles';
+import { watchGroups, onAuthUserListener } from "../utils/FirebaseUtils";
+import HomeStyles from "../StyleSheets/HomeStyles";
 
 interface Group {
   title: String;
@@ -22,22 +22,30 @@ export default function HomeScreen({ navigation }) {
   }, []);
 
   // Testing only. Will be reworked with #7 login ui
-  if (getCurrentUser() && !getCurrentUser().emailVerified) {
-    navigation.navigate("VerifyEmail");
+  function navSignup() {
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{ name: "SignupScreen" }],
+      })
+    );
   }
 
-  const _onSignOut = () => {
-    firebase.auth().signOut().then(function() {
-      navigation.navigate('Login');
-    }).catch(function(error) {
-      console.log(error.message)
-    });
-  };
+  function navVerifyEmail() {
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{ name: "Verify Email" }],
+      })
+    );
+  }
+
+  onAuthUserListener(() => console.log("at home"), navSignup, navVerifyEmail);
 
   return (
     <View style={HomeStyles.container}>
       <View style={HomeStyles.Heading}>
-        <Text category='h5'>My Communities</Text>
+        <Text category="h5">My Communities</Text>
       </View>
       <FlatList
         data={groups}
@@ -57,9 +65,6 @@ export default function HomeScreen({ navigation }) {
         )}
         keyExtractor={(item) => item.id}
       />
-      <Button onPress={_onSignOut} style={HomeStyles.SignOut}>
-        Sign Out
-      </Button>
     </View>
   );
 }

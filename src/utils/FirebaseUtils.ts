@@ -1,4 +1,4 @@
-import firebaseApp from "firebase/app";
+import firebaseApp, { auth } from "firebase/app";
 import firebase from "../constants/Firebase";
 import { Linking } from "expo";
 import { AsyncStorage } from "react-native";
@@ -55,8 +55,12 @@ function sendVerificationEmail() {
   }
 }
 
-function addUser(email: string, password: string) {
-  return firebaseApp.auth().createUserWithEmailAndPassword(email, password);
+async function addUser(email: string, password: string) {
+  await firebaseApp.auth().createUserWithEmailAndPassword(email, password);
+  const user = firebaseApp.auth().currentUser;
+  db.collection(collections.users)
+    .doc(user.uid)
+    .set({ timestamp: firebaseApp.firestore.FieldValue.serverTimestamp() });
 }
 
 function addComment(comment: comment) {
@@ -174,6 +178,30 @@ function watchGroups(setGroups) {
   });
 }
 
+function onAuthUserListener(signedInFunc, notSignedInFunc, notVerifiedFunc) {
+  firebaseApp.auth().onAuthStateChanged((authUser) => {
+    if (authUser) {
+      db.collection(collections.users)
+        .doc(authUser.uid)
+        .get()
+        .then((user) => {
+          const dbUser = user.data();
+          const mergedUser = {
+            uid: authUser.uid,
+            email: authUser.email,
+            emailVerified: authUser.emailVerified,
+            providerData: authUser.providerData,
+            ...dbUser,
+          };
+          if (authUser.emailVerified) signedInFunc(mergedUser);
+          else notVerifiedFunc(mergedUser);
+        });
+    } else {
+      notSignedInFunc();
+    }
+  });
+}
+
 export {
   addComment,
   watchComments,
@@ -186,4 +214,5 @@ export {
   getUserComments,
   sendVerificationEmail,
   getCurrentUser,
+  onAuthUserListener,
 };

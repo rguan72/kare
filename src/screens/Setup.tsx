@@ -13,7 +13,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import {
   addUser,
   sendVerificationEmail,
-  getCurrentUser,
+  onAuthUserListener,
 } from "../utils/FirebaseUtils";
 import { getEmailExtension } from "../utils/Parse";
 import whitelist from "../constants/emailWhitelist";
@@ -85,8 +85,29 @@ export default function SetupSurvey({ navigation }) {
   const buttonText = !loading ? "Next" : "Loading...";
 
   // TODO #7 login screen ui
-  // if (getCurrentUser() && getCurrentUser().emailVerified)
-  //   navigation.navigate("Home");
+  function navHome() {
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{ name: "Home" }],
+      })
+    );
+  }
+
+  function navVerifyEmail() {
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{ name: "Verify Email" }],
+      })
+    );
+  }
+
+  onAuthUserListener(
+    navHome,
+    () => console.log("not signed in"),
+    navVerifyEmail
+  );
 
   return (
     <View style={SetupStyles.container}>
