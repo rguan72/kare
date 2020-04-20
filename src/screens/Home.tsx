@@ -19,7 +19,7 @@ interface Group {
 export default function HomeScreen({ navigation }) {
   const [groups, setGroups] = useState([]);
 
-  const _onSignOut = () => {
+  const onSignOut = () => {
     firebase
       .auth()
       .signOut()
@@ -56,7 +56,7 @@ export default function HomeScreen({ navigation }) {
         )}
         keyExtractor={(item) => item.id}
       />
-      <Button onPress={_onSignOut} style={HomeStyles.SignOut}>
+      <Button onPress={onSignOut} style={HomeStyles.SignOut}>
         Sign Out
       </Button>
     </View>

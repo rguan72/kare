@@ -28,7 +28,7 @@ function SignupScreen({ navigation }) {
     </TouchableWithoutFeedback>
   );
 
-  const _onSignUpPressed = async () => {
+  const onSignUpPressed = async () => {
     console.log("Value")
     console.log(email.value)
     var isEmailValid = emailValid(email.value)
@@ -112,7 +112,7 @@ function SignupScreen({ navigation }) {
       <Button
         mode="contained"
         onPress={async () => {
-          await _onSignUpPressed();
+          await onSignUpPressed();
         }}
         style={styles.button}
       >
