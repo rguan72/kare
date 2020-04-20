@@ -17,7 +17,8 @@ export default StyleSheet.create({
         flexDirection: "row-reverse",
         justifyContent: "flex-end",
         alignItems: "center",
-        padding: '5%',
+        paddingTop: '2%',
+        paddingBottom:'5%'
     },
     textBox: {
         flexDirection: "column",

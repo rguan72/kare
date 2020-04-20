@@ -167,6 +167,10 @@ function getUser(id) {
 }
 
 function watchGroups(setGroups) {
+  // useful for getting the URL for new groups.
+  // imageStorage.refFromURL("gs://kare-3.appspot.com/Sports.png").getDownloadURL().then(url => {
+  //     console.log(url);
+  //   })
   return db.collection(collections.groups).onSnapshot((querySnapshot) => {
     const groups = [];
     querySnapshot.forEach((doc) => groups.push({ id: doc.id, ...doc.data() }));
