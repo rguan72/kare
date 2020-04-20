@@ -1,12 +1,7 @@
 import React, { useState, useEffect } from "react";
-import {
-  StyleSheet,
-  SafeAreaView,
-  FlatList,
-  KeyboardAvoidingView,
-} from "react-native";
+import { SafeAreaView, FlatList, KeyboardAvoidingView } from "react-native";
 import PropTypes from "prop-types";
-import { Layout, Button, Input, Text } from "@ui-kitten/components";
+import { Layout, Text } from "@ui-kitten/components";
 import UserListItem from "../components/UserListItem";
 import {
   getUserComments,

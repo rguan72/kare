@@ -9,34 +9,24 @@ export default StyleSheet.create({
     justifyContent: "center",
     backgroundColor: colors["purple"],
   },
-  nextView: {
-    display: "flex",
-    alignItems: "flex-end",
-    justifyContent: "flex-end",
+  closeButton: {
+    marginTop: 5,
+    backgroundColor: "#5505BA",
   },
   nextButton: {
     marginBottom: 20,
     marginRight: 20,
   },
   mt: {
-    marginTop: 20,
+    marginTop: 10,
   },
-  userName: {
-    marginBottom: 10,
+  verifyButton: {
+    backgroundColor: "#5505BA",
+    borderColor: "#5505BA",
   },
-  date: {
-    color: "rgba(0, 0, 0, 0.3)",
-  },
-  circle: {
-    width: 44,
-    height: 44,
-    borderRadius: 44 / 2,
-  },
-  square: {
-    marginRight: 5,
-    width: 20,
-    height: 20,
-    borderRadius: 5,
-    overflow: "hidden",
+  doneButton: {
+    marginTop: 5,
+    backgroundColor: "#5505BA",
+    borderColor: "#5505BA",
   },
 });
