@@ -4,6 +4,7 @@ import {
   TouchableWithoutFeedback,
   StyleSheet,
   View,
+  Image,
 } from "react-native";
 import { CommonActions } from "@react-navigation/native";
 import { authNav, AuthState } from "../utils/FirebaseUtils";
@@ -18,6 +19,7 @@ import {
   Input,
 } from "@ui-kitten/components";
 import { Ionicons } from "@expo/vector-icons";
+import Logo from '../components/Logo';
 
 function LoginScreen({ navigation }) {
   const [email, setEmail] = useState({ value: "", error: "" });
@@ -51,9 +53,9 @@ function LoginScreen({ navigation }) {
 
   return (
     <View style={{ marginTop: 30, backgroundColor: "#F3EAFF", flex: 1 }}>
-      {/* <Logo /> */}
-
-      <Text category="h1">Welcome to Kare</Text>
+      <View style={{alignItems: 'center', justifyContent: 'center'}}>
+        <Logo alignItems='center'/> 
+      </View> 
 
       <View style={styles.container}>
         <Input
@@ -130,8 +132,8 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: 24,
-    marginLeft: 10,
-    marginRight:10,
+    marginLeft: 30,
+    marginRight:30,
     borderColor: "#5505BA",
     backgroundColor: "#5505BA",
   },
@@ -142,11 +144,12 @@ const styles = StyleSheet.create({
   },
   label: {
     color: "black",
+    marginLeft: 20,
   },
   input: {
     marginTop: 10,
-    marginLeft: 10,
-    marginRight: 10,
+    marginLeft: 30,
+    marginRight: 30,
   },
   link: {
     fontWeight: "bold",

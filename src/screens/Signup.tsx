@@ -10,6 +10,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { addUser, authNav, AuthState } from "../utils/FirebaseUtils";
 import screens from "../constants/screenNames";
 import {emailValid} from "../utils/Parse.ts"
+import Logo from '../components/Logo';
 
 function SignupScreen({ navigation }) {
   const [email, setEmail] = useState({ value: "", error: "" });
@@ -70,9 +71,9 @@ function SignupScreen({ navigation }) {
     <View style={{ marginTop: 30, backgroundColor: "#F3EAFF", flex: 1 }}>
       {/* <BackButton goBack={() => navigation.navigate('HomeScreen')} /> */}
 
-      {/* <Logo /> */}
-
-      <Text category="h1">Create Account</Text>
+      <View style={{alignItems: 'center', justifyContent: 'center'}}>
+        <Logo alignItems='center'/> 
+      </View> 
 
       <Input
         placeholder="Email"
@@ -142,20 +143,20 @@ const styles = StyleSheet.create({
   },
   input: {
     marginTop: 10,
-    marginLeft: 10,
-    marginRight: 10,
+    marginLeft: 30,
+    marginRight: 30,
   },
   button: {
     marginTop: 24,
-    marginLeft: 10,
-    marginRight:10,
+    marginLeft: 30,
+    marginRight:30,
     borderColor: "#5505BA",
     backgroundColor: "#5505BA",
   },
   row: {
     flexDirection: "row",
     marginTop: 4,
-    marginLeft: 10,
+    marginLeft: 30,
   },
   link: {
     fontWeight: "bold",
