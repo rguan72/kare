@@ -31,11 +31,12 @@ function LoginScreen({ navigation }) {
 
   const renderIcon = (style) => (
     <TouchableWithoutFeedback onPress={onIconPress}>
-      <Ionicons name={secureTextEntry ? "ios-eye-off" : "ios-eye"} />
+      <Ionicons name={secureTextEntry ? "ios-eye-off" : "ios-eye"} size={20}/>
     </TouchableWithoutFeedback>
   );
 
   const _onLoginPressed = () => {
+    console.log(email.value)
     firebase
       .auth()
       .signInWithEmailAndPassword(email.value, password.value)
@@ -50,8 +51,6 @@ function LoginScreen({ navigation }) {
 
   return (
     <View style={{ marginTop: 30, backgroundColor: "#F3EAFF", flex: 1 }}>
-      {/*<BackButton goBack={() => navigation.navigate('Home')} /> */}
-
       {/* <Logo /> */}
 
       <Text category="h1">Welcome to Kare</Text>
@@ -68,6 +67,7 @@ function LoginScreen({ navigation }) {
           autoCompleteType="email"
           textContentType="emailAddress"
           keyboardType="email-address"
+          style={styles.input}
         />
       </View>
 
@@ -81,6 +81,7 @@ function LoginScreen({ navigation }) {
           error={!!password.error}
           errorText={password.error}
           secureTextEntry={secureTextEntry}
+          style={styles.input}
         />
       </View>
 
@@ -95,17 +96,10 @@ function LoginScreen({ navigation }) {
       <Button
         mode="contained"
         onPress={_onLoginPressed}
-        style={{ borderColor: "#5505BA", backgroundColor: "#5505BA" }}
+        style={styles.button}
       >
         Login
       </Button>
-
-      <Modal visible={visible}>
-        <Card disabled={true}>
-          <Text> {email.error} </Text>
-          <Button onPress={() => setVisible(false)}>CLOSE</Button>
-        </Card>
-      </Modal>
 
       <View style={styles.row}>
         <Text style={styles.label}>Don’t have an account? </Text>
@@ -113,6 +107,13 @@ function LoginScreen({ navigation }) {
           <Text style={styles.link}>Sign up</Text>
         </TouchableOpacity>
       </View>
+
+      <Modal visible={visible}>
+        <Card disabled={true}>
+          <Text> {email.error} </Text>
+          <Button onPress={() => setVisible(false)} style={styles.button}>CLOSE</Button>
+        </Card>
+      </Modal>
     </View>
   );
 }
@@ -127,12 +128,25 @@ const styles = StyleSheet.create({
     width: "100%",
     marginVertical: 12,
   },
+  button: {
+    marginTop: 24,
+    marginLeft: 10,
+    marginRight:10,
+    borderColor: "#5505BA",
+    backgroundColor: "#5505BA",
+  },
   row: {
     flexDirection: "row",
     marginTop: 4,
+    marginLeft: 10,
   },
   label: {
     color: "black",
+  },
+  input: {
+    marginTop: 10,
+    marginLeft: 10,
+    marginRight: 10,
   },
   link: {
     fontWeight: "bold",

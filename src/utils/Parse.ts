@@ -1,6 +1,7 @@
 import whiteList from "../constants/emailWhitelist";
 
 function getEmailExtension(email: string) {
+  console.log(email);
   return email.split("@")[1];
 }
 
