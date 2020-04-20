@@ -94,6 +94,7 @@ export default function App() {
                 name={screens.home}
                 component={HomeScreen}
                 options={{ title: "", headerTransparent: true }}
+                initialParams={{ userId: user.uid }}
               />
               <Stack.Screen
                 name={screens.userComments}
@@ -102,6 +103,7 @@ export default function App() {
                   headerTitle: "",
                   headerTransparent: true,
                 }}
+                initialParams={{ userId: user.uid }}
               />
               <Stack.Screen
                 name={screens.thread}
@@ -110,6 +112,7 @@ export default function App() {
                   headerTitle: "",
                   headerTransparent: true,
                 }}
+                initialParams={{ userId: user.uid }}
               />
               <Stack.Screen
                 name={screens.replies}
@@ -118,6 +121,7 @@ export default function App() {
                   headerTitle: "",
                   headerTransparent: true,
                 }}
+                initialParams={{ userId: user.uid }}
               />
               <Stack.Screen
                 name={screens.error}

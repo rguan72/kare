@@ -30,9 +30,7 @@ export default function Thread({ route, navigation }) {
   const [restComments, setRestComments] = useState([]);
   const [commentStructure, setCommentStructure] = useState([]);
   const [value, setValue] = useState("");
-  const { title, description } = route.params;
-  // hard coded for demo
-  const userId = "ztKIibvRJFjoz26pztO4";
+  const { userId, title, description } = route.params;
 
   useEffect(() => {
     const unsubscribe = watchComments(setComments);

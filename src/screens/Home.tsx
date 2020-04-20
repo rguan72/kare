@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useImperativeHandle } from "react";
 import { FlatList, View } from "react-native";
 import { Button, Layout, Text, withStyles } from "@ui-kitten/components";
 import GroupItem from "../components/GroupItem";
-import { getCurrentUser } from "../utils/FirebaseUtils";
-import { CommonActions } from "@react-navigation/native";
-import { watchGroups, authNav, AuthState } from "../utils/FirebaseUtils";
+import PropTypes from "prop-types";
+import { watchGroups } from "../utils/FirebaseUtils";
 import screens from "../constants/screenNames";
 import firebase from "firebase/app";
 
@@ -16,8 +15,9 @@ interface Group {
   id: String;
 }
 
-export default function HomeScreen({ navigation }) {
+export default function HomeScreen({ route, navigation }) {
   const [groups, setGroups] = useState([]);
+  const { userId } = route.params;
 
   const onSignOut = () => {
     firebase
@@ -48,6 +48,7 @@ export default function HomeScreen({ navigation }) {
             text={item.text}
             onPress={() =>
               navigation.navigate(screens.thread, {
+                userId: userId,
                 title: item.title,
                 description: item.description,
               })
@@ -62,3 +63,7 @@ export default function HomeScreen({ navigation }) {
     </View>
   );
 }
+
+HomeScreen.propTypes = {
+  route: PropTypes.object.isRequired,
+};

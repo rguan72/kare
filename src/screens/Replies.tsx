@@ -25,10 +25,7 @@ export default function Replies({ route, navigation }) {
   const [value, setValue] = useState("");
   const [name, setName] = useState("");
   const [userColor, setUserColor] = useState(Colors["purple"]); // default
-  const { user, comment, commentId, date } = route.params;
-  // hard coded for demo
-  const userId = "ztKIibvRJFjoz26pztO4";
-  //const userId = user; // something like this would be done in reality
+  const { userId, comment, commentId, date } = route.params;
 
   useEffect(() => {
     const unsubscribe = watchReplies(commentId, setReplies);
@@ -36,7 +33,7 @@ export default function Replies({ route, navigation }) {
   }, []);
 
   useEffect(() => {
-    getUser(user).then((userData) => {
+    getUser(userId).then((userData) => {
       setName(userData.name);
       setUserColor(Colors[userData.color]);
     });
@@ -106,7 +103,7 @@ export default function Replies({ route, navigation }) {
                     date={date}
                     onReply={() => {
                       navigation.navigate(screens.replies, {
-                        user: item.userId,
+                        userId: item.userId,
                         comment: item.text,
                         commentId: item.id,
                       });

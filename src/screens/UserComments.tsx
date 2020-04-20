@@ -13,14 +13,12 @@ import {
   reportComment,
   getUser,
 } from "../utils/FirebaseUtils";
-import UserCommentsStyles from "../StyleSheets/UserCommentsStyles"
+import UserCommentsStyles from "../StyleSheets/UserCommentsStyles";
 
-export default function UserComments({ route }) {
+export default function UserComments({ route, navigation }) {
   const [comments, setComments] = useState([]);
   const [name, setName] = useState("");
-  //const { userId } = route.params; // usually it would be this
-  // hard coded for demo
-  const userId = "ztKIibvRJFjoz26pztO4";
+  const { userId } = route.params;
 
   useEffect(() => {
     getUser(userId).then((userData) => {
@@ -35,7 +33,7 @@ export default function UserComments({ route }) {
   const GroupTitle = () => (
     <Layout style={UserCommentsStyles.header}>
       <Layout style={UserCommentsStyles.headerTextbox}>
-        <Text category='h4'>{name}</Text>
+        <Text category="h4">{name}</Text>
         <Text>Comment Summary:</Text>
       </Layout>
       <Layout style={{ backgroundColor: "#F3EAFF", maxHeight: 100 }}></Layout>
@@ -43,7 +41,7 @@ export default function UserComments({ route }) {
   );
 
   return (
-    <KeyboardAvoidingView behavior='padding' style={{ flex: 1 }}>
+    <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
       <SafeAreaView style={UserCommentsStyles.safeAreaView}>
         {/* <ScrollView keyboardShouldPersistTaps="always"> */}
         <FlatList
