@@ -10,10 +10,9 @@ export default StyleSheet.create({
         marginTop: 15 
     },
     SignOut: {
-    	width: 60,  
-		height: 60,   
 		borderRadius: 30,            
-		backgroundColor: '#ee6e73',                                    
+		backgroundColor: '#5505BA', 
+        borderColor: '#5505BA',                                   
 		position: 'absolute',                                          
 		bottom: 10,                                                    
 		right: 10, 
