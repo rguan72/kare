@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useImperativeHandle } from "react";
 import { FlatList, View } from "react-native";
-import { Layout, Text, withStyles } from "@ui-kitten/components";
+import { Button, Layout, Text, withStyles } from "@ui-kitten/components";
 import GroupItem from "../components/GroupItem";
-import { getCurrentUser } from "../utils/FirebaseUtils";
-import { CommonActions } from "@react-navigation/native";
+import PropTypes from "prop-types";
 import { watchGroups } from "../utils/FirebaseUtils";
-import HomeStyles from '../StyleSheets/HomeStyles';
+import screens from "../constants/screenNames";
+import firebase from "firebase/app";
+
+import HomeStyles from "../StyleSheets/HomeStyles";
 
 interface Group {
   title: String;
@@ -13,23 +15,28 @@ interface Group {
   id: String;
 }
 
-export default function HomeScreen({ navigation }) {
+export default function HomeScreen({ route, navigation }) {
   const [groups, setGroups] = useState([]);
+  const { userId } = route.params;
+
+  const onSignOut = () => {
+    firebase
+      .auth()
+      .signOut()
+      .catch(function (error) {
+        console.log(error.message);
+      });
+  };
 
   useEffect(() => {
     const unsubscribe = watchGroups(setGroups);
     return () => unsubscribe();
   }, []);
 
-  // Testing only. Will be reworked with #7 login ui
-  if (getCurrentUser() && !getCurrentUser().emailVerified) {
-    navigation.navigate("VerifyEmail");
-  }
-
   return (
     <View style={HomeStyles.container}>
       <View style={HomeStyles.Heading}>
-        <Text category='h5'>My Communities</Text>
+        <Text category="h5">My Communities</Text>
       </View>
       <FlatList
         data={groups}
@@ -40,7 +47,8 @@ export default function HomeScreen({ navigation }) {
             description={item.description}
             text={item.text}
             onPress={() =>
-              navigation.navigate("Thread", {
+              navigation.navigate(screens.thread, {
+                userId: userId,
                 title: item.title,
                 description: item.description,
               })
@@ -49,6 +57,13 @@ export default function HomeScreen({ navigation }) {
         )}
         keyExtractor={(item) => item.id}
       />
+      <Button onPress={onSignOut} style={HomeStyles.SignOut}>
+        Sign Out
+      </Button>
     </View>
   );
 }
+
+HomeScreen.propTypes = {
+  route: PropTypes.object.isRequired,
+};

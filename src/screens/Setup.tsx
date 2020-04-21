@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View } from "react-native";
 import {
   Card,
@@ -10,30 +10,31 @@ import {
 } from "@ui-kitten/components";
 import RNPickerSelect from "react-native-picker-select";
 import { ScrollView } from "react-native-gesture-handler";
-import {
-  addUser,
-  sendVerificationEmail,
-  getCurrentUser,
-} from "../utils/FirebaseUtils";
+import { addUser, sendVerificationEmail, updateUser } from "../utils/FirebaseUtils";
+import screens from "../constants/screenNames";
 import { getEmailExtension } from "../utils/Parse";
 import whitelist from "../constants/emailWhitelist";
 import { CommonActions } from "@react-navigation/native";
 import { groupOptions, stressOptions } from "../constants/community";
 import SetupStyles from "../StyleSheets/SetupStyles";
-import { Slider } from "react-native";
+import { Slider, YellowBox } from "react-native";
+import firebase from "firebase";
 
-export default function SetupSurvey({ navigation }) {
+
+export default function SetupSurvey({ navigation, route}) {
+  // Ignore Firebase timer issues
+  YellowBox.ignoreWarnings(["Setting a timer"]);
+  console.ignoredYellowBox = ["Setting a timer"];
+
   // initial state
   const initialState = {
     username: "",
-    email: "",
     val1: 5,
     val2: 5,
     val3: 5,
   };
   const [color, setColor] = useState("");
   const [userName, setUserName] = useState("");
-  const [emailValid, setEmailValid] = useState(false);
   const [values, setValues] = useState(initialState);
   const [loading, setLoading] = useState(false);
   const [selectedIndexOne, setSelectedIndexOne] = useState([]);
@@ -79,14 +80,9 @@ export default function SetupSurvey({ navigation }) {
     values["username"].length > 0 &&
     selectedIndexOne.length >= 2 &&
     selectedIndexTwo.length >= 3 &&
-    color.length > 0 &&
-    emailValid;
+    color.length > 0;
 
   const buttonText = !loading ? "Next" : "Loading...";
-
-  // TODO #7 login screen ui
-  // if (getCurrentUser() && getCurrentUser().emailVerified)
-  //   navigation.navigate("Home");
 
   return (
     <View style={SetupStyles.container}>
@@ -108,20 +104,6 @@ export default function SetupSurvey({ navigation }) {
               { label: "Green", value: "green" },
             ]}
           />
-        </Card>
-        <Card style={SetupStyles.card}>
-          <Text category="h6">What is your student email? </Text>
-          <Text style={{ paddingTop: 2, paddingBottom: 2 }}>(required)</Text>
-          <Input
-            value={values["email"]}
-            autoCapitalize="none"
-            onChange={(e) => handleEventChange(e, "email")}
-            onEndEditing={(e) => {
-              const email = values["email"];
-              setEmailValid(whitelist.includes(getEmailExtension(email)));
-            }}
-          />
-          {!emailValid && <Text> Need valid .edu email to sign up </Text>}
         </Card>
         <Card style={SetupStyles.card}>
           <Text category="h6">What is your spirit animal? </Text>
@@ -261,22 +243,31 @@ export default function SetupSurvey({ navigation }) {
         </Card>
 
         <Button
-          onPress={async () => {
+          onPress={() => {
             setLoading(!loading);
             try {
-              await addUser(values["email"], "password");
-              await console.log(allUserInformation); // this will be subbed for creating the linked user db entry
-              sendVerificationEmail();
-              setLoading(!loading);
-              navigation.dispatch(
-                CommonActions.reset({
-                  index: 0,
-                  routes: [{ name: "VerifyEmail" }],
+              addUser(route.params.email, route.params.password)
+                .then(() => {
+                  console.log("User account created & signed in!");
+                  updateUser(allUserInformation()); // this will be subbed for creating the linked user db entry
                 })
-              ); // routes to home and doesnt give option to go back
+                .catch((error) => {
+                  if (error.code === "auth/email-already-in-use") {
+                    console.log("That email address is already in use!");
+                  }
+
+                  if (error.code === "auth/invalid-email") {
+                    console.log("That email address is invalid!");
+                  }
+
+                  email.error = error.message;
+                  setVisible(true);
+                  return;
+                });
+              setLoading(!loading);
             } catch (err) {
               console.log(err); // in this case we just log it
-              //navigation.navigate("Error"); // in reality we would nav to error page
+              navigation.navigate(screens.error);
             }
           }}
           disabled={!((isEnabled && !loading) || (!isEnabled && loading))}
@@ -284,19 +275,18 @@ export default function SetupSurvey({ navigation }) {
         >
           {buttonText}
         </Button>
-        {
-          <Button
-            onPress={() => {
-              navigation.navigate("Home");
-            }}
-            style={SetupStyles.button}
-          >
-            Go to Home debug
-          </Button>
-        }
+        {/*
         <Button
           onPress={() => {
-            navigation.navigate("VerifyEmail");
+            navigation.navigate(screens.home);
+          }}
+          style={SetupStyles.button}
+        >
+          Go to Home debug
+        </Button>
+        <Button
+          onPress={() => {
+            navigation.navigate(screens.verifyEmail);
           }}
           style={{
             borderColor: "#5505BA",
@@ -304,7 +294,7 @@ export default function SetupSurvey({ navigation }) {
           }}
         >
           Go to Verify Email debug
-        </Button>
+        </Button>*/}
       </ScrollView>
     </View>
   );

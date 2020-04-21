@@ -1,9 +1,13 @@
-import firebaseApp from "firebase/app";
+import React from "react";
+import firebaseApp, { auth } from "firebase/app";
 import firebase from "../constants/Firebase";
 import { Linking } from "expo";
 import { AsyncStorage } from "react-native";
+import { CommonActions } from "@react-navigation/native";
 import { collections } from "../constants/FirebaseStrings";
 import { community } from "../constants/community";
+import { func } from "prop-types";
+import screens from "../constants/screenNames";
 
 const db = firebase.firestore();
 const imageStorage = firebase.storage();
@@ -28,6 +32,13 @@ interface returnComment extends comment {
 interface commentList {
   [index: number]: returnComment;
 }
+
+enum AuthState {
+  loggedin,
+  emailverify,
+  loggedout,
+}
+
 function getCurrentUser() {
   return firebaseApp.auth().currentUser;
 }
@@ -55,8 +66,17 @@ function sendVerificationEmail() {
   }
 }
 
-function addUser(email: string, password: string) {
-  return firebaseApp.auth().createUserWithEmailAndPassword(email, password);
+async function addUser(email: string, password: string) {
+  await firebaseApp.auth().createUserWithEmailAndPassword(email, password);
+  const user = firebaseApp.auth().currentUser;
+  db.collection(collections.users)
+    .doc(user.uid)
+    .set({ timestamp: firebaseApp.firestore.FieldValue.serverTimestamp() });
+}
+
+function updateUser(allUserInformation) {
+  const user = firebaseApp.auth().currentUser;
+  db.collection(collections.users).doc(user.uid).update(allUserInformation);
 }
 
 function addComment(comment: comment) {
@@ -174,6 +194,30 @@ function watchGroups(setGroups) {
   });
 }
 
+function onAuthUserListener(next, fallback, notVerifiedFunc) {
+  firebaseApp.auth().onAuthStateChanged((authUser) => {
+    if (authUser) {
+      db.collection(collections.users)
+        .doc(authUser.uid)
+        .get()
+        .then((user) => {
+          const dbUser = user.data();
+          const mergedUser = {
+            uid: authUser.uid,
+            email: authUser.email,
+            emailVerified: authUser.emailVerified,
+            providerData: authUser.providerData,
+            ...dbUser,
+          };
+          if (authUser.emailVerified) next(mergedUser);
+          else notVerifiedFunc(mergedUser);
+        });
+    } else {
+      fallback();
+    }
+  });
+}
+
 export {
   addComment,
   watchComments,
@@ -186,4 +230,7 @@ export {
   getUserComments,
   sendVerificationEmail,
   getCurrentUser,
+  onAuthUserListener,
+  updateUser,
+  AuthState,
 };

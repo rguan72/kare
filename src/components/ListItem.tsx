@@ -4,16 +4,23 @@ import { Card, Text, Layout } from "@ui-kitten/components";
 import { StyleSheet, View } from "react-native";
 import PropTypes from "prop-types";
 import Emojis from "../constants/emojis";
-import Colors from "../constants/userColors"
+import Colors from "../constants/userColors";
 import { getUser } from "../utils/FirebaseUtils";
-import ListItemStyles from "../StyleSheets/ListItemStyles"
+import ListItemStyles from "../StyleSheets/ListItemStyles";
 
-export default function ListItem({ userId, text, onReport, date, onReply, numReplies }) {
+export default function ListItem({
+  userId,
+  text,
+  onReport,
+  date,
+  onReply,
+  numReplies,
+}) {
   const [name, setName] = useState("");
   const [color, setColor] = useState(Colors["purple"]); //defualt purple
   useEffect(() => {
-    if (userId) { 
-      getUser(userId).then(userData => {
+    if (userId) {
+      getUser(userId).then((userData) => {
         setName(userData.name);
         setColor(userData.color);
       });
@@ -22,13 +29,10 @@ export default function ListItem({ userId, text, onReport, date, onReply, numRep
   const userColor = Colors[color];
 
   return (
-    <Card style={ListItemStyles.card} >
+    <Card style={ListItemStyles.card}>
       <View style={{ flexDirection: "row" }}>
-        <View style={[ListItemStyles.square, {backgroundColor: userColor}]} /> 
-        <Text style={ListItemStyles.userName}>
-          {" "} 
-          {name}
-        </Text> 
+        <View style={[ListItemStyles.square, { backgroundColor: userColor }]} />
+        <Text style={ListItemStyles.userName}> {name}</Text>
         <Text style={ListItemStyles.date}>
           {" * "}
           {date}
@@ -36,12 +40,11 @@ export default function ListItem({ userId, text, onReport, date, onReply, numRep
       </View>
       {/* </View> */}
       <Text category="h6"> {text} </Text>
-      <View style={ListItemStyles.bottomRow} >
+      <View style={ListItemStyles.bottomRow}>
         <TouchableOpacity onPress={onReply}>
-          <Text >{numReplies ? numReplies : 0} Replies </Text>
+          <Text>{numReplies ? numReplies : 0} Replies </Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={onReport}>
-          <Text > {Emojis.flag()} Flag </Text>
           <Text style={ListItemStyles.report}> Report</Text>
         </TouchableOpacity>
       </View>
@@ -54,5 +57,5 @@ ListItem.propTypes = {
   text: PropTypes.string.isRequired,
   date: PropTypes.string.isRequired,
   onReport: PropTypes.func.isRequired,
-  onReply: PropTypes.func.isRequired
+  onReply: PropTypes.func.isRequired,
 };

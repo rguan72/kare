@@ -8,5 +8,13 @@ export default StyleSheet.create({
     Heading: {
         alignItems: "center",
         marginTop: 15 
+    },
+    SignOut: {
+		borderRadius: 30,            
+		backgroundColor: '#5505BA', 
+        borderColor: '#5505BA',                                   
+		position: 'absolute',                                          
+		bottom: 10,                                                    
+		right: 10, 
     }
 })

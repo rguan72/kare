@@ -16,6 +16,7 @@ import {
   reportComment,
   getUser,
 } from "../utils/FirebaseUtils";
+import screens from "../constants/screenNames";
 import Colors from "../constants/userColors";
 import RepliesStyles from "../StyleSheets/RepliesStyles";
 
@@ -24,10 +25,7 @@ export default function Replies({ route, navigation }) {
   const [value, setValue] = useState("");
   const [name, setName] = useState("");
   const [userColor, setUserColor] = useState(Colors["purple"]); // default
-  const { user, comment, commentId, date } = route.params;
-  // hard coded for demo
-  const userId = "ztKIibvRJFjoz26pztO4";
-  //const userId = user; // something like this would be done in reality
+  const { userId, comment, commentId, date } = route.params;
 
   useEffect(() => {
     const unsubscribe = watchReplies(commentId, setReplies);
@@ -35,7 +33,7 @@ export default function Replies({ route, navigation }) {
   }, []);
 
   useEffect(() => {
-    getUser(user).then((userData) => {
+    getUser(userId).then((userData) => {
       setName(userData.name);
       setUserColor(Colors[userData.color]);
     });
@@ -68,7 +66,7 @@ export default function Replies({ route, navigation }) {
                 {date}
               </Text>
             </View>
-            <Text category='h6'> {comment} </Text>
+            <Text category="h6"> {comment} </Text>
           </Card>
         </Layout>
       </Layout>
@@ -104,8 +102,8 @@ export default function Replies({ route, navigation }) {
                     onReport={() => reportComment(item.id)}
                     date={date}
                     onReply={() => {
-                      navigation.navigate("Replies", {
-                        user: item.userId,
+                      navigation.navigate(screens.replies, {
+                        userId: item.userId,
                         comment: item.text,
                         commentId: item.id,
                       });
@@ -124,7 +122,7 @@ export default function Replies({ route, navigation }) {
               }}
             >
               <Input
-                placeholder='Add comment'
+                placeholder="Add comment"
                 value={value}
                 onChangeText={setValue}
               />

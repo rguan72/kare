@@ -22,6 +22,7 @@ import {
 } from "../utils/FirebaseUtils";
 import { WOMEN } from "../../Images";
 import ThreadStyles from "../StyleSheets/ThreadStyles";
+import screens from "../constants/screenNames";
 
 export default function Thread({ route, navigation }) {
   const [comments, setComments] = useState([]);
@@ -29,9 +30,7 @@ export default function Thread({ route, navigation }) {
   const [restComments, setRestComments] = useState([]);
   const [commentStructure, setCommentStructure] = useState([]);
   const [value, setValue] = useState("");
-  const { title, description } = route.params;
-  // hard coded for demo
-  const userId = "ztKIibvRJFjoz26pztO4";
+  const { userId, title, description } = route.params;
 
   useEffect(() => {
     const unsubscribe = watchComments(setComments);
@@ -81,7 +80,7 @@ export default function Thread({ route, navigation }) {
                     userId={item.userId}
                     text={item.text}
                     onReply={() => {
-                      navigation.navigate("Replies", {
+                      navigation.navigate(screens.replies, {
                         user: item.userId,
                         comment: item.text,
                         commentId: item.id,

@@ -1,52 +1,67 @@
-import React from "react";
+import React, { useState } from "react";
 import firebase from "firebase/app";
-import { View, TouchableOpacity } from "react-native";
-import { Text, Button } from "@ui-kitten/components";
+import { View, TouchableOpacity, TouchableWithoutFeedback } from "react-native";
+import { Modal, Card, Text, Button } from "@ui-kitten/components";
+import screens from "../constants/screenNames";
 import { sendVerificationEmail, getCurrentUser } from "../utils/FirebaseUtils";
-import colors from "../constants/userColors";
+import VerifyStyles from "../StyleSheets/VerifyStyles";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function VerifyEmail({ navigation }) {
-  const user = getCurrentUser();
   let email;
+  const user = getCurrentUser();
+  const [visible, setVisible] = useState(false);
+  const [buttonTxt, setButtonTxt] = useState("Send Verification");
+  const onSignOut = () => {
+    setVisible(true);
+    firebase
+      .auth()
+      .signOut()
+      .catch(function (error) {
+        console.log(error.message);
+      });
+  };
 
-  // TODO: issue #7
-  if (!user) {
-    // TODO: navigate to sign in/sign up page
-    console.log("not signed in");
-    // hard coded for testing
-    firebase.auth().signInWithEmailAndPassword("guanr@umich.edu", "password");
-    email = "hi";
-  } else {
-    email = user.email;
-  }
-
+  if (user) email = user.email;
   return (
-    <View
-      style={{
-        display: "flex",
-        flexGrow: 1,
-        flexShrink: 0,
-        alignItems: "center",
-        justifyContent: "center",
-        backgroundColor: colors["purple"],
-      }}
-    >
+    <View style={VerifyStyles.parent}>
       <Text style={{ textAlign: "center" }} category="h6">
-        A verification email was just sent to: {email}
+        Almost done! We just need to verify your email address: {email}
       </Text>
-      <TouchableOpacity
-        style={{
-          marginTop: 10,
-        }}
-        disabled
-      >
+      <Modal visible={visible}>
+        <Card disabled={true}>
+          <TouchableWithoutFeedback onPress={() => {setVisible(false)}}>
+            <Ionicons name="ios-close-circle" size={25} style={{position: 'absolute', right: 10, top: 0, bottom: 0, color: "#5505BA"}}/>
+          </TouchableWithoutFeedback>
+          <Text>
+            {" "}
+            Once you've clicked the link in the verification email, you're ready
+            to login.{" "}
+          </Text>
+          <Button onPress={() => onSignOut()} style={VerifyStyles.closeButton}>
+            Go to Login
+          </Button>
+        </Card>
+      </Modal>
+      <TouchableOpacity style={VerifyStyles.mt} disabled>
         <Button
           onPress={() => {
             console.log("sent email");
             sendVerificationEmail();
+            setButtonTxt("Resend Verification");
           }}
+          style={VerifyStyles.verifyButton}
         >
-          Resend Link
+          {buttonTxt}
+        </Button>
+        <Button
+          onPress={() => {
+            console.log("done with verification");
+            setVisible(true);
+          }}
+          style={VerifyStyles.doneButton}
+        >
+          Done
         </Button>
       </TouchableOpacity>
     </View>
