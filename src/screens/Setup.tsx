@@ -54,7 +54,7 @@ export default function SetupSurvey({ navigation, route }) {
   );
 
   const groupOneDisplayValues = selectedIndexOne.map((index) => {
-    return stressOptions[index.row];
+    return stressOptions[index.row].title;
   });
 
   const groupTwoDisplayValues = selectedIndexTwo.map((index) => {
