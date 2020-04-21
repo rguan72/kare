@@ -9,9 +9,9 @@ import {
   Modal,
   Card,
   Text,
-  Input,
   withStyles,
   Button,
+  Input,
 } from "@ui-kitten/components";
 import { Ionicons } from "@expo/vector-icons";
 import { authNav, AuthState } from "../utils/FirebaseUtils";
@@ -91,6 +91,7 @@ function SignupScreen({ navigation }) {
       <Input
         placeholder="Email"
         autoCapitalize="none"
+        autoCompleteType="email"
         value={email.value}
         onChangeText={(text) => setEmail({ value: text, error: "" })}
         error={!!email.error}
@@ -101,6 +102,8 @@ function SignupScreen({ navigation }) {
       <Input
         value={password.value}
         placeholder="Password"
+        autoCapitalize="none"
+        autoCompleteType="password"
         accessoryRight={renderIcon}
         caption=" Make sure your password is at least 6 characters"
         onChangeText={(text) => setPassword({ value: text, error: "" })}
@@ -114,6 +117,8 @@ function SignupScreen({ navigation }) {
       <Input
         returnKeyType="done"
         value={repassword.value}
+        autoCapitalize="none"
+        autoCompleteType="password"
         placeholder="Retype Password"
         accessoryRight={renderIcon}
         caption=" Make sure both passwords match"

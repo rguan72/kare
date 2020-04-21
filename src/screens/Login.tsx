@@ -19,7 +19,7 @@ import {
   Input,
 } from "@ui-kitten/components";
 import { Ionicons } from "@expo/vector-icons";
-import Logo from '../components/Logo';
+import Logo from "../components/Logo";
 
 function LoginScreen({ navigation }) {
   const [email, setEmail] = useState({ value: "", error: "" });
@@ -33,12 +33,12 @@ function LoginScreen({ navigation }) {
 
   const renderIcon = (style) => (
     <TouchableWithoutFeedback onPress={onIconPress}>
-      <Ionicons name={secureTextEntry ? "ios-eye-off" : "ios-eye"} size={20}/>
+      <Ionicons name={secureTextEntry ? "ios-eye-off" : "ios-eye"} size={20} />
     </TouchableWithoutFeedback>
   );
 
   const _onLoginPressed = () => {
-    console.log(email.value)
+    console.log(email.value);
     firebase
       .auth()
       .signInWithEmailAndPassword(email.value, password.value)
@@ -53,9 +53,9 @@ function LoginScreen({ navigation }) {
 
   return (
     <View style={{ marginTop: 30, backgroundColor: "#F3EAFF", flex: 1 }}>
-      <View style={{alignItems: 'center', justifyContent: 'center'}}>
-        <Logo alignItems='center'/> 
-      </View> 
+      <View style={{ alignItems: "center", justifyContent: "center" }}>
+        <Logo alignItems="center" />
+      </View>
 
       <View style={styles.container}>
         <Input
@@ -83,23 +83,13 @@ function LoginScreen({ navigation }) {
           error={!!password.error}
           errorText={password.error}
           secureTextEntry={secureTextEntry}
+          autoCapitalize="none"
+          autoCompleteType="password"
           style={styles.input}
         />
       </View>
 
-      {/* <View style={styles.forgotPassword}>
-        <TouchableOpacity
-          onPress={() => navigation.navigate('ForgotPasswordScreen')}
-        >
-          <Text style={styles.label}>Forgot your password?</Text>
-        </TouchableOpacity>
-      </View> */}
-
-      <Button
-        mode="contained"
-        onPress={_onLoginPressed}
-        style={styles.button}
-      >
+      <Button mode="contained" onPress={_onLoginPressed} style={styles.button}>
         Login
       </Button>
 
@@ -113,7 +103,9 @@ function LoginScreen({ navigation }) {
       <Modal visible={visible}>
         <Card disabled={true}>
           <Text> {email.error} </Text>
-          <Button onPress={() => setVisible(false)} style={styles.button}>CLOSE</Button>
+          <Button onPress={() => setVisible(false)} style={styles.button}>
+            CLOSE
+          </Button>
         </Card>
       </Modal>
     </View>
@@ -133,7 +125,7 @@ const styles = StyleSheet.create({
   button: {
     marginTop: 24,
     marginLeft: 30,
-    marginRight:30,
+    marginRight: 30,
     borderColor: "#5505BA",
     backgroundColor: "#5505BA",
   },
