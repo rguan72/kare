@@ -36,7 +36,7 @@ export default function HomeScreen({ route, navigation }) {
   return (
     <View style={HomeStyles.container}>
       <View style={HomeStyles.Heading}>
-        <Text category="h5">My Communities</Text>
+        <Text category='h5'>My Communities</Text>
       </View>
       <FlatList
         data={groups}
@@ -51,6 +51,7 @@ export default function HomeScreen({ route, navigation }) {
                 userId: userId,
                 title: item.title,
                 description: item.description,
+                groupId: item.id,
               })
             }
           />
