@@ -17,8 +17,7 @@ export default StyleSheet.create({
         flexDirection: "row-reverse",
         justifyContent: "flex-end",
         alignItems: "center",
-        paddingTop: '2%',
-        paddingBottom:'5%'
+        paddingVertical: 20,
     },
     textBox: {
         borderColor: '#F3EAFF',
