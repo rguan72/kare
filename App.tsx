@@ -3,7 +3,6 @@ import "react-native-gesture-handler";
 import { Image } from "react-native";
 import * as eva from "@eva-design/eva";
 import { ApplicationProvider, Text } from "@ui-kitten/components";
-import { EvaIconsPack } from "@ui-kitten/eva-icons";
 import { StyleSheet, YellowBox, View } from "react-native";
 import { decode, encode } from "base-64";
 import { mapping, light as lightTheme } from "@eva-design/eva";

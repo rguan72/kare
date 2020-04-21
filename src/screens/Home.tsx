@@ -3,7 +3,7 @@ import { FlatList, View } from "react-native";
 import { Button, Layout, Text, withStyles } from "@ui-kitten/components";
 import GroupItem from "../components/GroupItem";
 import PropTypes from "prop-types";
-import { watchGroups } from "../utils/FirebaseUtils";
+import { getGroupsById, getUser } from "../utils/FirebaseUtils";
 import screens from "../constants/screenNames";
 import firebase from "firebase/app";
 
@@ -29,8 +29,9 @@ export default function HomeScreen({ route, navigation }) {
   };
 
   useEffect(() => {
-    const unsubscribe = watchGroups(setGroups);
-    return () => unsubscribe();
+    getUser(userId)
+      .then((user) => getGroupsById(user.groups))
+      .then((fetchedGroups) => setGroups(fetchedGroups));
   }, []);
 
   return (

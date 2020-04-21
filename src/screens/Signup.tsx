@@ -5,12 +5,19 @@ import {
   View,
   TouchableWithoutFeedback,
 } from "react-native";
-import { Modal, Card, Text, withStyles, Button, Input } from "@ui-kitten/components";
+import {
+  Modal,
+  Card,
+  Text,
+  Input,
+  withStyles,
+  Button,
+} from "@ui-kitten/components";
 import { Ionicons } from "@expo/vector-icons";
 import { authNav, AuthState } from "../utils/FirebaseUtils";
 import screens from "../constants/screenNames";
-import {emailValid} from "../utils/Parse.ts"
-import Logo from '../components/Logo';
+import { emailValid } from "../utils/Parse.ts";
+import Logo from "../components/Logo";
 import firebase from "firebase";
 
 function SignupScreen({ navigation }) {
@@ -26,41 +33,44 @@ function SignupScreen({ navigation }) {
 
   const renderIcon = (style) => (
     <TouchableWithoutFeedback onPress={onIconPress}>
-      <Ionicons name={secureTextEntry ? "ios-eye-off" : "ios-eye"} size={20}/>
+      <Ionicons name={secureTextEntry ? "ios-eye-off" : "ios-eye"} size={20} />
     </TouchableWithoutFeedback>
   );
 
   const onSignUpPressed = async () => {
-    var isEmailValid = emailValid(email.value)
-    var doPasswordsMatch = (password.value == repassword.value)
+    var isEmailValid = emailValid(email.value);
+    var doPasswordsMatch = password.value == repassword.value;
     if (!isEmailValid) {
-      console.log("Not umich email")
+      console.log("Not umich email");
       email.error = "Sorry, only umich.edu emails can be used right now!";
       setVisible(true);
       return;
     }
 
-    if (!doPasswordsMatch){
-      console.log("Passwords don't match")
+    if (!doPasswordsMatch) {
+      console.log("Passwords don't match");
       email.error = "Both passwords should match";
       setVisible(true);
       return;
     }
-    if (password.value.length < 6){
-      console.log("Passwords is short")
+    if (password.value.length < 6) {
+      console.log("Passwords is short");
       email.error = "Password must be at least 6 characters";
       setVisible(true);
-      return;    
+      return;
     }
-    var methods = await firebase.auth().fetchSignInMethodsForEmail(email.value)
+    var methods = await firebase.auth().fetchSignInMethodsForEmail(email.value);
     if (methods.length != 0) {
-      console.log("email already used")
+      console.log("email already used");
       email.error = "This email address is already associated with an account.";
       setVisible(true);
       return;
     } else {
       console.log("Moving to set up");
-      navigation.navigate(screens.setup, {email: email.value, password: password.value});
+      navigation.navigate(screens.setup, {
+        email: email.value,
+        password: password.value,
+      });
     }
   };
 
@@ -68,15 +78,21 @@ function SignupScreen({ navigation }) {
     <View style={{ marginTop: 30, backgroundColor: "#F3EAFF", flex: 1 }}>
       {/* <BackButton goBack={() => navigation.navigate('HomeScreen')} /> */}
 
-      <View style={{alignItems: 'center', justifyContent: 'center', resizeMode: 'cover'}}>
-        <Logo/> 
-      </View> 
+      <View
+        style={{
+          alignItems: "center",
+          justifyContent: "center",
+          resizeMode: "cover",
+        }}
+      >
+        <Logo />
+      </View>
 
       <Input
         placeholder="Email"
         autoCapitalize="none"
         value={email.value}
-        onChangeText={(text) => setEmail({value: text, error: ""})}
+        onChangeText={(text) => setEmail({ value: text, error: "" })}
         error={!!email.error}
         errorText={email.error}
         style={styles.input}
@@ -90,7 +106,8 @@ function SignupScreen({ navigation }) {
         onChangeText={(text) => setPassword({ value: text, error: "" })}
         error={!!password.error}
         errorText={password.error}
-        secureTextEntry={secureTextEntry}s
+        secureTextEntry={secureTextEntry}
+        s
         style={styles.input}
       />
 
@@ -127,7 +144,9 @@ function SignupScreen({ navigation }) {
       <Modal visible={visible}>
         <Card disabled={true}>
           <Text> {email.error} </Text>
-          <Button onPress={() => setVisible(false)} style={styles.button}>CLOSE</Button>
+          <Button onPress={() => setVisible(false)} style={styles.button}>
+            CLOSE
+          </Button>
         </Card>
       </Modal>
     </View>
@@ -146,7 +165,7 @@ const styles = StyleSheet.create({
   button: {
     marginTop: 24,
     marginLeft: 30,
-    marginRight:30,
+    marginRight: 30,
     borderColor: "#5505BA",
     backgroundColor: "#5505BA",
   },
