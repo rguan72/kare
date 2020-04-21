@@ -7,10 +7,11 @@ import {
 } from "react-native";
 import { Modal, Card, Text, withStyles, Button, Input } from "@ui-kitten/components";
 import { Ionicons } from "@expo/vector-icons";
-import { addUser, authNav, AuthState } from "../utils/FirebaseUtils";
+import { authNav, AuthState } from "../utils/FirebaseUtils";
 import screens from "../constants/screenNames";
 import {emailValid} from "../utils/Parse.ts"
 import Logo from '../components/Logo';
+import firebase from "firebase";
 
 function SignupScreen({ navigation }) {
   const [email, setEmail] = useState({ value: "", error: "" });
@@ -30,10 +31,7 @@ function SignupScreen({ navigation }) {
   );
 
   const onSignUpPressed = async () => {
-    console.log("Value")
-    console.log(email.value)
     var isEmailValid = emailValid(email.value)
-    console.log("Done")
     var doPasswordsMatch = (password.value == repassword.value)
     if (!isEmailValid) {
       console.log("Not umich email")
@@ -48,31 +46,30 @@ function SignupScreen({ navigation }) {
       setVisible(true);
       return;
     }
-    addUser(email.value, password.value)
-      .then(() => {
-        console.log("User account created & signed in!");
-      })
-      .catch((error) => {
-        if (error.code === "auth/email-already-in-use") {
-          console.log("That email address is already in use!");
-        }
-
-        if (error.code === "auth/invalid-email") {
-          console.log("That email address is invalid!");
-        }
-
-        email.error = error.message;
-        setVisible(true);
-        return;
-      });
+    if (password.value.length < 6){
+      console.log("Passwords is short")
+      email.error = "Password must be at least 6 characters";
+      setVisible(true);
+      return;    
+    }
+    var methods = await firebase.auth().fetchSignInMethodsForEmail(email.value)
+    if (methods.length != 0) {
+      console.log("email already used")
+      email.error = "This email address is already associated with an account.";
+      setVisible(true);
+      return;
+    } else {
+      console.log("Moving to set up");
+      navigation.navigate(screens.setup, {email: email.value, password: password.value});
+    }
   };
 
   return (
     <View style={{ marginTop: 30, backgroundColor: "#F3EAFF", flex: 1 }}>
       {/* <BackButton goBack={() => navigation.navigate('HomeScreen')} /> */}
 
-      <View style={{alignItems: 'center', justifyContent: 'center'}}>
-        <Logo alignItems='center'/> 
+      <View style={{alignItems: 'center', justifyContent: 'center', resizeMode: 'cover'}}>
+        <Logo/> 
       </View> 
 
       <Input

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View } from "react-native";
 import {
   Card,
@@ -10,16 +10,22 @@ import {
 } from "@ui-kitten/components";
 import RNPickerSelect from "react-native-picker-select";
 import { ScrollView } from "react-native-gesture-handler";
-import { sendVerificationEmail, updateUser } from "../utils/FirebaseUtils";
+import { addUser, sendVerificationEmail, updateUser } from "../utils/FirebaseUtils";
 import screens from "../constants/screenNames";
 import { getEmailExtension } from "../utils/Parse";
 import whitelist from "../constants/emailWhitelist";
 import { CommonActions } from "@react-navigation/native";
 import { groupOptions, stressOptions } from "../constants/community";
 import SetupStyles from "../StyleSheets/SetupStyles";
-import { Slider } from "react-native";
+import { Slider, YellowBox } from "react-native";
+import firebase from "firebase";
 
-export default function SetupSurvey({ navigation }) {
+
+export default function SetupSurvey({ navigation, route}) {
+  // Ignore Firebase timer issues
+  YellowBox.ignoreWarnings(["Setting a timer"]);
+  console.ignoredYellowBox = ["Setting a timer"];
+
   // initial state
   const initialState = {
     username: "",
@@ -240,8 +246,24 @@ export default function SetupSurvey({ navigation }) {
           onPress={() => {
             setLoading(!loading);
             try {
-              updateUser(allUserInformation()); // this will be subbed for creating the linked user db entry
-              sendVerificationEmail();
+              addUser(route.params.email, route.params.password)
+                .then(() => {
+                  console.log("User account created & signed in!");
+                  updateUser(allUserInformation()); // this will be subbed for creating the linked user db entry
+                })
+                .catch((error) => {
+                  if (error.code === "auth/email-already-in-use") {
+                    console.log("That email address is already in use!");
+                  }
+
+                  if (error.code === "auth/invalid-email") {
+                    console.log("That email address is invalid!");
+                  }
+
+                  email.error = error.message;
+                  setVisible(true);
+                  return;
+                });
               setLoading(!loading);
             } catch (err) {
               console.log(err); // in this case we just log it
@@ -253,16 +275,15 @@ export default function SetupSurvey({ navigation }) {
         >
           {buttonText}
         </Button>
-        {
-          <Button
-            onPress={() => {
-              navigation.navigate(screens.home);
-            }}
-            style={SetupStyles.button}
-          >
-            Go to Home debug
-          </Button>
-        }
+        {/*
+        <Button
+          onPress={() => {
+            navigation.navigate(screens.home);
+          }}
+          style={SetupStyles.button}
+        >
+          Go to Home debug
+        </Button>
         <Button
           onPress={() => {
             navigation.navigate(screens.verifyEmail);
@@ -273,7 +294,7 @@ export default function SetupSurvey({ navigation }) {
           }}
         >
           Go to Verify Email debug
-        </Button>
+        </Button>*/}
       </ScrollView>
     </View>
   );
