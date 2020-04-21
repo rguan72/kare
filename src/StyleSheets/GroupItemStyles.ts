@@ -21,7 +21,10 @@ export default StyleSheet.create({
         paddingBottom:'5%'
     },
     textBox: {
+        borderColor: '#F3EAFF',
+        borderWidth: 1,
         flexDirection: "column",
+        maxWidth: '80%',
     },
     imageBox: {
         backgroundColor: "#F3EAFF",
