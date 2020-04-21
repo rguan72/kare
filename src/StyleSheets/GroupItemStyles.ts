@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { FlexStyleProps } from '@ui-kitten/components/devsupport';
 export default StyleSheet.create({
     button: {
         backgroundColor: "#F3EAFF",
@@ -18,12 +19,11 @@ export default StyleSheet.create({
         justifyContent: "flex-end",
         alignItems: "center",
         paddingVertical: 20,
+        paddingLeft: 20,
     },
     textBox: {
-        borderColor: '#F3EAFF',
-        borderWidth: 1,
         flexDirection: "column",
-        maxWidth: '80%',
+        flex: 1,
     },
     imageBox: {
         backgroundColor: "#F3EAFF",
