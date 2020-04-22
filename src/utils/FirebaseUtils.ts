@@ -79,13 +79,14 @@ function updateUser(allUserInformation) {
   db.collection(collections.users).doc(user.uid).update(allUserInformation);
 }
 
-function addComment(comment: comment) {
+function addComment(comment: comment, groupId) {
   db.collection(collections.comments)
     .doc()
     .set({
       timestamp: firebaseApp.firestore.FieldValue.serverTimestamp(),
       numReplies: 0,
       parentId: "",
+      groupId: groupId,
       ...comment,
     });
 }
@@ -123,11 +124,12 @@ function reportComment(id: string) {
   });
 }
 
-function watchComments(setComments) {
+function watchComments(setComments, groupId) {
   return db
     .collection(collections.comments)
     .where("parentId", "==", "")
     .where("show", "==", true)
+    .where("groupId", "==", groupId)
     .orderBy("timestamp", "asc")
     .onSnapshot((querySnapshot) => {
       const comments = [];

@@ -30,10 +30,10 @@ export default function Thread({ route, navigation }) {
   const [restComments, setRestComments] = useState([]);
   const [commentStructure, setCommentStructure] = useState([]);
   const [value, setValue] = useState("");
-  const { userId, title, description } = route.params;
+  const { userId, title, description, groupId } = route.params;
 
   useEffect(() => {
-    const unsubscribe = watchComments(setComments);
+    const unsubscribe = watchComments(setComments, groupId);
 
     return () => unsubscribe();
   }, []);
@@ -49,7 +49,7 @@ export default function Thread({ route, navigation }) {
     <Layout style={ThreadStyles.header}>
       {/* text box */}
       <Layout style={ThreadStyles.headerTextBox}>
-        <Text category="h4"> {title} </Text>
+        <Text category='h4'> {title} </Text>
         <Text> {description}</Text>
       </Layout>
       {/* image box */}
@@ -100,19 +100,22 @@ export default function Thread({ route, navigation }) {
             />
             <Layout style={ThreadStyles.commentBox}>
               <Input
-                placeholder="Add comment"
+                placeholder='Add comment'
                 value={value}
                 onChangeText={setValue}
               />
               <Button
                 onPress={() => {
-                  addComment({
-                    userId: userId,
-                    text: value,
-                    reports: 0,
-                    show: true,
-                    numReplies: 0,
-                  });
+                  addComment(
+                    {
+                      userId: userId,
+                      text: value,
+                      reports: 0,
+                      show: true,
+                      numReplies: 0,
+                    },
+                    groupId
+                  );
                   setValue("");
                 }}
                 style={ThreadStyles.submitButton}
