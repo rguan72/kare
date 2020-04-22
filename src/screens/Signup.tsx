@@ -82,7 +82,6 @@ function SignupScreen({ navigation }) {
         style={{
           alignItems: "center",
           justifyContent: "center",
-          resizeMode: "cover",
         }}
       >
         <Logo />
