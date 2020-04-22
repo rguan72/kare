@@ -10,18 +10,13 @@ import {
 } from "@ui-kitten/components";
 import RNPickerSelect from "react-native-picker-select";
 import { ScrollView } from "react-native-gesture-handler";
-import { addUser, sendVerificationEmail, updateUser } from "../utils/FirebaseUtils";
+import { addUser, updateUser, getGroups } from "../utils/FirebaseUtils";
 import screens from "../constants/screenNames";
-import { getEmailExtension } from "../utils/Parse";
-import whitelist from "../constants/emailWhitelist";
-import { CommonActions } from "@react-navigation/native";
-import { groupOptions, stressOptions } from "../constants/community";
+import { stressOptions } from "../constants/community";
 import SetupStyles from "../StyleSheets/SetupStyles";
 import { Slider, YellowBox } from "react-native";
-import firebase from "firebase";
 
-
-export default function SetupSurvey({ navigation, route}) {
+export default function SetupSurvey({ navigation, route }) {
   // Ignore Firebase timer issues
   YellowBox.ignoreWarnings(["Setting a timer"]);
   console.ignoredYellowBox = ["Setting a timer"];
@@ -39,15 +34,31 @@ export default function SetupSurvey({ navigation, route}) {
   const [loading, setLoading] = useState(false);
   const [selectedIndexOne, setSelectedIndexOne] = useState([]);
   const [selectedIndexTwo, setSelectedIndexTwo] = useState([]);
+  const [groupOptions, setGroupOptions] = useState([]);
 
-  const renderOption = (title) => <SelectItem title={title} key={title} />;
+  useEffect(() => {
+    getGroups()
+      .then((querySnapshot) => {
+        const options = [];
+        querySnapshot.forEach((doc) => {
+          options.push({ id: doc.id, title: doc.data().title });
+        });
+        setGroupOptions(options);
+        console.log("options: " + options);
+      })
+      .catch(() => navigation.navigate(screens.error));
+  }, []);
+
+  const renderOption = (group) => (
+    <SelectItem title={group.title} key={group.id} />
+  );
 
   const groupOneDisplayValues = selectedIndexOne.map((index) => {
-    return stressOptions[index.row];
+    return stressOptions[index.row].title;
   });
 
   const groupTwoDisplayValues = selectedIndexTwo.map((index) => {
-    return groupOptions[index.row];
+    return groupOptions[index.row].title;
   });
 
   const makeArray = (groupData, selectedIndex) => {
@@ -67,12 +78,16 @@ export default function SetupSurvey({ navigation, route}) {
   const allUserInformation = () => {
     // will use this to create user entry in db
     return {
+      name: userName,
       color: color,
       support: values["val1"],
       voice: values["val2"],
       consider: values["val3"],
       stress: makeArray(stressOptions, selectedIndexOne),
-      groups: makeArray(groupOptions, selectedIndexTwo),
+      groups: makeArray(
+        groupOptions.map((opt) => opt.id),
+        selectedIndexTwo
+      ),
     };
   };
 

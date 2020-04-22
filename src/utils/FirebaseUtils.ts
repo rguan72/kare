@@ -180,7 +180,8 @@ function watchReplies(commentId, setReplies) {
     });
 }
 
-function getUser(id) {
+// not sure how to get correct Typescript return type
+async function getUser(id): Promise<user> {
   return db
     .collection(collections.users)
     .doc(id)
@@ -198,6 +199,22 @@ function watchGroups(setGroups) {
     querySnapshot.forEach((doc) => groups.push({ id: doc.id, ...doc.data() }));
     return setGroups(groups);
   });
+}
+
+async function getGroupsById(groupIds: Array<string>) {
+  return Promise.all(
+    groupIds.map((id) =>
+      db
+        .collection(collections.groups)
+        .doc(id)
+        .get()
+        .then((ref) => ({ id: ref.id, ...ref.data() }))
+    )
+  );
+}
+
+async function getGroups() {
+  return db.collection(collections.groups).get();
 }
 
 function onAuthUserListener(next, fallback, notVerifiedFunc) {
@@ -239,4 +256,6 @@ export {
   onAuthUserListener,
   updateUser,
   AuthState,
+  getGroups,
+  getGroupsById,
 };
