@@ -6,7 +6,7 @@ import PropTypes from "prop-types";
 import { getGroupsById, getUser } from "../utils/FirebaseUtils";
 import screens from "../constants/screenNames";
 import firebase from "firebase/app";
-
+import { NavigationEvents } from "react-navigation";
 import HomeStyles from "../StyleSheets/HomeStyles";
 
 interface Group {
@@ -17,6 +17,7 @@ interface Group {
 
 export default function HomeScreen({ route, navigation }) {
   const [groups, setGroups] = useState([]);
+  const [refresh, setRefresh] = useState(false);
   const { userId } = route.params;
 
   const onSignOut = () => {
@@ -29,15 +30,34 @@ export default function HomeScreen({ route, navigation }) {
   };
 
   useEffect(() => {
-    getUser(userId)
-      .then((user) => getGroupsById(user.groups))
-      .then((fetchedGroups) => setGroups(fetchedGroups));
-  }, []);
+    const unsubscribe = navigation.addListener("focus", () => {
+      getUser(userId)
+        .then((user) => getGroupsById(user.groups))
+        .then((fetchedGroups) => setGroups(fetchedGroups));
+    });
+
+    return unsubscribe;
+  }, [navigation]);
+
+  const handleNavigateBack = () => {
+    setRefresh(!refresh);
+  };
 
   return (
     <View style={HomeStyles.container}>
       <View style={HomeStyles.Heading}>
         <Text category='h5'>My Communities</Text>
+        <Text
+          style={{ alignSelf: "flex-end" }}
+          onPress={() =>
+            navigation.navigate(screens.manage, {
+              userId: userId,
+              onNavigateBack: handleNavigateBack,
+            })
+          }
+        >
+          Manage Communities
+        </Text>
       </View>
       <FlatList
         data={groups}

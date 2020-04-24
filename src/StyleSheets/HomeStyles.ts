@@ -3,6 +3,7 @@ export default StyleSheet.create({
   container: {
     marginTop: 30,
     backgroundColor: "#FFFDF4",
+    flex: 4,
   },
   Heading: {
     alignItems: "center",
