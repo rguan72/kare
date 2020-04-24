@@ -265,7 +265,6 @@ export default function SetupSurvey({ navigation, route }) {
               addUser(route.params.email, route.params.password)
                 .then(() => {
                   console.log("User account created & signed in!");
-                  console.log(allUserInformation());
                   updateUser(allUserInformation()); // this will be subbed for creating the linked user db entry
                 })
                 .catch((error) => {
