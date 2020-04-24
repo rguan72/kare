@@ -103,7 +103,7 @@ export default function SetupSurvey({ navigation, route }) {
     <View style={SetupStyles.container}>
       <ScrollView>
         <View style={SetupStyles.header}>
-          <Text category="h4">Setup Survey</Text>
+          <Text category="h4">User Survey</Text>
         </View>
         <Card style={SetupStyles.card}>
           <Text category="h6">Select your favorite Color:</Text>
@@ -264,6 +264,7 @@ export default function SetupSurvey({ navigation, route }) {
               addUser(route.params.email, route.params.password)
                 .then(() => {
                   console.log("User account created & signed in!");
+                  console.log(allUserInformation());
                   updateUser(allUserInformation()); // this will be subbed for creating the linked user db entry
                 })
                 .catch((error) => {
