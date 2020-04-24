@@ -7,7 +7,7 @@ export default StyleSheet.create({
     flexShrink: 0,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: colors["purple"],
+    backgroundColor: "#F3EAFF",
   },
   closeButton: {
     marginTop: 5,

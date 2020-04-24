@@ -103,7 +103,7 @@ export default function SetupSurvey({ navigation, route }) {
     <View style={SetupStyles.container}>
       <ScrollView>
         <View style={SetupStyles.header}>
-          <Text category="h4">Setup Survey</Text>
+          <Text category="h4">User Survey</Text>
         </View>
         <Card style={SetupStyles.card}>
           <Text category="h6">Select your favorite Color:</Text>
@@ -112,16 +112,17 @@ export default function SetupSurvey({ navigation, route }) {
             style={SetupStyles}
             onValueChange={(value) => setColor(value)}
             items={[
-              { label: "Beige", value: "beige" },
+              { label: "Orange", value: "orange" },
               { label: "Red", value: "red" },
               { label: "Purple", value: "purple" },
               { label: "Blue", value: "blue" },
               { label: "Green", value: "green" },
+              { label: "Yellow", value: "yellow" }
             ]}
           />
         </Card>
         <Card style={SetupStyles.card}>
-          <Text category="h6">What is your spirit animal? </Text>
+          <Text style={SetupStyles.question}>What is your favorite animal? </Text>
           <Text style={{ paddingTop: 2, paddingBottom: 2 }}>(required)</Text>
           <Input
             value={values["username"]}
@@ -138,7 +139,7 @@ export default function SetupSurvey({ navigation, route }) {
           <Text>{userName}</Text>
         </Card>
         <Card style={SetupStyles.card}>
-          <Text category="h6">How supported do you currently feel?</Text>
+          <Text style={SetupStyles.question}>How supported do you currently feel?</Text>
           <Text style={{ paddingTop: 2, paddingBottom: 2 }}>(required)</Text>
           <View
             style={{
@@ -164,7 +165,7 @@ export default function SetupSurvey({ navigation, route }) {
         </Card>
 
         <Card style={SetupStyles.card}>
-          <Text category="h6">
+          <Text style={SetupStyles.question}>
             No matter what I am facing, I have somewhere to voice my concerns
           </Text>
           <Text style={{ paddingTop: 2, paddingBottom: 2 }}>(required)</Text>
@@ -190,7 +191,7 @@ export default function SetupSurvey({ navigation, route }) {
           </View>
         </Card>
         <Card style={SetupStyles.card}>
-          <Text category="h6">I consider myself </Text>
+          <Text style={SetupStyles.question}>I consider myself </Text>
           <Text style={{ paddingTop: 2, paddingBottom: 2 }}>(required)</Text>
           <View
             style={{
@@ -199,9 +200,9 @@ export default function SetupSurvey({ navigation, route }) {
               justifyContent: "space-between",
             }}
           >
-            <Text style={{ paddingTop: 8 }}>Introverted</Text>
+            <Text style={{ paddingTop: 8}}>Introverted</Text>
             <Slider
-              style={{ width: 200, height: 40 }}
+              style={{ width: 165, height: 40 }}
               minimumValue={0}
               maximumValue={10}
               minimumTrackTintColor="#000000"
@@ -215,7 +216,7 @@ export default function SetupSurvey({ navigation, route }) {
           </View>
         </Card>
         <Card style={SetupStyles.card}>
-          <Text category="h6">
+          <Text style={SetupStyles.question}>
             What are the leading causes of your stress? Please select TWO that
             most impact you. (This information will remain confidential.)
           </Text>
@@ -236,7 +237,7 @@ export default function SetupSurvey({ navigation, route }) {
           </Select>
         </Card>
         <Card style={SetupStyles.card}>
-          <Text category="h6">
+          <Text style={SetupStyles.question}>
             Which communities within Kare would you like to join? Please choose
             at least 3. (This information will remain confidential.)
           </Text>
