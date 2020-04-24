@@ -41,12 +41,12 @@ function SignupScreen({ navigation }) {
   const newCaption = () => {
     var caption = "";
     if (!isLong)
-      caption = caption + "Password must be greater than 8 characters long \n";
-    if (!isUpper) caption = caption + "Need an upper case Letter \n";
-    if (!isLower) caption = caption + "Need a Lower Case Letter \n";
-    if (!isDigit) caption = caption + "Need a Number \n";
-    if (!isSpecial) caption = caption + "Need a Special Character \n";
-    if (isInv) caption = caption + "Uses invalid characters < or >";
+      caption = caption + "Password must be greater than 8 characters long. \n";
+    if (!isUpper) caption = caption + "Password needs an upper case letter. \n";
+    if (!isLower) caption = caption + "Password needs a lower case letter. \n";
+    if (!isDigit) caption = caption + "Password needs a number. \n";
+    if (!isSpecial) caption = caption + "Password needs a special character. \n";
+    if (isInv) caption = caption + "Password uses invalid characters (< or >)";
     return caption;
   };
 
