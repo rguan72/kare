@@ -34,12 +34,12 @@ export default function ListItem({
         <View style={[ListItemStyles.square, { backgroundColor: userColor }]} />
         <Text style={ListItemStyles.userName}> {name}</Text>
         <Text style={ListItemStyles.date}>
-          {" * "}
+          {" "}
           {date}
         </Text>
       </View>
       {/* </View> */}
-      <Text category="h6"> {text} </Text>
+      <Text style={ListItemStyles.comments}> {text} </Text>
       <View style={ListItemStyles.bottomRow}>
         <TouchableOpacity onPress={onReply}>
           <Text>{numReplies ? numReplies : 0} Replies </Text>

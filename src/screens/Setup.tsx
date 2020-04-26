@@ -103,11 +103,10 @@ export default function SetupSurvey({ navigation, route }) {
     <View style={SetupStyles.container}>
       <ScrollView>
         <View style={SetupStyles.header}>
-          <Text category="h4">User Survey</Text>
+          <Text category="h5">User Survey</Text>
         </View>
         <Card style={SetupStyles.card}>
-          <Text category="h6">Select your favorite Color:</Text>
-          <Text style={{ paddingTop: 2, paddingBottom: 2 }}>(required)</Text>
+          <Text style={SetupStyles.question}>Select your favorite Color:</Text>
           <RNPickerSelect
             style={SetupStyles}
             onValueChange={(value) => setColor(value)}
@@ -123,7 +122,6 @@ export default function SetupSurvey({ navigation, route }) {
         </Card>
         <Card style={SetupStyles.card}>
           <Text style={SetupStyles.question}>What is your favorite animal? </Text>
-          <Text style={{ paddingTop: 2, paddingBottom: 2 }}>(required)</Text>
           <Input
             value={values["username"]}
             onChange={(e) => handleEventChange(e, "username")}
@@ -140,7 +138,6 @@ export default function SetupSurvey({ navigation, route }) {
         </Card>
         <Card style={SetupStyles.card}>
           <Text style={SetupStyles.question}>How supported do you currently feel?</Text>
-          <Text style={{ paddingTop: 2, paddingBottom: 2 }}>(required)</Text>
           <View
             style={{
               flex: 1,
@@ -168,7 +165,6 @@ export default function SetupSurvey({ navigation, route }) {
           <Text style={SetupStyles.question}>
             No matter what I am facing, I have somewhere to voice my concerns
           </Text>
-          <Text style={{ paddingTop: 2, paddingBottom: 2 }}>(required)</Text>
           <View
             style={{
               flex: 1,
@@ -192,7 +188,6 @@ export default function SetupSurvey({ navigation, route }) {
         </Card>
         <Card style={SetupStyles.card}>
           <Text style={SetupStyles.question}>I consider myself </Text>
-          <Text style={{ paddingTop: 2, paddingBottom: 2 }}>(required)</Text>
           <View
             style={{
               flex: 1,
@@ -220,7 +215,6 @@ export default function SetupSurvey({ navigation, route }) {
             What are the leading causes of your stress? Please select TWO that
             most impact you. (This information will remain confidential.)
           </Text>
-          <Text style={{ paddingTop: 2, paddingBottom: 2 }}>(required)</Text>
           <Select
             multiSelect={true}
             selectedIndex={selectedIndexOne}
@@ -241,7 +235,6 @@ export default function SetupSurvey({ navigation, route }) {
             Which communities within Kare would you like to join? Please choose
             at least 3. (This information will remain confidential.)
           </Text>
-          <Text style={{ paddingTop: 2, paddingBottom: 2 }}>(required)</Text>
           <Select
             multiSelect={true}
             selectedIndex={selectedIndexTwo}

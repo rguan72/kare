@@ -19,6 +19,7 @@ export default StyleSheet.create({
         flexDirection: "column",
         marginLeft: 10,
         backgroundColor: "#F3EAFF",
+        marginRight: 10,
     },
     icon: {
         flexShrink: 1,

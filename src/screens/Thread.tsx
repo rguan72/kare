@@ -49,8 +49,8 @@ export default function Thread({ route, navigation }) {
     <Layout style={ThreadStyles.header}>
       {/* text box */}
       <Layout style={ThreadStyles.headerTextBox}>
-        <Text category='h4'> {title} </Text>
-        <Text> {description}</Text>
+        <Text category='h5'> {title} </Text>
+        <Text style={{marginRight: 10}}> {description}</Text>
       </Layout>
       {/* image box */}
       <Layout style={{ backgroundColor: "#F3EAFF", maxHeight: 100 }}>

@@ -39,7 +39,7 @@ export default StyleSheet.create({
   },
   question: {
     fontWeight: "bold",
-    fontSize: normalize(18),
+    fontSize: normalize(16),
   },
   mb: {
     marginBottom: 10,
