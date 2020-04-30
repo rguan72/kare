@@ -26,6 +26,7 @@ export default StyleSheet.create({
         width: 60,
         height: 60,
         marginLeft: 15,
+	resizeMode: 'contain',
     },
     safeAreaView: {
         flex: 1,

@@ -26,6 +26,29 @@ function SignupScreen({ navigation }) {
   const [repassword, setRePassword] = useState({ value: "", error: "" });
   const [secureTextEntry, setSecureTextEntry] = useState(true);
   const [visible, setVisible] = useState(false);
+  const [passCaption, setPassCaption] = useState("");
+  const [pass2Caption, setPass2Caption] = useState("");
+
+  var isUpper = false;
+  var isLower = false;
+  var isDigit = false;
+  var isSpecial = false;
+  var isLong = false;
+  var isInv = false;
+  const specialChars = new RegExp(/[~`!#$%\^&*+=\-\[\]\\';,/{}|\\":\?]/); // acceptable special characters?
+  const unacceptable = new RegExp(/[<>]/);
+
+  const newCaption = () => {
+    var caption = "";
+    if (!isLong)
+      caption = caption + "Password must be greater than 8 characters long. \n";
+    if (!isUpper) caption = caption + "Password needs an upper case letter. \n";
+    if (!isLower) caption = caption + "Password needs a lower case letter. \n";
+    if (!isDigit) caption = caption + "Password needs a number. \n";
+    if (!isSpecial) caption = caption + "Password needs a special character. \n";
+    if (isInv) caption = caption + "Password uses invalid characters (< or >)";
+    return caption;
+  };
 
   const onIconPress = () => {
     setSecureTextEntry(!secureTextEntry);
@@ -53,9 +76,9 @@ function SignupScreen({ navigation }) {
       setVisible(true);
       return;
     }
-    if (password.value.length < 6) {
-      console.log("Passwords is short");
-      email.error = "Password must be at least 6 characters";
+    if (!(isLower && isSpecial && isUpper && isLong && isDigit)) {
+      console.log("Password Issue");
+      email.error = newCaption();
       setVisible(true);
       return;
     }
@@ -74,6 +97,28 @@ function SignupScreen({ navigation }) {
     }
   };
 
+  const onPasswordChange = (text) => {
+    setPassword({ value: text, error: "" });
+    var upper = false;
+    var lower = false;
+    var digit = false;
+    text.length >= 8 ? (isLong = true) : (isLong = false);
+    specialChars.test(text) ? (isSpecial = true) : (isSpecial = false);
+    unacceptable.test(text) ? (isInv = true) : (isInv = false);
+    for (var i = 0; i < text.length; i++) {
+      if (text[i] == text[i].toUpperCase() && text[i] != text[i].toLowerCase())
+        upper = true;
+      if (text[i] == text[i].toLowerCase() && text[i] != text[i].toUpperCase())
+        lower = true;
+      if (text[i] >= "0" && text[i] <= "9") digit = true;
+    }
+    isUpper = upper;
+    isLower = lower;
+    isDigit = digit;
+    var new_cap = newCaption();
+    setPassCaption(new_cap);
+  };
+
   return (
     <View style={{ marginTop: 30, backgroundColor: "#F3EAFF", flex: 1 }}>
       {/* <BackButton goBack={() => navigation.navigate('HomeScreen')} /> */}
@@ -88,9 +133,9 @@ function SignupScreen({ navigation }) {
       </View>
 
       <Input
-        placeholder="Email"
-        autoCapitalize="none"
-        autoCompleteType="email"
+        placeholder='Email'
+        autoCapitalize='none'
+        autoCompleteType='email'
         value={email.value}
         onChangeText={(text) => setEmail({ value: text, error: "" })}
         error={!!email.error}
@@ -100,28 +145,34 @@ function SignupScreen({ navigation }) {
 
       <Input
         value={password.value}
-        placeholder="Password"
-        autoCapitalize="none"
-        autoCompleteType="password"
+        placeholder='Password'
+        autoCapitalize='none'
+        autoCompleteType='password'
         accessoryRight={renderIcon}
-        caption=" Make sure your password is at least 6 characters"
-        onChangeText={(text) => setPassword({ value: text, error: "" })}
+        caption={passCaption}
+        onChangeText={onPasswordChange}
         error={!!password.error}
         errorText={password.error}
         secureTextEntry={secureTextEntry}
-        s
         style={styles.input}
       />
-
       <Input
-        returnKeyType="done"
+        returnKeyType='done'
         value={repassword.value}
-        autoCapitalize="none"
-        autoCompleteType="password"
-        placeholder="Retype Password"
+        autoCapitalize='none'
+        autoCompleteType='password'
+        placeholder='Retype Password'
         accessoryRight={renderIcon}
-        caption=" Make sure both passwords match"
-        onChangeText={(text) => setRePassword({ value: text, error: "" })}
+        caption={pass2Caption}
+        onChangeText={(text) => {
+          //setPass2Caption("");
+          if (password.value == text) {
+            setPass2Caption("");
+          } else {
+            setPass2Caption("Make sure Passwords match");
+          }
+          setRePassword({ value: text, error: "" });
+        }}
         error={!!repassword.error}
         errorText={repassword.error}
         secureTextEntry={secureTextEntry}
@@ -129,7 +180,7 @@ function SignupScreen({ navigation }) {
       />
 
       <Button
-        mode="contained"
+        mode='contained'
         onPress={async () => {
           await onSignUpPressed();
         }}
