@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { FlatList, View, Text } from "react-native";
+import { FlatList, View, ActivityIndicator } from "react-native";
 import { getGroupsById, getUser } from "../utils/FirebaseUtils";
 import UserGroupItem from "../components/UserGroupItem";
 import screens from "../constants/screenNames";
-import { Card, Button, Input, Select, SelectItem } from "@ui-kitten/components";
+import { Card, Button, Text, Select, SelectItem } from "@ui-kitten/components";
 import { getGroups, addGroupsToUser } from "../utils/FirebaseUtils";
 
 import HomeStyles from "../StyleSheets/HomeStyles";
 import SetupStyles from "../StyleSheets/SetupStyles";
+
+import NUM_GROUPS from "../constants/numberGroups";
 
 export default function ManageGroups({ route, navigation }) {
   const [groups, setGroups] = useState([]);
@@ -15,6 +17,8 @@ export default function ManageGroups({ route, navigation }) {
   const [selectedIndexTwo, setSelectedIndexTwo] = useState([]);
   const [groupOptions, setGroupOptions] = useState([]);
   const [reload, setReload] = useState(false);
+
+  const [loading, setLoading] = useState(true);
 
   const groupTwoDisplayValues = selectedIndexTwo.map((index) => {
     return groupOptions[index.row].title;
@@ -25,6 +29,7 @@ export default function ManageGroups({ route, navigation }) {
   );
 
   useEffect(() => {
+    setLoading(true);
     getUser(userId)
       .then((user) => getGroupsById(user.groups))
       .then((fetchedGroups) => setGroups(fetchedGroups));
@@ -44,9 +49,9 @@ export default function ManageGroups({ route, navigation }) {
           }
         });
         setGroupOptions(options);
-        console.log("options: " + options);
       })
       .catch(() => navigation.navigate(screens.error));
+    setLoading(false);
   }, [groups]);
 
   const makeArray = (groupData, selectedIndex) => {
@@ -76,38 +81,55 @@ export default function ManageGroups({ route, navigation }) {
   return (
     <View style={HomeStyles.container}>
       <View style={HomeStyles.Heading}>
-        <Text category='h5'>Edit Communities</Text>
+        <Text category='h6'>Manage Communities</Text>
       </View>
-      <FlatList
-        data={groups}
-        renderItem={({ item }) => (
-          <UserGroupItem
-            title={item.title}
-            image={item.imageURL}
-            description={item.description}
-            text={item.text}
-            onCancel={onCancel}
-            groupId={item.id}
+      {loading ? (
+        <ActivityIndicator
+          size='large'
+          style={{ flex: 1 }}
+          color='#5505BA'
+          animating={loading}
+        />
+      ) : (
+        <React.Fragment>
+          <FlatList
+            data={groups}
+            renderItem={({ item }) => (
+              <UserGroupItem
+                title={item.title}
+                image={item.imageURL}
+                description={item.description}
+                text={item.text}
+                onCancel={onCancel}
+                groupId={item.id}
+              />
+            )}
+            keyExtractor={(item) => item.id}
           />
-        )}
-        keyExtractor={(item) => item.id}
-      />
-      <Card style={SetupStyles.card}>
-        <Text category='h6'>Would you like to join any new groups?</Text>
-        <Select
-          multiSelect={true}
-          selectedIndex={selectedIndexTwo}
-          value={groupTwoDisplayValues.join(", ")}
-          onSelect={(index) => {
-            setSelectedIndexTwo(index);
-          }}
-        >
-          {groupOptions.map(renderOption)}
-        </Select>
-        <Button style={{ backgroundColor: "#5505BA" }} onPress={onPress}>
-          Join!
-        </Button>
-      </Card>
+          {groups.length < NUM_GROUPS && (
+            <Card style={SetupStyles.card}>
+              <Text category='h6'>Would you like to join any new groups?</Text>
+              <Select
+                multiSelect={true}
+                selectedIndex={selectedIndexTwo}
+                value={groupTwoDisplayValues.join(", ")}
+                onSelect={(index) => {
+                  setSelectedIndexTwo(index);
+                }}
+              >
+                {groupOptions.map(renderOption)}
+              </Select>
+              <Button
+                style={{ backgroundColor: "#5505BA" }}
+                onPress={onPress}
+                disabled={selectedIndexTwo.length == 0}
+              >
+                Join!
+              </Button>
+            </Card>
+          )}
+        </React.Fragment>
+      )}
     </View>
   );
 }

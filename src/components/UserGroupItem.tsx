@@ -28,21 +28,23 @@ export default function UserGroupItem({
   };
 
   return (
-    <TouchableWithoutFeedback style={GroupItemStyles.button}>
+    <View style={styles.button}>
       <React.Fragment>
-        <View style={GroupItemStyles.buttonBox}>
-          <View style={GroupItemStyles.textBox}>
-            <Text category='h4'>{title}</Text>
-            <Text>{description}</Text>
+        <View style={styles.buttonBox}>
+          <View style={styles.textBox}>
+            <View style={{ flex: 10 }}>
+              <Text category='h5'>{title}</Text>
+              <Text>{description}</Text>
+            </View>
             <TouchableOpacity
-              style={{ alignSelf: "flex-end" }}
+              style={{ flex: 1, paddingLeft: 5 }}
               onPress={onIconPress}
             >
-              <Ionicons name='ios-close-circle-outline' size={20} />
+              <Ionicons name='ios-trash' size={40} />
             </TouchableOpacity>
           </View>
-          <View style={GroupItemStyles.imageBox}>
-            <Image style={GroupItemStyles.image} source={{ uri: image }} />
+          <View style={styles.imageBox}>
+            <Image style={styles.image} source={{ uri: image }} />
           </View>
         </View>
         <Modal visible={visible}>
@@ -54,17 +56,20 @@ export default function UserGroupItem({
                 onCancel();
                 setVisible(false);
               }}
-              style={styles.button}
+              style={styles.groupButton}
             >
               YES
             </Button>
-            <Button onPress={() => setVisible(false)} style={styles.button}>
+            <Button
+              onPress={() => setVisible(false)}
+              style={styles.groupButton}
+            >
               NO
             </Button>
           </Card>
         </Modal>
       </React.Fragment>
-    </TouchableWithoutFeedback>
+    </View>
   );
 }
 
@@ -78,11 +83,47 @@ UserGroupItem.propTypes = {
 };
 
 const styles = StyleSheet.create({
-  button: {
+  groupButton: {
     marginTop: 24,
     marginLeft: 30,
     marginRight: 30,
     borderColor: "#5505BA",
     backgroundColor: "#5505BA",
+  },
+  button: {
+    backgroundColor: "#F3EAFF",
+    marginLeft: 10,
+    marginRight: 10,
+    marginTop: 20,
+    borderRadius: 20,
+    marginBottom: 10,
+    shadowOffset: { width: 5, height: 5 },
+    shadowColor: "black",
+    shadowOpacity: 0.5,
+    elevation: 5,
+  },
+  buttonBox: {
+    display: "flex",
+    flexDirection: "row-reverse",
+    justifyContent: "flex-end",
+    alignItems: "center",
+    paddingVertical: 20,
+    paddingLeft: 20,
+  },
+  textBox: {
+    flexDirection: "row",
+    alignItems: "center",
+    flex: 1,
+  },
+  imageBox: {
+    backgroundColor: "#F3EAFF",
+    maxHeight: 100,
+    marginLeft: 15,
+    marginRight: 10,
+  },
+  image: {
+    resizeMode: "contain",
+    width: 60,
+    height: 60,
   },
 });

@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useImperativeHandle } from "react";
-import { FlatList, View } from "react-native";
+import { FlatList, View, TouchableOpacity } from "react-native";
 import { Button, Layout, Text, withStyles } from "@ui-kitten/components";
 import GroupItem from "../components/GroupItem";
 import PropTypes from "prop-types";
 import { getGroupsById, getUser } from "../utils/FirebaseUtils";
 import screens from "../constants/screenNames";
 import firebase from "firebase/app";
-import { NavigationEvents } from "react-navigation";
+import { Entypo } from "@expo/vector-icons";
 import HomeStyles from "../StyleSheets/HomeStyles";
 
 interface Group {
@@ -46,9 +46,11 @@ export default function HomeScreen({ route, navigation }) {
   return (
     <View style={HomeStyles.container}>
       <View style={HomeStyles.Heading}>
-        <Text category='h5'>My Communities</Text>
-        <Text
-          style={{ alignSelf: "flex-end" }}
+        <Text category='h5' style={{ alignSelf: "center" }}>
+          My Communities
+        </Text>
+        <TouchableOpacity
+          style={{ position: "absolute", right: 10 }}
           onPress={() =>
             navigation.navigate(screens.manage, {
               userId: userId,
@@ -56,8 +58,8 @@ export default function HomeScreen({ route, navigation }) {
             })
           }
         >
-          Manage Communities
-        </Text>
+          <Entypo name='dots-three-horizontal' size={20} />
+        </TouchableOpacity>
       </View>
       <FlatList
         data={groups}
