@@ -3,10 +3,13 @@ export default StyleSheet.create({
   container: {
     marginTop: 30,
     backgroundColor: "#FFFDF4",
+    flex: 6,
   },
   Heading: {
-    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "center",
     marginTop: 15,
+    marginBottom: 10,
   },
   SignOut: {
     borderRadius: 30,

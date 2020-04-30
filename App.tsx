@@ -16,6 +16,7 @@ import Thread from "./src/screens/Thread";
 import Replies from "./src/screens/Replies";
 import SetupSurvey from "./src/screens/Setup";
 import VerifyEmailScreen from "./src/screens/Verify";
+import ManageGroups from "./src/screens/ManageGroups";
 import Error from "./src/screens/Error";
 import screens from "./src/constants/screenNames";
 import firebase from "firebase/app";
@@ -92,6 +93,12 @@ export default function App() {
               <Stack.Screen
                 name={screens.home}
                 component={HomeScreen}
+                options={{ title: "", headerTransparent: true }}
+                initialParams={{ userId: user.uid }}
+              />
+              <Stack.Screen
+                name={screens.manage}
+                component={ManageGroups}
                 options={{ title: "", headerTransparent: true }}
                 initialParams={{ userId: user.uid }}
               />
