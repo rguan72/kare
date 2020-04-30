@@ -23,8 +23,8 @@ export default StyleSheet.create({
     },
     icon: {
         flexShrink: 1,
-        maxWidth: 60,
-        maxHeight: 60,
+        width: 60,
+        height: 60,
         marginLeft: 15,
     },
     safeAreaView: {

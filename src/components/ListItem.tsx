@@ -15,6 +15,7 @@ export default function ListItem({
   date,
   onReply,
   numReplies,
+  showReplies,
 }) {
   const [name, setName] = useState("");
   const [color, setColor] = useState(Colors["purple"]); //defualt purple
@@ -27,9 +28,20 @@ export default function ListItem({
     }
   }, [name]);
   const userColor = Colors[color];
+  const RepliesNumber = () => {
+    if (showReplies == "True") {
+      return (
+        <View>
+          <Text>{numReplies ? numReplies : 0} Replies </Text>
+	</View>
+      );
+    } else {
+      return (null);
+    }
+  };
 
   return (
-    <Card style={ListItemStyles.card}>
+    <Card style={ListItemStyles.card} onPress={onReply}>
       <View style={{ flexDirection: "row" }}>
         <View style={[ListItemStyles.square, { backgroundColor: userColor }]} />
         <Text style={ListItemStyles.userName}> {name}</Text>
@@ -41,9 +53,7 @@ export default function ListItem({
       {/* </View> */}
       <Text style={ListItemStyles.comments}> {text} </Text>
       <View style={ListItemStyles.bottomRow}>
-        <TouchableOpacity onPress={onReply}>
-          <Text>{numReplies ? numReplies : 0} Replies </Text>
-        </TouchableOpacity>
+        <RepliesNumber></RepliesNumber>
         <TouchableOpacity onPress={onReport}>
           <Text style={ListItemStyles.report}> Report</Text>
         </TouchableOpacity>

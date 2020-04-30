@@ -30,7 +30,7 @@ export default function Thread({ route, navigation }) {
   const [restComments, setRestComments] = useState([]);
   const [commentStructure, setCommentStructure] = useState([]);
   const [value, setValue] = useState("");
-  const { userId, title, description, groupId } = route.params;
+  const { userId, title, description, groupId, image } = route.params;
 
   useEffect(() => {
     const unsubscribe = watchComments(setComments, groupId);
@@ -54,7 +54,7 @@ export default function Thread({ route, navigation }) {
       </Layout>
       {/* image box */}
       <Layout style={{ backgroundColor: "#F3EAFF", maxHeight: 100 }}>
-        <Image source={WOMEN} style={ThreadStyles.icon} />
+        <Image source={{uri: image}} style={ThreadStyles.icon} />
       </Layout>
     </Layout>
   );
@@ -90,6 +90,7 @@ export default function Thread({ route, navigation }) {
                     onReport={() => reportComment(item.id)}
                     date={date}
                     numReplies={item.numReplies}
+		    showReplies="True"
                   />
                 );
               }}
