@@ -11,8 +11,6 @@ import {
 import screens from "../constants/screenNames";
 import firebase from "firebase/app";
 
-import { Entypo } from "@expo/vector-icons";
-
 import { Notifications } from "expo";
 import * as Permissions from "expo-permissions";
 import Constants from "expo-constants";
@@ -84,17 +82,13 @@ export default function HomeScreen({ route, navigation }) {
 
   useEffect(() => {
     registerForPushNotificationsAsync();
-    const unsubscribe = navigation.addListener("focus", () => {
-      getUser(userId)
-        .then((user) => getGroupsById(user.groups))
-        .then((fetchedGroups) => setGroups(fetchedGroups));
-    });
+    getUser(userId)
+      .then((user) => getGroupsById(user.groups))
+      .then((fetchedGroups) => setGroups(fetchedGroups));
 
     const _notificationSubscription = Notifications.addListener(
       _handleNotification
     );
-
-    return unsubscribe;
   }, []);
 
   return (
