@@ -23,6 +23,7 @@ import {
 import { WOMEN } from "../../Images";
 import ThreadStyles from "../StyleSheets/ThreadStyles";
 import screens from "../constants/screenNames";
+import { Notifications } from "expo";
 
 export default function Thread({ route, navigation }) {
   const [comments, setComments] = useState([]);
@@ -32,8 +33,23 @@ export default function Thread({ route, navigation }) {
   const [value, setValue] = useState("");
   const { userId, title, description, groupId } = route.params;
 
+  const _handleNotification = (notification) => {
+    const data = notification.data;
+    navigation.navigate(screens.replies, {
+      commenterId: data.commenterId,
+      comment: data.comment,
+      commentId: data.commentId,
+      date: data.date,
+      userId: userId,
+    });
+  };
+
   useEffect(() => {
     const unsubscribe = watchComments(setComments, groupId);
+
+    const _notificationSubscription = Notifications.addListener(
+      _handleNotification
+    );
 
     return () => unsubscribe();
   }, []);

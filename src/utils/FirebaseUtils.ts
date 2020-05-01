@@ -23,6 +23,7 @@ interface comment {
 interface user {
   userName: String;
   color: String;
+  notificationId: String;
 }
 
 interface returnComment extends comment {
@@ -64,6 +65,10 @@ function sendVerificationEmail() {
   } else {
     console.log("user not signed in");
   }
+}
+
+async function addNotifTokenToUser(id, token) {
+  db.collection(collections.users).doc(id).update({ notificationId: token });
 }
 
 async function addUser(email: string, password: string) {
@@ -258,4 +263,5 @@ export {
   AuthState,
   getGroups,
   getGroupsById,
+  addNotifTokenToUser,
 };

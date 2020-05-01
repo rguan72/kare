@@ -45,7 +45,8 @@ function SignupScreen({ navigation }) {
     if (!isUpper) caption = caption + "Password needs an upper case letter. \n";
     if (!isLower) caption = caption + "Password needs a lower case letter. \n";
     if (!isDigit) caption = caption + "Password needs a number. \n";
-    if (!isSpecial) caption = caption + "Password needs a special character. \n";
+    if (!isSpecial)
+      caption = caption + "Password needs a special character. \n";
     if (isInv) caption = caption + "Password uses invalid characters (< or >)";
     return caption;
   };
@@ -76,7 +77,7 @@ function SignupScreen({ navigation }) {
       setVisible(true);
       return;
     }
-    if (!(isLower && isSpecial && isUpper && isLong && isDigit)) {
+    if (newCaption.length != 0) {
       console.log("Password Issue");
       email.error = newCaption();
       setVisible(true);

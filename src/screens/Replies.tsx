@@ -19,13 +19,27 @@ import {
 import screens from "../constants/screenNames";
 import Colors from "../constants/userColors";
 import RepliesStyles from "../StyleSheets/RepliesStyles";
+import { Notifications } from "expo";
 
 export default function Replies({ route, navigation }) {
   const [replies, setReplies] = useState([]);
   const [value, setValue] = useState("");
-  const [name, setName] = useState("");
-  const [userColor, setUserColor] = useState(Colors.purple); // default
+  const [commenterName, setCommenterName] = useState("");
+  const [userName, setUserName] = useState("");
+  const [commenterColor, setCommenterColor] = useState(Colors.purple); // default
   const { commenterId, userId, comment, commentId, date } = route.params;
+
+  const _handleNotification = (notification) => {
+    const data = notification.data;
+    console.log(data);
+    navigation.navigate(screens.replies, {
+      commenterId: data.commenterId,
+      comment: data.comment,
+      commentId: data.commentId,
+      date: data.date,
+      userId: userId,
+    });
+  };
 
   useEffect(() => {
     const unsubscribe = watchReplies(commentId, setReplies);
@@ -34,10 +48,45 @@ export default function Replies({ route, navigation }) {
 
   useEffect(() => {
     getUser(commenterId).then((userData) => {
-      setName(userData.name);
-      setUserColor(Colors[userData.color]);
+      setCommenterName(userData.name);
+      setCommenterColor(Colors[userData.color]);
     });
+    getUser(userId).then((userData) => {
+      setUserName(userData.name);
+    });
+
+    const _notificationSubscription = Notifications.addListener(
+      _handleNotification
+    );
   }, []); // so it only runs once
+
+  const sendCommenterNotification = async (reply) => {
+    let commentUser = getUser(commenterId);
+    let notifId = (await commentUser).notificationId;
+    const message = await {
+      to: notifId,
+      sound: "default",
+      title: `${userName} replied to your comment!`,
+      body: reply,
+      data: {
+        commenterId: commenterId,
+        comment: comment,
+        commentId: commentId,
+        date: date,
+      },
+      _displayInForeground: true,
+    };
+
+    const response = await fetch("https://exp.host/--/api/v2/push/send", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Accept-encoding": "gzip, deflate",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(message),
+    });
+  };
 
   const ReplyParent = () => (
     <Layout style={[RepliesStyles.mb, RepliesStyles.bgColor, RepliesStyles.mt]}>
@@ -57,16 +106,16 @@ export default function Replies({ route, navigation }) {
               <View
                 style={[
                   RepliesStyles.square,
-                  { backgroundColor: userColor, marginRight: 5 },
+                  { backgroundColor: commenterColor, marginRight: 5 },
                 ]}
               />
-              <Text style={RepliesStyles.mb}> {name}</Text>
+              <Text style={RepliesStyles.mb}> {commenterName}</Text>
               <Text style={{ color: "rgba(0, 0, 0, 0.3)" }}>
                 {" * "}
                 {date}
               </Text>
             </View>
-            <Text category="h6"> {comment} </Text>
+            <Text category='h6'> {comment} </Text>
           </Card>
         </Layout>
       </Layout>
@@ -122,12 +171,14 @@ export default function Replies({ route, navigation }) {
               }}
             >
               <Input
-                placeholder="Add comment"
+                placeholder='Add comment'
                 value={value}
                 onChangeText={setValue}
               />
               <Button
                 onPress={() => {
+                  if (userName != commenterName)
+                    sendCommenterNotification(value);
                   addReply(commentId, {
                     userId: userId,
                     text: value,
