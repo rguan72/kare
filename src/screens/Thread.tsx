@@ -81,7 +81,7 @@ export default function Thread({ route, navigation }) {
                     text={item.text}
                     onReply={() => {
                       navigation.navigate(screens.replies, {
-                        user: item.userId,
+                        commenterId: item.userId,
                         comment: item.text,
                         commentId: item.id,
                         date: date,

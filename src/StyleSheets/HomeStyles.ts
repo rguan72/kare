@@ -6,7 +6,8 @@ export default StyleSheet.create({
     flex: 1,
   },
   Heading: {
-    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "center",
     marginTop: 15,
     marginBottom: 5,
   },

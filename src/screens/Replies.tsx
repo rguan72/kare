@@ -24,8 +24,8 @@ export default function Replies({ route, navigation }) {
   const [replies, setReplies] = useState([]);
   const [value, setValue] = useState("");
   const [name, setName] = useState("");
-  const [userColor, setUserColor] = useState(Colors["purple"]); // default
-  const { userId, comment, commentId, date } = route.params;
+  const [userColor, setUserColor] = useState(Colors.purple); // default
+  const { commenterId, userId, comment, commentId, date } = route.params;
 
   useEffect(() => {
     const unsubscribe = watchReplies(commentId, setReplies);
@@ -33,7 +33,7 @@ export default function Replies({ route, navigation }) {
   }, []);
 
   useEffect(() => {
-    getUser(userId).then((userData) => {
+    getUser(commenterId).then((userData) => {
       setName(userData.name);
       setUserColor(Colors[userData.color]);
     });
