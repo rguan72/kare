@@ -77,6 +77,7 @@ function SignupScreen({ navigation }) {
       return;
     }
     if (!(isLower && isSpecial && isUpper && isLong && isDigit)) {
+      console.log(isLower && isSpecial && isUpper && isLong && isDigit);
       console.log("Password Issue");
       email.error = newCaption();
       setVisible(true);
@@ -90,11 +91,15 @@ function SignupScreen({ navigation }) {
       return;
     } else {
       console.log("Moving to set up");
-      navigation.navigate(screens.setup, {
+      navigation.navigate(screens.userAgreement, {
         email: email.value,
         password: password.value,
       });
     }
+    navigation.navigate(screens.userAgreement, {
+      email: email.value,
+      password: password.value,
+    });
   };
 
   const onPasswordChange = (text) => {
