@@ -1,11 +1,10 @@
 let colors = {
-  beige: "#FFECDE",
+  orange: "#FFA500",
   red: "#E8CAD2",
-  purple: "#F3EAFF",
-  darkPurple: "#5505BA",
+  purple: "#9370DB",
+  yellow: "#FFFF00",
   blue: "#CAD9E8",
-  green: "#C4FFE4",
-  yellow: "#FF9D76",
+  green: "#008000",
 };
 
 export default colors;
