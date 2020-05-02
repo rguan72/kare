@@ -14,7 +14,8 @@ import { addUser, updateUser, getGroups } from "../utils/FirebaseUtils";
 import screens from "../constants/screenNames";
 import { stressOptions } from "../constants/community";
 import SetupStyles from "../StyleSheets/SetupStyles";
-import { Slider, YellowBox } from "react-native";
+import { Slider, YellowBox, FlatList } from "react-native";
+import UserGroupItem from "../components/UserGroupItem";
 
 export default function SetupSurvey({ navigation, route }) {
   // Ignore Firebase timer issues
@@ -35,6 +36,7 @@ export default function SetupSurvey({ navigation, route }) {
   const [selectedIndexOne, setSelectedIndexOne] = useState([]);
   const [selectedIndexTwo, setSelectedIndexTwo] = useState([]);
   const [groupOptions, setGroupOptions] = useState([]);
+
 
   useEffect(() => {
     getGroups()
@@ -249,6 +251,20 @@ export default function SetupSurvey({ navigation, route }) {
           >
             {groupOptions.map(renderOption)}
           </Select>
+          <FlatList
+            data={groupOptions}
+            renderItem={({ item }) => (
+              <UserGroupItem
+                title={item.title}
+                image={item.imageURL}
+                description={item.description}
+                text={item.text}
+                groupId={item.id}
+              />
+            )}
+            keyExtractor={(item) => item.id}
+          />
+
         </Card>
 
         <Button
