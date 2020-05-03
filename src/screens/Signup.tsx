@@ -96,10 +96,6 @@ function SignupScreen({ navigation }) {
         password: password.value,
       });
     }
-    navigation.navigate(screens.userAgreement, {
-      email: email.value,
-      password: password.value,
-    });
   };
 
   const onPasswordChange = (text) => {

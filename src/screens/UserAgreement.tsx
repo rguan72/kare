@@ -7,22 +7,20 @@ import { turquoise } from "color-name";
 import {Dimensions} from 'react-native';
 
 export default function UserAgreement({ navigation, route }) {
-    const [agreed, setAgreed] = useState("");
+    const [agreed, setAgreed] = useState(false);
     const [goNext, setGoNext] = useState(false);
 
 
     function onCheckboxPress() {
-        console.log(Dimensions.get("window").width);
-        console.log(Dimensions.get("window").height);
-        if (agreed == "x") {
-            setAgreed("");
+        if (agreed) {
+            setAgreed(false);
         } else {
-            setAgreed("x");
+            setAgreed(true);
         }
     };
 
     function onNextPress() {
-        if (agreed == "x") {
+        if (agreed) {
             navigation.navigate(screens.setup, {
                 email: route.params.email,
                 password: route.params.password,
@@ -46,12 +44,12 @@ export default function UserAgreement({ navigation, route }) {
                 </Text>
             </ScrollView>
             <View style={UserAgreementStyles.errorBox}>
-                {goNext == true && agreed != "x" && <Text style={UserAgreementStyles.errorText}>
+                {goNext && agreed != "x" && <Text style={UserAgreementStyles.errorText}>
                     You must agree to the user agreement before proceeding.
                 </Text>}
                 <TouchableOpacity style={UserAgreementStyles.agreementBox} onPress={onCheckboxPress}>
                     <View style={UserAgreementStyles.checkbox}>
-                        <Text style={UserAgreementStyles.x}>{agreed}</Text>
+                        {agreed && <Text style={UserAgreementStyles.x}>X</Text>}
                     </View>
                     <Text style={UserAgreementStyles.agreementText}> I have read and agree to the user agreement</Text>
                 </TouchableOpacity>

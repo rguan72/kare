@@ -62,7 +62,7 @@ export default StyleSheet.create({
     },
     buttonText: {
         height: Dimensions.get("window").height*0.0476,
-        fontSize: Dimensions.get("window").height*0.0476,
+        fontSize: Dimensions.get("window").width*0.0845,
         color: 'white',
     }
 })
