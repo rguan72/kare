@@ -19,12 +19,14 @@ export default StyleSheet.create({
         flexDirection: "column",
         marginLeft: 10,
         backgroundColor: "#F3EAFF",
+        marginRight: 10,
     },
     icon: {
         flexShrink: 1,
-        maxWidth: 60,
-        maxHeight: 60,
+        width: 60,
+        height: 60,
         marginLeft: 15,
+	resizeMode: 'contain',
     },
     safeAreaView: {
         flex: 1,

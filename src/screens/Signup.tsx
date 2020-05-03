@@ -1,4 +1,4 @@
-import React, { memo, useState } from "react";
+import React, { memo, useState, useEffect } from "react";
 import {
   TouchableOpacity,
   StyleSheet,
@@ -28,13 +28,13 @@ function SignupScreen({ navigation }) {
   const [visible, setVisible] = useState(false);
   const [passCaption, setPassCaption] = useState("");
   const [pass2Caption, setPass2Caption] = useState("");
+  const [isUpper, setIsUpper] = useState(false);
+  const [isLower, setIsLower] = useState(false);
+  const [isDigit, setIsDigit] = useState(false);
+  const [isSpecial, setIsSpecial] = useState(false);
+  const [isInv, setIsInv] = useState(false);
+  const [isLong, setIsLong] = useState(false);
 
-  var isUpper = false;
-  var isLower = false;
-  var isDigit = false;
-  var isSpecial = false;
-  var isLong = false;
-  var isInv = false;
   const specialChars = new RegExp(/[~`!#$%\^&*+=\-\[\]\\';,/{}|\\":\?]/); // acceptable special characters?
   const unacceptable = new RegExp(/[<>]/);
 
@@ -50,6 +50,11 @@ function SignupScreen({ navigation }) {
     if (isInv) caption = caption + "Password uses invalid characters (< or >)";
     return caption;
   };
+
+  useEffect(() => {
+    var new_cap = newCaption();
+    setPassCaption(new_cap);
+  });
 
   const onIconPress = () => {
     setSecureTextEntry(!secureTextEntry);
@@ -103,9 +108,9 @@ function SignupScreen({ navigation }) {
     var upper = false;
     var lower = false;
     var digit = false;
-    text.length >= 8 ? (isLong = true) : (isLong = false);
-    specialChars.test(text) ? (isSpecial = true) : (isSpecial = false);
-    unacceptable.test(text) ? (isInv = true) : (isInv = false);
+    text.length >= 8 ? (setIsLong(true)) : (setIsLong(false));
+    specialChars.test(text) ? (setIsSpecial(true)) : (setIsSpecial(false));
+    unacceptable.test(text) ? (setIsInv(true)) : (setIsInv(false));
     for (var i = 0; i < text.length; i++) {
       if (text[i] == text[i].toUpperCase() && text[i] != text[i].toLowerCase())
         upper = true;
@@ -113,9 +118,9 @@ function SignupScreen({ navigation }) {
         lower = true;
       if (text[i] >= "0" && text[i] <= "9") digit = true;
     }
-    isUpper = upper;
-    isLower = lower;
-    isDigit = digit;
+    setIsUpper(upper);
+    setIsLower(lower);
+    setIsDigit(digit);
     var new_cap = newCaption();
     setPassCaption(new_cap);
   };

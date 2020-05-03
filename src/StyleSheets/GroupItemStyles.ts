@@ -1,16 +1,16 @@
-import { StyleSheet } from 'react-native';
-import { FlexStyleProps } from '@ui-kitten/components/devsupport';
+import { StyleSheet } from "react-native";
+import { FlexStyleProps } from "@ui-kitten/components/devsupport";
 export default StyleSheet.create({
-    button: {
+  button: {
         backgroundColor: "#F3EAFF",
         marginLeft: 10,
         marginRight: 10,
-        marginTop: 20,
+        marginTop: 10,
         borderRadius: 20,
         marginBottom: 10,
         shadowOffset: { width: 5, height: 5 },
         shadowColor: "black",
-        shadowOpacity: 1.0,
+        shadowOpacity: 0.25,
         elevation: 5,
     },
     buttonBox: {

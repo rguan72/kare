@@ -84,6 +84,22 @@ function updateUser(allUserInformation) {
   db.collection(collections.users).doc(user.uid).update(allUserInformation);
 }
 
+function addGroupsToUser(newGroups) {
+  const user = firebaseApp.auth().currentUser;
+  newGroups.forEach((doc) => {
+    db.collection(collections.users)
+      .doc(user.uid)
+      .update({ groups: firebaseApp.firestore.FieldValue.arrayUnion(doc) });
+  });
+}
+
+function removeGroupFromUser(group) {
+  const user = firebaseApp.auth().currentUser;
+  db.collection(collections.users)
+    .doc(user.uid)
+    .update({ groups: firebaseApp.firestore.FieldValue.arrayRemove(group) });
+}
+
 function addComment(comment: comment, groupId) {
   db.collection(collections.comments)
     .doc()
@@ -264,4 +280,6 @@ export {
   getGroups,
   getGroupsById,
   addNotifTokenToUser,
+  addGroupsToUser,
+  removeGroupFromUser,
 };

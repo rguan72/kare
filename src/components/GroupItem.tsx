@@ -17,8 +17,7 @@ export default function GroupItem({ title, image, description, text, onPress }) 
         <View
           style={GroupItemStyles.textBox}
         >
-          <Text category="h4">{title}</Text>
-          <Text>{description}</Text>
+          <Text category="h5">{title}</Text>
         </View>
         <View
           style={GroupItemStyles.imageBox}
