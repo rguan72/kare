@@ -14,7 +14,8 @@ import { addUser, updateUser, getGroups } from "../utils/FirebaseUtils";
 import screens from "../constants/screenNames";
 import { stressOptions } from "../constants/community";
 import SetupStyles from "../StyleSheets/SetupStyles";
-import { Slider, YellowBox } from "react-native";
+import { Slider, YellowBox, FlatList } from "react-native";
+import SurveyGroupItem from "../components/SurveyGroupItem";
 
 export default function SetupSurvey({ navigation, route }) {
   // Ignore Firebase timer issues
@@ -235,6 +236,19 @@ export default function SetupSurvey({ navigation, route }) {
             Which communities within Kare would you like to join? Please choose
             at least 3. (This information will remain confidential.)
           </Text>
+          <FlatList
+            data={groupOptions}
+            renderItem={({ item }) => (
+              <SurveyGroupItem
+                title={item.title}
+                image={item.imageURL}
+                description={item.description}
+                text={item.text}
+                groupId={item.id}
+              />
+            )}
+            keyExtractor={(item) => item.id}
+          />
           <Select
             multiSelect={true}
             selectedIndex={selectedIndexTwo}
