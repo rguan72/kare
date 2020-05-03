@@ -1,5 +1,11 @@
 import React, { useState, useEffect, useImperativeHandle } from "react";
-import { FlatList, View, TouchableOpacity, Vibration, Platform } from "react-native";
+import {
+  FlatList,
+  View,
+  TouchableOpacity,
+  Vibration,
+  Platform,
+} from "react-native";
 import { Button, Layout, Text, withStyles } from "@ui-kitten/components";
 import GroupItem from "../components/GroupItem";
 import PropTypes from "prop-types";
@@ -85,10 +91,8 @@ export default function HomeScreen({ route, navigation }) {
     const _notificationSubscription = Notifications.addListener(
       _handleNotification
     );
-    
-    return __notificationSubscription;
   }, []);
-  
+
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
       getUser(userId)
@@ -135,7 +139,7 @@ export default function HomeScreen({ route, navigation }) {
                 title: item.title,
                 description: item.description,
                 groupId: item.id,
-		image: item.imageURL,
+                image: item.imageURL,
               })
             }
           />
