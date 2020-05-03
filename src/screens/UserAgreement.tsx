@@ -12,11 +12,7 @@ export default function UserAgreement({ navigation, route }) {
 
 
     function onCheckboxPress() {
-        if (agreed) {
-            setAgreed(false);
-        } else {
-            setAgreed(true);
-        }
+        setAgreed(!agreed);
     };
 
     function onNextPress() {
@@ -44,7 +40,7 @@ export default function UserAgreement({ navigation, route }) {
                 </Text>
             </ScrollView>
             <View style={UserAgreementStyles.errorBox}>
-                {goNext && agreed != "x" && <Text style={UserAgreementStyles.errorText}>
+                {goNext && !agreed && <Text style={UserAgreementStyles.errorText}>
                     You must agree to the user agreement before proceeding.
                 </Text>}
                 <TouchableOpacity style={UserAgreementStyles.agreementBox} onPress={onCheckboxPress}>

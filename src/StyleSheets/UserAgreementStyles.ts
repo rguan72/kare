@@ -27,9 +27,10 @@ export default StyleSheet.create({
         alignItems: 'center'
     },
     errorText: {
-        fontSize: Dimensions.get("window").height*0.0204,
+        fontSize: Dimensions.get("window").width*0.0362,
         color: 'red',
         flexShrink: 1,
+        textAlign: 'center'
     },
     agreementBox: {
         paddingTop: '2%',
@@ -45,7 +46,7 @@ export default StyleSheet.create({
         justifyContent: 'center',
     },
     x: {
-        fontSize: Dimensions.get("window").height*0.0204,
+        fontSize: Dimensions.get("window").width*0.0362,
     },
     agreementText: {
         height: Dimensions.get("window").height*0.0272,
@@ -61,7 +62,7 @@ export default StyleSheet.create({
         alignItems:'center',
     },
     buttonText: {
-        height: Dimensions.get("window").height*0.0476,
+        height: Dimensions.get("window").height*0.0679,
         fontSize: Dimensions.get("window").width*0.0845,
         color: 'white',
     }

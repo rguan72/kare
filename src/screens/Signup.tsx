@@ -61,41 +61,41 @@ function SignupScreen({ navigation }) {
   );
 
   const onSignUpPressed = async () => {
-    var isEmailValid = emailValid(email.value);
-    var doPasswordsMatch = password.value == repassword.value;
-    if (!isEmailValid) {
-      console.log("Not umich email");
-      email.error = "Sorry, only umich.edu emails can be used right now!";
-      setVisible(true);
-      return;
-    }
+    // var isEmailValid = emailValid(email.value);
+    // var doPasswordsMatch = password.value == repassword.value;
+    // if (!isEmailValid) {
+    //   console.log("Not umich email");
+    //   email.error = "Sorry, only umich.edu emails can be used right now!";
+    //   setVisible(true);
+    //   return;
+    // }
 
-    if (!doPasswordsMatch) {
-      console.log("Passwords don't match");
-      email.error = "Both passwords should match";
-      setVisible(true);
-      return;
-    }
-    if (!(isLower && isSpecial && isUpper && isLong && isDigit)) {
-      console.log(isLower && isSpecial && isUpper && isLong && isDigit);
-      console.log("Password Issue");
-      email.error = newCaption();
-      setVisible(true);
-      return;
-    }
-    var methods = await firebase.auth().fetchSignInMethodsForEmail(email.value);
-    if (methods.length != 0) {
-      console.log("email already used");
-      email.error = "This email address is already associated with an account.";
-      setVisible(true);
-      return;
-    } else {
+    // if (!doPasswordsMatch) {
+    //   console.log("Passwords don't match");
+    //   email.error = "Both passwords should match";
+    //   setVisible(true);
+    //   return;
+    // }
+    // if (!(isLower && isSpecial && isUpper && isLong && isDigit)) {
+    //   console.log(isLower && isSpecial && isUpper && isLong && isDigit);
+    //   console.log("Password Issue");
+    //   email.error = newCaption();
+    //   setVisible(true);
+    //   return;
+    // }
+    // var methods = await firebase.auth().fetchSignInMethodsForEmail(email.value);
+    // if (methods.length != 0) {
+    //   console.log("email already used");
+    //   email.error = "This email address is already associated with an account.";
+    //   setVisible(true);
+    //   return;
+    // } else {
       console.log("Moving to set up");
       navigation.navigate(screens.userAgreement, {
         email: email.value,
         password: password.value,
       });
-    }
+    // }
   };
 
   const onPasswordChange = (text) => {
