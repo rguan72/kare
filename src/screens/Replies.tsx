@@ -109,6 +109,7 @@ export default function Replies({ route, navigation }) {
                       });
                     }}
                     numReplies={item.numReplies}
+		    showReplies="False"
                   />
                 );
               }}
