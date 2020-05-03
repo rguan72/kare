@@ -36,13 +36,15 @@ export default function SetupSurvey({ navigation, route }) {
   const [selectedIndexOne, setSelectedIndexOne] = useState([]);
   const [selectedIndexTwo, setSelectedIndexTwo] = useState([]);
   const [groupOptions, setGroupOptions] = useState([]);
+  const [groups, setGroups] = useState([]);
 
   useEffect(() => {
     getGroups()
       .then((querySnapshot) => {
         const options = [];
         querySnapshot.forEach((doc) => {
-          options.push({ id: doc.id, title: doc.data().title });
+          options.push({ id: doc.id, title: doc.data().title, 
+          description: doc.data().description, imageURL: doc.data().imageURL });
         });
         setGroupOptions(options);
         console.log("options: " + options);
@@ -263,6 +265,7 @@ export default function SetupSurvey({ navigation, route }) {
           >
             {groupOptions.map(renderOption)}
           </Select>
+
         </Card>
 
         <Button

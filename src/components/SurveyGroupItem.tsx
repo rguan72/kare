@@ -1,9 +1,14 @@
 import React, { useState } from "react";
-import { Card, CardHeader, Button, Text } from "@ui-kitten/components";
-import { StyleSheet, Image, TouchableOpacity, View } from "react-native";
+import { Text, Modal, Button, Card } from "@ui-kitten/components";
+import {
+  Image,
+  TouchableOpacity,
+  View,
+  TouchableWithoutFeedback,
+  StyleSheet,
+} from "react-native";
 import PropTypes from "prop-types";
-import { WOMEN } from "../../Images";
-import GroupItemStyles from "../StyleSheets/GroupItemStyles"
+import { Ionicons } from "@expo/vector-icons";
 
 export default function SurveyGroupItem({
   title,
@@ -21,7 +26,7 @@ export default function SurveyGroupItem({
         <View style={styles.buttonBox}>
           <View style={styles.textBox}>
             <View style={{ flex: 10 }}>
-              <Text category='h5'>{title}</Text>
+              <Text category='h6'>{title}</Text>
               <Text>{description}</Text>
             </View>
           </View>
@@ -34,10 +39,10 @@ export default function SurveyGroupItem({
   );
 }
 
-UserGroupItem.propTypes = {
+
+SurveyGroupItem.propTypes = {
   title: PropTypes.string.isRequired,
   image: PropTypes.string.isRequired,
-  text: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
   groupId: PropTypes.string.isRequired,
 };
@@ -66,7 +71,7 @@ const styles = StyleSheet.create({
   },
   image: {
     resizeMode: "contain",
-    width: 60,
-    height: 60,
+    width: 40,
+    height: 40,
   },
 });
