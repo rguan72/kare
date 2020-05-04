@@ -1,0 +1,50 @@
+{
+    "Header": "KARE",
+    "SubHeader": "Beta User Terms & Conditions\n",
+    "GeneralText": {
+        "A":"(the ",
+        "B":"are agreed and entered into by and between HelpNow, LLC d/b/a Kare, an Ohio limited liability company (",
+        "C":"), and the user accessing and/or using KARE’s Beta Application, as described below (",
+        "D":" or ",
+        "E":").  By accessing and/or using KARE’s Beta Application, User hereby accepts and agrees to these Terms.  If User does not accept and agree to these Terms, User is not authorized or permitted to access or use KARE’s Beta Application.\n",
+        "F":".  In consideration of User’s agreement to and fulfilment of its obligations under these Terms, KARE will employ commercially reasonable measures to provide User with access to and permission to use a beta version of its communication application known as Kare (the ",
+        "G":") solely for purposes of evaluating the Beta Application and strictly pursuant to the terms hereof.\n",
+        "H":".  User may use and evaluate the Beta Application only as expressly permitted herein.  User may not, directly or indirectly, copy, distribute, disclose, display, perform, modify, attempt to decompile or reverse engineer, share or make available to others, in whole or in part, the Beta Application or any information or data, in any form and however generated, concerning the operation or performance of the Beta Application (",
+        "I":"), for any purpose other than to evaluate and report to KARE on the Beta Application. User acknowledges that the Beta Application and the Beta Test Information are highly proprietary and confidential and shall take all measures necessary to insure that the Beta Application and the Beta Test Information are kept in confidence and not used, made available or disclosed except as expressly permitted herein.\n",
+        "J":".  User acknowledges that the Beta Application and Beta Test Information are the exclusive property of KARE and contain confidential and proprietary information and trade secrets of KARE. Except for the access and permission to use expressly provided above, nothing in these Terms is intended to or shall grant User any rights in or to the Beta Application or Beta Test Information or KARE’s patent rights, copyrights, trademarks, trade secrets or other proprietary rights (",
+        "K":") therein.\n",
+        "L":".  User shall, in a timely manner and as requested by KARE, provide KARE with feedback regarding use of the Beta Application, including information about its functionality, ease of use, problems, ideas for enhancement and the value it provides to User, and hereby assigns to KARE all right, title and interest to such feedback and all Beta Test Information, including all IP Rights therein.\n",
+        "M":".  User acknowledges that the Beta Application may not be available at all times or at any time and that KARE may interrupt, suspend or terminate User’s access to and use of the Beta Application at any time, for any reason or no reason.  ",
+        "N":". User agrees to use the Beta Application in strict compliance with all applicable laws and not to ship, transfer or export the Beta Application into any country, territory or jurisdiction in violation of any U.S. Export Administration Regulation or other U.S. law or regulation.\n",
+        "O":".  These Terms and the agreement embodied herein may be terminated by KARE or Use at any time, upon notice to the other, whereupon User will promptly and permanently disable and remove the Beta Application and any code associated therewith from any and all smart phones, tablets, computers, systems and other devices and, upon KARE’s request, certify that it has done so.\n",
+        "P":".  These Terms will be governed by and construed in accordance with the laws of the State of Ohio, United States of America, notwithstanding any conflicts of law or choice of law doctrine to the contrary.  Any legal action regarding these Terms or the subject matter hereof may be brought only in a state or federal court in Cuyahoga County, Ohio, USA, to the personal jurisdiction of which the parties hereby stipulate and waive any objection to venue therein.  These Terms will not be subject to the United Nations Convention on Contracts for the International Sale of Goods, the application of which is expressly excluded.\n\n"
+    },
+    "CapsLock": {
+        "A": "The Beta Application IS MADE ACCESSIBLE \"as is,\" without warranty of any kind, and KARE hereby disclaims all warranties, express, implied, or statutory, Including, without limitation, all implied warranties of merchantability, fitness for a particular purpose OR non-infringement.\n",
+        "B": "  IN NO EVENT SHALL KARE BE LIABLE FOR ANY DAMAGES WHATSOEVER (INCLUDING WITHOUT LIMITATION ANY SPECIAL, INCIDENTAL, DIRECT, INDIRECT, CONSEQUENTIAL, OR PUNITIVE DAMAGES OR FOR LOSS OF INFORMATION OR DATA) ARISING OUT OF THE USE OF OR INABILITY TO USE THE BETA APPLICATION.\n"
+    },
+    "BoldText": {
+        "A": "These Beta User Terms & Conditions "
+    },
+    "BoldItalics": {
+        "A": "\"Terms\"",
+        "B": "“KARE”",
+        "C": "“User”",
+        "D": "“You”",
+        "E": "\"Beta Application\"",
+        "F":"\"Beta Test Information\"", 
+        "G": "“IP Rights”" 
+    },
+    "BoldUnderline": {
+        "A": "Permission",
+        "B": "No Unauthorized Use or Disclosure",
+        "C": "No Transfer of Rights",
+        "D": "Feedback",
+        "E": "No Guaranteed Access or Warranty",
+        "F": "Limitation of Liability",
+        "G": "Export Laws",
+        "H": "Termination and Return of Beta Application",
+        "I": "Governing Law"
+    }
+}
+    

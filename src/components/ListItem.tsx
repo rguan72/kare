@@ -51,7 +51,7 @@ export default function ListItem({
         </Text>
       </View>
       {/* </View> */}
-      <Text style={ListItemStyles.comments}> {text} </Text>
+      <Text style={ListItemStyles.comments}>{text} </Text>
       <View style={ListItemStyles.bottomRow}>
         <RepliesNumber></RepliesNumber>
         <TouchableOpacity onPress={onReport}>
