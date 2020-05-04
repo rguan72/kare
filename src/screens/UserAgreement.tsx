@@ -5,6 +5,13 @@ import screens from "../constants/screenNames";
 import UserAgreementStyles from "../StyleSheets/UserAgreementStyles";
 import { turquoise } from "color-name";
 import {Dimensions} from 'react-native';
+import {Header} from "../constants/UserAgreementLanguage.json";
+import {SubHeader} from "../constants/UserAgreementLanguage.json";
+import {BoldText} from "../constants/UserAgreementLanguage.json";
+import {GeneralText} from "../constants/UserAgreementLanguage.json";
+import {BoldItalics} from "../constants/UserAgreementLanguage.json";
+import {BoldUnderline} from "../constants/UserAgreementLanguage.json";
+import {CapsLock} from "../constants/UserAgreementLanguage.json";
 
 export default function UserAgreement({ navigation, route }) {
     const [agreed, setAgreed] = useState(false);
@@ -29,25 +36,28 @@ export default function UserAgreement({ navigation, route }) {
     return (
         <View style={UserAgreementStyles.container}>
             <ScrollView style={UserAgreementStyles.scrollView}>
-                <Text category = 'h5' style={UserAgreementStyles.heading}>User Agreement</Text>
-                <Text style={UserAgreementStyles.text}>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-                ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-                ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-                reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur
-                sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
-                est laborum.
-                </Text>
+                <Text category = 'h5' style={UserAgreementStyles.heading}>{Header}</Text>
+                <Text category = 'h6' style={UserAgreementStyles.heading}>{SubHeader}</Text>
+                <Text><Text style={UserAgreementStyles.Bold}> {BoldText.A}</Text><Text>{GeneralText.A}</Text><Text style={UserAgreementStyles.BoldItalics}>{BoldItalics.A}</Text><Text>{GeneralText.B}</Text><Text style={UserAgreementStyles.BoldItalics}>{BoldItalics.B}</Text><Text>{GeneralText.C}</Text><Text style={UserAgreementStyles.BoldItalics}>{BoldItalics.C}</Text><Text>{GeneralText.D}</Text><Text style={UserAgreementStyles.BoldItalics}>{BoldItalics.D}</Text><Text>{GeneralText.E}</Text></Text>
+                <Text><Text style={UserAgreementStyles.BoldUnderlined}>{BoldUnderline.A}</Text><Text>{GeneralText.F}</Text><Text style={UserAgreementStyles.BoldItalics}>{BoldItalics.E}</Text><Text>{GeneralText.G}</Text></Text>
+                <Text><Text style={UserAgreementStyles.BoldUnderlined}>{BoldUnderline.B}</Text><Text>{GeneralText.H}</Text><Text style={UserAgreementStyles.BoldItalics}>{BoldItalics.F}</Text><Text>{GeneralText.I}</Text></Text>
+                <Text><Text style={UserAgreementStyles.BoldUnderlined}>{BoldUnderline.C}</Text><Text>{GeneralText.J}</Text><Text style={UserAgreementStyles.BoldItalics}>{BoldItalics.G}</Text><Text>{GeneralText.K}</Text></Text>
+                <Text><Text style={UserAgreementStyles.BoldUnderlined}>{BoldUnderline.D}</Text><Text>{GeneralText.L}</Text></Text>
+                <Text><Text style={UserAgreementStyles.BoldUnderlined}>{BoldUnderline.E}</Text><Text>{GeneralText.M}</Text><Text style={UserAgreementStyles.CapsLock}>{CapsLock.A}</Text></Text>
+                <Text><Text style={UserAgreementStyles.BoldUnderlined}>{BoldUnderline.F}</Text><Text style={UserAgreementStyles.CapsLock}>{CapsLock.B}</Text></Text>
+                <Text><Text style={UserAgreementStyles.BoldUnderlined}>{BoldUnderline.G}</Text><Text>{GeneralText.N}</Text></Text>
+                <Text><Text style={UserAgreementStyles.BoldUnderlined}>{BoldUnderline.H}</Text><Text>{GeneralText.O}</Text></Text>
+                <Text><Text style={UserAgreementStyles.BoldUnderlined}>{BoldUnderline.I}</Text><Text>{GeneralText.P}</Text></Text>
             </ScrollView>
             <View style={UserAgreementStyles.errorBox}>
                 {goNext && !agreed && <Text style={UserAgreementStyles.errorText}>
-                    You must agree to the user agreement before proceeding.
+                    You must accept the Terms & Conditions before proceeding.
                 </Text>}
                 <TouchableOpacity style={UserAgreementStyles.agreementBox} onPress={onCheckboxPress}>
                     <View style={UserAgreementStyles.checkbox}>
                         {agreed && <Text style={UserAgreementStyles.x}>X</Text>}
                     </View>
-                    <Text style={UserAgreementStyles.agreementText}> I have read and agree to the user agreement</Text>
+                    <Text style={UserAgreementStyles.agreementText}> I have read and accept the Terms & Conditions</Text>
                 </TouchableOpacity>
             </View>
             <TouchableOpacity style={UserAgreementStyles.button} onPress={onNextPress}>

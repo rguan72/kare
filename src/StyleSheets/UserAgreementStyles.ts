@@ -7,6 +7,20 @@ export default StyleSheet.create({
         flex: 1,
         alignItems: "center",
     },
+    Bold:{
+        fontWeight: 'bold'
+    },
+    BoldUnderlined: {
+        fontWeight: 'bold',
+        textDecorationLine: 'underline'
+    },
+    BoldItalics: {
+        fontWeight: 'bold',
+        fontStyle: 'italic'
+    },
+    CapsLock: {
+        textTransform: 'uppercase'
+    },
     scrollView: {
         paddingVertical: '5%',
         paddingHorizontal: '2%',
@@ -30,7 +44,8 @@ export default StyleSheet.create({
         fontSize: Dimensions.get("window").width*0.0362,
         color: 'red',
         flexShrink: 1,
-        textAlign: 'center'
+        textAlign: 'center',
+        flexWrap: 'wrap'
     },
     agreementBox: {
         paddingTop: '2%',
