@@ -111,12 +111,17 @@ export default function SetupSurvey({ navigation, route }) {
             style={SetupStyles}
             onValueChange={(value) => setColor(value)}
             items={[
-              { label: "Orange", value: "orange" },
+              { label: "Kare Purple", value: "karePurple" },
+              { label: "Fushia Purple", value: "fushiaPurple" },
               { label: "Red", value: "red" },
-              { label: "Purple", value: "purple" },
+              { label: "Pink", value: "pink" },
+              { label: "Orange", value: "orange" },
+              { label: "Maize", value: "maize" },
               { label: "Blue", value: "blue" },
-              { label: "Green", value: "green" },
-              { label: "Yellow", value: "yellow" }
+              { label: "Sky Blue", value: "skyBlue" },
+              { label: "Mint Green", value: "mintGreen" },
+              { label: "Forest Green", value: "forestGreen" },
+              { label: "Black", value: "black" },
             ]}
           />
         </Card>
