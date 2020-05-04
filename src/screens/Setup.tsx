@@ -38,6 +38,7 @@ export default function SetupSurvey({ navigation, route }) {
   const [groupOptions, setGroupOptions] = useState([]);
   const [groups, setGroups] = useState([]);
 
+  
   useEffect(() => {
     getGroups()
       .then((querySnapshot) => {
@@ -50,6 +51,16 @@ export default function SetupSurvey({ navigation, route }) {
         console.log("options: " + options);
       })
       .catch(() => navigation.navigate(screens.error));
+    
+    // will use this to create 3 random letters
+    var num1 = Math.floor(Math.random() * 900 + 100).toString(10); // to ensure 3 digits
+    var num2 = Math.floor(Math.random() * 900 + 100).toString(10); // to ensure 3 digits
+    var characters = 'abcdefghijklmnopqrstuvwxyz'
+    var rand_str = ''
+    for ( var i = 0; i < 3; i++ ){
+      rand_str += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    setUserName(num1+rand_str+num2)
   }, []);
 
   const renderOption = (group) => (
@@ -95,7 +106,6 @@ export default function SetupSurvey({ navigation, route }) {
   };
 
   var isEnabled =
-    values["username"].length > 0 &&
     selectedIndexOne.length >= 2 &&
     selectedIndexTwo.length >= 3 &&
     color.length > 0;
@@ -129,18 +139,6 @@ export default function SetupSurvey({ navigation, route }) {
           />
         </Card>
         <Card style={SetupStyles.card}>
-          <Text style={SetupStyles.question}>What is your favorite animal? </Text>
-          <Input
-            value={values["username"]}
-            onChange={(e) => handleEventChange(e, "username")}
-            onEndEditing={(e) => {
-              var num1 = Math.floor(Math.random() * 900 + 100).toString(10); // to ensure 3 digits
-              var num2 = Math.floor(Math.random() * 900 + 100).toString(10); // to ensure 3 digits
-              return setUserName(
-                num1 + e.nativeEvent.text.trim().toLowerCase() + num2
-              );
-            }}
-          />
           <Text>Your random username will be</Text>
           <Text>{userName}</Text>
         </Card>
