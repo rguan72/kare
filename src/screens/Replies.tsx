@@ -77,6 +77,8 @@ export default function Replies({ route, navigation }) {
       _displayInForeground: true,
     };
 
+    console.log(`sent ${message.title} to ${await commentUser}`);
+
     const response = await fetch("https://exp.host/--/api/v2/push/send", {
       method: "POST",
       headers: {
@@ -158,7 +160,7 @@ export default function Replies({ route, navigation }) {
                       });
                     }}
                     numReplies={item.numReplies}
-		    showReplies="False"
+                    showReplies='False'
                   />
                 );
               }}
@@ -178,8 +180,8 @@ export default function Replies({ route, navigation }) {
               />
               <Button
                 onPress={() => {
-                  if (userName != commenterName)
-                    sendCommenterNotification(value);
+                  //if (userName != commenterName)
+                  sendCommenterNotification(value);
                   addReply(commentId, {
                     userId: userId,
                     text: value,

@@ -60,6 +60,7 @@ export default function HomeScreen({ route, navigation }) {
       }
       const token = await Notifications.getExpoPushTokenAsync();
       // TODO add token to user in db
+      console.log(`The exponent token for your device is ${token}`);
       addNotifTokenToUser(userId, token);
     } else {
       alert("Must use physical device for Push Notifications");
@@ -77,6 +78,9 @@ export default function HomeScreen({ route, navigation }) {
 
   const _handleNotification = (notification) => {
     const data = notification.data;
+    console.log(
+      `Notification is being handled and you will be redirected to ${data.comment} thread`
+    );
     navigation.navigate(screens.replies, {
       commenterId: data.commenterId,
       comment: data.comment,
