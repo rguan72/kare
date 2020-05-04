@@ -30,7 +30,7 @@ export default function Thread({ route, navigation }) {
   const [restComments, setRestComments] = useState([]);
   const [commentStructure, setCommentStructure] = useState([]);
   const [value, setValue] = useState("");
-  const { userId, title, description, groupId } = route.params;
+  const { userId, title, description, groupId, image } = route.params;
 
   useEffect(() => {
     const unsubscribe = watchComments(setComments, groupId);
@@ -49,12 +49,12 @@ export default function Thread({ route, navigation }) {
     <Layout style={ThreadStyles.header}>
       {/* text box */}
       <Layout style={ThreadStyles.headerTextBox}>
-        <Text category='h4'> {title} </Text>
-        <Text> {description}</Text>
+        <Text category='h5'> {title} </Text>
+        <Text style={{marginRight: 10}}> {description}</Text>
       </Layout>
       {/* image box */}
       <Layout style={{ backgroundColor: "#F3EAFF", maxHeight: 100 }}>
-        <Image source={WOMEN} style={ThreadStyles.icon} />
+        <Image source={{uri: image}} style={ThreadStyles.icon} />
       </Layout>
     </Layout>
   );
@@ -81,7 +81,7 @@ export default function Thread({ route, navigation }) {
                     text={item.text}
                     onReply={() => {
                       navigation.navigate(screens.replies, {
-                        user: item.userId,
+                        commenterId: item.userId,
                         comment: item.text,
                         commentId: item.id,
                         date: date,
@@ -90,6 +90,7 @@ export default function Thread({ route, navigation }) {
                     onReport={() => reportComment(item.id)}
                     date={date}
                     numReplies={item.numReplies}
+		    showReplies="True"
                   />
                 );
               }}

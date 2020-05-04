@@ -1,4 +1,21 @@
-import { StyleSheet } from "react-native";
+import { Dimensions, Platform, PixelRatio, StyleSheet } from "react-native";
+
+const {
+  width: SCREEN_WIDTH,
+  height: SCREEN_HEIGHT,
+} = Dimensions.get('window');
+
+const scale = SCREEN_WIDTH / 375;
+
+export function normalize(size) {
+  const newSize = size * scale 
+  if (Platform.OS === 'ios') {
+    return Math.round(PixelRatio.roundToNearestPixel(newSize))
+  } else {
+    return Math.round(PixelRatio.roundToNearestPixel(newSize)) - 2
+  }
+}
+
 export default StyleSheet.create({
   container: {
     marginTop: 30,
@@ -19,6 +36,10 @@ export default StyleSheet.create({
   },
   mt: {
     marginTop: 20,
+  },
+  question: {
+    fontWeight: "bold",
+    fontSize: normalize(16),
   },
   mb: {
     marginBottom: 10,
