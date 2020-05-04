@@ -23,6 +23,7 @@ import {
 import { WOMEN } from "../../Images";
 import ThreadStyles from "../StyleSheets/ThreadStyles";
 import screens from "../constants/screenNames";
+import PureImage from "../components/PureImage";
 
 export default function Thread({ route, navigation }) {
   const [comments, setComments] = useState([]);
@@ -50,11 +51,11 @@ export default function Thread({ route, navigation }) {
       {/* text box */}
       <Layout style={ThreadStyles.headerTextBox}>
         <Text category='h5'> {title} </Text>
-        <Text style={{marginRight: 10}}> {description}</Text>
+        <Text style={{ marginRight: 10 }}> {description}</Text>
       </Layout>
       {/* image box */}
       <Layout style={{ backgroundColor: "#F3EAFF", maxHeight: 100 }}>
-        <Image source={{uri: image}} style={ThreadStyles.icon} />
+        <PureImage source={{ uri: image }} style={ThreadStyles.icon} />
       </Layout>
     </Layout>
   );
@@ -90,7 +91,7 @@ export default function Thread({ route, navigation }) {
                     onReport={() => reportComment(item.id)}
                     date={date}
                     numReplies={item.numReplies}
-		    showReplies="True"
+                    showReplies='True'
                   />
                 );
               }}

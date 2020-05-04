@@ -11,6 +11,7 @@ import PropTypes from "prop-types";
 import GroupItemStyles from "../StyleSheets/GroupItemStyles";
 import { Ionicons } from "@expo/vector-icons";
 import { removeGroupFromUser } from "../utils/FirebaseUtils";
+import PureImage from "../components/PureImage";
 
 export default function UserGroupItem({
   title,
@@ -44,7 +45,7 @@ export default function UserGroupItem({
             </TouchableOpacity>
           </View>
           <View style={styles.imageBox}>
-            <Image style={styles.image} source={{ uri: image }} />
+            <PureImage style={styles.image} source={{ uri: image }} />
           </View>
         </View>
         <Modal visible={visible}>
