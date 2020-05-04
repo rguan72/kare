@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import PropTypes from "prop-types";
 import { Ionicons } from "@expo/vector-icons";
+import { CheckBox } from 'react-native-elements'
 
 export default function SurveyGroupItem({
   title,
@@ -17,24 +18,28 @@ export default function SurveyGroupItem({
   onCancel,
   groupId,
 }) {
+
   const [visible, setVisible] = useState(false);
   const [caption, setCaption] = useState("");
 
+  const onIconPress = () => {
+    setCaption(`Are you sure you want to leave group ${title}?`);
+    setVisible(true);
+  };
+
   return (
     <View style={styles.textbox}>
-      <React.Fragment>
-        <View style={styles.buttonBox}>
-          <View style={styles.textBox}>
-            <View style={{ flex: 10 }}>
-              <Text category='h6'>{title}</Text>
-              <Text>{description}</Text>
-            </View>
-          </View>
-          <View style={styles.imageBox}>
-            <Image style={styles.image} source={{ uri: image }} />
+      <View style={styles.buttonBox}>
+        <View style={styles.textBox}>
+          <View style={{ flex: 10 }}>
+            <Text category='h6'>{title}</Text>
+            <Text>{description}</Text>
           </View>
         </View>
-      </React.Fragment>
+        <View style={styles.imageBox}>
+          <Image style={styles.image} source={{ uri: image }} />
+        </View>
+      </View>
     </View>
   );
 }
