@@ -14,7 +14,8 @@ import { addUser, updateUser, getGroups } from "../utils/FirebaseUtils";
 import screens from "../constants/screenNames";
 import { stressOptions } from "../constants/community";
 import SetupStyles from "../StyleSheets/SetupStyles";
-import { Slider, YellowBox } from "react-native";
+import { Slider, YellowBox, FlatList } from "react-native";
+import SurveyGroupItem from "../components/SurveyGroupItem";
 
 export default function SetupSurvey({ navigation, route }) {
   // Ignore Firebase timer issues
@@ -35,18 +36,31 @@ export default function SetupSurvey({ navigation, route }) {
   const [selectedIndexOne, setSelectedIndexOne] = useState([]);
   const [selectedIndexTwo, setSelectedIndexTwo] = useState([]);
   const [groupOptions, setGroupOptions] = useState([]);
+  const [groups, setGroups] = useState([]);
 
+  
   useEffect(() => {
     getGroups()
       .then((querySnapshot) => {
         const options = [];
         querySnapshot.forEach((doc) => {
-          options.push({ id: doc.id, title: doc.data().title });
+          options.push({ id: doc.id, title: doc.data().title, 
+          description: doc.data().description, imageURL: doc.data().imageURL });
         });
         setGroupOptions(options);
         console.log("options: " + options);
       })
       .catch(() => navigation.navigate(screens.error));
+    
+    // will use this to create 3 random letters
+    var num1 = Math.floor(Math.random() * 900 + 100).toString(10); // to ensure 3 digits
+    var num2 = Math.floor(Math.random() * 900 + 100).toString(10); // to ensure 3 digits
+    var characters = 'abcdefghijklmnopqrstuvwxyz'
+    var rand_str = ''
+    for ( var i = 0; i < 3; i++ ){
+      rand_str += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    setUserName(num1+rand_str+num2)
   }, []);
 
   const renderOption = (group) => (
@@ -92,7 +106,6 @@ export default function SetupSurvey({ navigation, route }) {
   };
 
   var isEnabled =
-    values["username"].length > 0 &&
     selectedIndexOne.length >= 2 &&
     selectedIndexTwo.length >= 3 &&
     color.length > 0;
@@ -111,28 +124,21 @@ export default function SetupSurvey({ navigation, route }) {
             style={SetupStyles}
             onValueChange={(value) => setColor(value)}
             items={[
-              { label: "Orange", value: "orange" },
+              { label: "Kare Purple", value: "karePurple" },
+              { label: "Fushia Purple", value: "fushiaPurple" },
               { label: "Red", value: "red" },
-              { label: "Purple", value: "purple" },
+              { label: "Pink", value: "pink" },
+              { label: "Orange", value: "orange" },
+              { label: "Maize", value: "maize" },
               { label: "Blue", value: "blue" },
-              { label: "Green", value: "green" },
-              { label: "Yellow", value: "yellow" }
+              { label: "Sky Blue", value: "skyBlue" },
+              { label: "Mint Green", value: "mintGreen" },
+              { label: "Forest Green", value: "forestGreen" },
+              { label: "Black", value: "black" },
             ]}
           />
         </Card>
         <Card style={SetupStyles.card}>
-          <Text style={SetupStyles.question}>What is your favorite animal? </Text>
-          <Input
-            value={values["username"]}
-            onChange={(e) => handleEventChange(e, "username")}
-            onEndEditing={(e) => {
-              var num1 = Math.floor(Math.random() * 900 + 100).toString(10); // to ensure 3 digits
-              var num2 = Math.floor(Math.random() * 900 + 100).toString(10); // to ensure 3 digits
-              return setUserName(
-                num1 + e.nativeEvent.text.trim().toLowerCase() + num2
-              );
-            }}
-          />
           <Text>Your random username will be</Text>
           <Text>{userName}</Text>
         </Card>
@@ -235,6 +241,19 @@ export default function SetupSurvey({ navigation, route }) {
             Which communities within Kare would you like to join? Please choose
             at least 3. (This information will remain confidential.)
           </Text>
+          <FlatList
+            data={groupOptions}
+            renderItem={({ item }) => (
+              <SurveyGroupItem
+                title={item.title}
+                image={item.imageURL}
+                description={item.description}
+                text={item.text}
+                groupId={item.id}
+              />
+            )}
+            keyExtractor={(item) => item.id}
+          />
           <Select
             multiSelect={true}
             selectedIndex={selectedIndexTwo}
@@ -249,6 +268,7 @@ export default function SetupSurvey({ navigation, route }) {
           >
             {groupOptions.map(renderOption)}
           </Select>
+
         </Card>
 
         <Button

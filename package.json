@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@eva-design/eva": "^2.0.0-alpha.1",
+    "@expo/webpack-config": "^0.12.3",
     "@react-native-community/masked-view": "0.1.5",
     "@react-native-community/slider": "^2.0.9",
     "@react-navigation/native": "^5.0.6",
