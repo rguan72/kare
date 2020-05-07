@@ -18,6 +18,7 @@ import SetupSurvey from "./src/screens/Setup";
 import VerifyEmailScreen from "./src/screens/Verify";
 import ManageGroups from "./src/screens/ManageGroups";
 import Error from "./src/screens/Error";
+import UserAgreement from "./src/screens/UserAgreement";
 import screens from "./src/constants/screenNames";
 import firebase from "firebase/app";
 import { onAuthUserListener, AuthState } from "./src/utils/FirebaseUtils";
@@ -68,6 +69,11 @@ export default function App() {
                 name={screens.signup}
                 component={SignupScreen}
                 options={{ title: "", headerTransparent: true }}
+              />
+              <Stack.Screen
+                name={screens.userAgreement}
+                component={UserAgreement}
+                options={{title: "", headerTransparent: true}}
               />
               <Stack.Screen
                 name={screens.login}

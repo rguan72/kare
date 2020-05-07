@@ -9,4 +9,5 @@ export default {
   thread: "Thread",
   replies: "Replies",
   error: "Error",
+  userAgreement: "UserAgreement",
 };
