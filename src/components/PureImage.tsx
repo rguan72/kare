@@ -1,8 +1,16 @@
-import React, { memo } from "react";
+import React, { memo, useEffect } from "react";
 import { Image } from "react-native";
 
-const PureImage = memo((props) => {
-  return <Image {...props} />;
-});
+const areEqual = (prevProps, nextProps) => {
+  return true;
+};
 
-export default PureImage;
+const PureImage = (props) => {
+  useEffect(() => {
+    console.log("rendered");
+  });
+
+  return <Image {...props} />;
+};
+
+export default React.memo(PureImage, areEqual);

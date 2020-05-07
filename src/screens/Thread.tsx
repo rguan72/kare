@@ -30,7 +30,6 @@ export default function Thread({ route, navigation }) {
   const [firstComments, setFirstComments] = useState([]);
   const [restComments, setRestComments] = useState([]);
   const [commentStructure, setCommentStructure] = useState([]);
-  const [value, setValue] = useState("");
   const { userId, title, description, groupId, image } = route.params;
 
   useEffect(() => {
@@ -46,7 +45,7 @@ export default function Thread({ route, navigation }) {
     ]);
   }, [comments]);
 
-  const GroupTitle = () => (
+  const GroupTitle = React.memo(() => (
     <Layout style={ThreadStyles.header}>
       {/* text box */}
       <Layout style={ThreadStyles.headerTextBox}>
@@ -58,7 +57,40 @@ export default function Thread({ route, navigation }) {
         <PureImage source={{ uri: image }} style={ThreadStyles.icon} />
       </Layout>
     </Layout>
-  );
+  ));
+
+  const ButtonLayout = () => {
+    const [value, setValue] = useState("");
+
+    return (
+      <Layout style={ThreadStyles.commentBox}>
+        <Input
+          placeholder='Add comment'
+          value={value}
+          onChangeText={(e) => setValue(e)}
+        />
+        <Button
+          onPress={() => {
+            addComment(
+              {
+                userId: userId,
+                text: value,
+                reports: 0,
+                show: true,
+                numReplies: 0,
+              },
+              groupId
+            );
+            setValue("");
+          }}
+          style={ThreadStyles.submitButton}
+          disabled={value === ""}
+        >
+          Submit
+        </Button>
+      </Layout>
+    );
+  };
 
   return (
     <KeyboardAvoidingView
@@ -100,32 +132,7 @@ export default function Thread({ route, navigation }) {
                 <Text style={ThreadStyles.sectionHeader}> {title} </Text>
               )}
             />
-            <Layout style={ThreadStyles.commentBox}>
-              <Input
-                placeholder='Add comment'
-                value={value}
-                onChangeText={setValue}
-              />
-              <Button
-                onPress={() => {
-                  addComment(
-                    {
-                      userId: userId,
-                      text: value,
-                      reports: 0,
-                      show: true,
-                      numReplies: 0,
-                    },
-                    groupId
-                  );
-                  setValue("");
-                }}
-                style={ThreadStyles.submitButton}
-                disabled={value === ""}
-              >
-                Submit
-              </Button>
-            </Layout>
+            <ButtonLayout />
           </React.Fragment>
         </TouchableWithoutFeedback>
       </SafeAreaView>
