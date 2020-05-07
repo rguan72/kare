@@ -1,11 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  SafeAreaView,
-  FlatList,
-  Image,
-  TextInput,
-  SectionList,
-} from "react-native";
+import { SafeAreaView, FlatList, Image, SectionList } from "react-native";
 import PropTypes from "prop-types";
 import {
   KeyboardAvoidingView,
@@ -13,23 +7,23 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
 } from "react-native";
-import { Layout, Button, Input, Text } from "@ui-kitten/components";
+import { Layout, Button, Input, Text, Icon } from "@ui-kitten/components";
 import ListItem from "../components/ListItem";
 import {
   addComment,
   watchComments,
   reportComment,
 } from "../utils/FirebaseUtils";
-import { WOMEN } from "../../Images";
 import ThreadStyles from "../StyleSheets/ThreadStyles";
 import screens from "../constants/screenNames";
+import { EvilIcons } from "@expo/vector-icons";
 
 export default function Thread({ route, navigation }) {
   const [comments, setComments] = useState([]);
-  const [firstComments, setFirstComments] = useState([]);
-  const [restComments, setRestComments] = useState([]);
+  const [filteredComments, setFilteredComments] = useState([]);
   const [commentStructure, setCommentStructure] = useState([]);
   const [value, setValue] = useState("");
+  const [query, setQuery] = useState("");
   const { userId, title, description, groupId, image } = route.params;
 
   useEffect(() => {
@@ -45,18 +39,35 @@ export default function Thread({ route, navigation }) {
     ]);
   }, [comments]);
 
+  useEffect(() => {
+    const lowerCaseQuery = query.toLowerCase();
+    setFilteredComments(
+      comments.filter((comment) => {
+        return comment["text"].toLowerCase().includes(lowerCaseQuery);
+      })
+    );
+  }, [query]);
+
   const GroupTitle = () => (
-    <Layout style={ThreadStyles.header}>
-      {/* text box */}
-      <Layout style={ThreadStyles.headerTextBox}>
-        <Text category='h5'> {title} </Text>
-        <Text style={{marginRight: 10}}> {description}</Text>
+    <>
+      <Layout style={ThreadStyles.header}>
+        {/* text box */}
+        <Layout style={ThreadStyles.headerTextBox}>
+          <Text category='h5'> {title} </Text>
+          <Text style={{ marginRight: 10 }}> {description}</Text>
+        </Layout>
+        {/* image box */}
+        <Layout style={{ backgroundColor: "#F3EAFF", maxHeight: 100 }}>
+          <Image source={{ uri: image }} style={ThreadStyles.icon} />
+        </Layout>
       </Layout>
-      {/* image box */}
-      <Layout style={{ backgroundColor: "#F3EAFF", maxHeight: 100 }}>
-        <Image source={{uri: image}} style={ThreadStyles.icon} />
-      </Layout>
-    </Layout>
+    </>
+  );
+
+  const renderIcon = (props) => (
+    <TouchableWithoutFeedback>
+      {!query ? <EvilIcons name='search' size={20} /> : <Text></Text>}
+    </TouchableWithoutFeedback>
   );
 
   return (
@@ -67,38 +78,84 @@ export default function Thread({ route, navigation }) {
       <SafeAreaView style={ThreadStyles.safeAreaView}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <React.Fragment>
-            <SectionList
-              sections={commentStructure}
-              ListHeaderComponent={GroupTitle}
-              renderItem={({ item }) => {
-                const date =
-                  item && item.timestamp
-                    ? item.timestamp.toDate().toLocaleDateString()
-                    : "";
-                return (
-                  <ListItem
-                    userId={item.userId}
-                    text={item.text}
-                    onReply={() => {
-                      navigation.navigate(screens.replies, {
-                        commenterId: item.userId,
-                        comment: item.text,
-                        commentId: item.id,
-                        date: date,
-                      });
-                    }}
-                    onReport={() => reportComment(item.id)}
-                    date={date}
-                    numReplies={item.numReplies}
-		    showReplies="True"
-                  />
-                );
+            <Input
+              style={{
+                marginTop: 40,
+                paddingLeft: 10,
+                paddingRight: 5,
+                borderRadius: 20,
+                borderStyle: "solid",
+                borderColor: "#5505BA",
               }}
-              keyExtractor={(item) => item.id}
-              renderSectionHeader={({ section: { title } }) => (
-                <Text style={ThreadStyles.sectionHeader}> {title} </Text>
-              )}
+              placeholder='Search for a comment...'
+              onChangeText={setQuery}
+              value={query}
+              accessoryRight={renderIcon}
             />
+            {query.length > 0 ? (
+              <FlatList
+                data={filteredComments}
+                renderItem={({ item }) => {
+                  const date =
+                    item && item.timestamp
+                      ? item.timestamp.toDate().toLocaleDateString()
+                      : "";
+                  return (
+                    <ListItem
+                      userId={item.userId}
+                      text={item.text}
+                      onReply={() => {
+                        navigation.navigate(screens.replies, {
+                          commenterId: item.userId,
+                          comment: item.text,
+                          commentId: item.id,
+                          date: date,
+                        });
+                      }}
+                      onReport={() => reportComment(item.id)}
+                      date={date}
+                      numReplies={item.numReplies}
+                      showReplies='True'
+                    />
+                  );
+                }}
+                keyExtractor={(item) => item.id}
+              />
+            ) : (
+              <SectionList
+                sections={commentStructure}
+                ListHeaderComponent={GroupTitle}
+                renderItem={({ item }) => {
+                  const date =
+                    item && item.timestamp
+                      ? item.timestamp.toDate().toLocaleDateString()
+                      : "";
+                  return (
+                    <ListItem
+                      userId={item.userId}
+                      text={item.text}
+                      onReply={() => {
+                        navigation.navigate(screens.replies, {
+                          commenterId: item.userId,
+                          comment: item.text,
+                          commentId: item.id,
+                          date: date,
+                        });
+                      }}
+                      onReport={() => reportComment(item.id)}
+                      date={date}
+                      numReplies={item.numReplies}
+                      showReplies='True'
+                    />
+                  );
+                }}
+                keyExtractor={(item) => item.id}
+                renderSectionHeader={({ section: { title } }) => (
+                  <Text style={ThreadStyles.sectionHeader}> {title} </Text>
+                )}
+                stickySectionHeadersEnabled={false}
+              />
+            )}
             <Layout style={ThreadStyles.commentBox}>
               <Input
                 placeholder='Add comment'
