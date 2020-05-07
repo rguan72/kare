@@ -23,6 +23,7 @@ import {
 import { WOMEN } from "../../Images";
 import ThreadStyles from "../StyleSheets/ThreadStyles";
 import screens from "../constants/screenNames";
+import ReportDiologue from "../components/ReportDiologue";
 
 export default function Thread({ route, navigation }) {
   const [comments, setComments] = useState([]);
