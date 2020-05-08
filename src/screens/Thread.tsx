@@ -17,6 +17,7 @@ import {
 import ThreadStyles from "../StyleSheets/ThreadStyles";
 import screens from "../constants/screenNames";
 import { EvilIcons } from "@expo/vector-icons";
+import SearchBar from "../components/SearchBar";
 
 export default function Thread({ route, navigation }) {
   const [comments, setComments] = useState([]);
@@ -24,6 +25,7 @@ export default function Thread({ route, navigation }) {
   const [commentStructure, setCommentStructure] = useState([]);
   const [value, setValue] = useState("");
   const [query, setQuery] = useState("");
+
   const {
     userId,
     title,
@@ -86,13 +88,7 @@ export default function Thread({ route, navigation }) {
       <SafeAreaView style={ThreadStyles.safeAreaView}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <React.Fragment>
-            <Input
-              style={{
-                marginTop: 40,
-                paddingLeft: 10,
-                paddingRight: 5,
-                borderRadius: 20,
-              }}
+            <SearchBar
               placeholder='Search for a comment...'
               onChangeText={setQuery}
               value={query}
@@ -100,6 +96,7 @@ export default function Thread({ route, navigation }) {
             />
             {query.length > 0 ? (
               <FlatList
+                style={{ marginTop: 5 }}
                 data={filteredComments}
                 renderItem={({ item }) => {
                   const date =
