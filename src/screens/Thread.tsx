@@ -42,7 +42,7 @@ export default function Thread({ route, navigation }) {
   useEffect(() => {
     setCommentStructure([
       { title: "Most Recent", data: comments.slice(0, 3) },
-      { title: "Older", data: comments.slice(4) },
+      { title: "Older", data: comments.slice(3) },
     ]);
   }, [comments]);
 
