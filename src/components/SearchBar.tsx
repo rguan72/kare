@@ -9,8 +9,8 @@ const SearchBar = (props) => {
       {...props}
       style={{
         marginTop: 40,
-        paddingLeft: 5,
-        paddingRight: 5,
+        paddingLeft: 3,
+        paddingRight: 3,
         borderRadius: 20,
         borderStyle: "solid",
         borderColor: focus ? "#8566AA" : "#DBDBDB",

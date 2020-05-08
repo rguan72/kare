@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { SafeAreaView, FlatList, Image, SectionList } from "react-native";
+import {
+  SafeAreaView,
+  FlatList,
+  Image,
+  SectionList,
+  ActivityIndicator,
+} from "react-native";
 import PropTypes from "prop-types";
 import {
   KeyboardAvoidingView,
@@ -25,6 +31,7 @@ export default function Thread({ route, navigation }) {
   const [commentStructure, setCommentStructure] = useState([]);
   const [value, setValue] = useState("");
   const [query, setQuery] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const {
     userId,
@@ -49,12 +56,16 @@ export default function Thread({ route, navigation }) {
   }, [comments]);
 
   useEffect(() => {
-    const lowerCaseQuery = query.toLowerCase();
-    setFilteredComments(
-      comments.filter((comment) => {
-        return comment["text"].toLowerCase().includes(lowerCaseQuery);
-      })
-    );
+    setLoading(true);
+    setTimeout(() => {
+      const lowerCaseQuery = query.toLowerCase();
+      setFilteredComments(
+        comments.filter((comment) => {
+          return comment["text"].toLowerCase().includes(lowerCaseQuery);
+        })
+      );
+      setLoading(false);
+    }, 500);
   }, [query]);
 
   const GroupTitle = () => (
@@ -76,7 +87,13 @@ export default function Thread({ route, navigation }) {
 
   const renderIcon = (props) => (
     <TouchableWithoutFeedback>
-      {!query ? <EvilIcons name='search' size={20} /> : <Text></Text>}
+      {!query ? (
+        <EvilIcons name='search' size={25} />
+      ) : loading ? (
+        <ActivityIndicator size={25} color='#8566AA' />
+      ) : (
+        <Text></Text>
+      )}
     </TouchableWithoutFeedback>
   );
 
