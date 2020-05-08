@@ -75,7 +75,8 @@ export default function HomeScreen({ route, navigation }) {
                 title: item.title,
                 description: item.description,
                 groupId: item.id,
-		image: item.imageURL,
+                image: item.imageURL,
+                num_members: item.num_members,
               })
             }
           />

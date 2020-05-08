@@ -77,6 +77,11 @@ async function addUser(email: string, password: string) {
 function updateUser(allUserInformation) {
   const user = firebaseApp.auth().currentUser;
   db.collection(collections.users).doc(user.uid).update(allUserInformation);
+  allUserInformation["groups"].forEach((group) => {
+    db.collection(collections.groups)
+      .doc(group)
+      .update({ num_members: firebaseApp.firestore.FieldValue.increment(1) });
+  });
 }
 
 function addGroupsToUser(newGroups) {
@@ -85,6 +90,9 @@ function addGroupsToUser(newGroups) {
     db.collection(collections.users)
       .doc(user.uid)
       .update({ groups: firebaseApp.firestore.FieldValue.arrayUnion(doc) });
+    db.collection(collections.groups)
+      .doc(doc)
+      .update({ num_members: firebaseApp.firestore.FieldValue.increment(1) });
   });
 }
 
@@ -93,6 +101,9 @@ function removeGroupFromUser(group) {
   db.collection(collections.users)
     .doc(user.uid)
     .update({ groups: firebaseApp.firestore.FieldValue.arrayRemove(group) });
+  db.collection(collections.groups)
+    .doc(group)
+    .update({ num_members: firebaseApp.firestore.FieldValue.increment(-1) });
 }
 
 function addComment(comment: comment, groupId) {

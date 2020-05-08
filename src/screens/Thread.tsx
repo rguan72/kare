@@ -24,7 +24,14 @@ export default function Thread({ route, navigation }) {
   const [commentStructure, setCommentStructure] = useState([]);
   const [value, setValue] = useState("");
   const [query, setQuery] = useState("");
-  const { userId, title, description, groupId, image } = route.params;
+  const {
+    userId,
+    title,
+    description,
+    groupId,
+    image,
+    num_members,
+  } = route.params;
 
   useEffect(() => {
     const unsubscribe = watchComments(setComments, groupId);
@@ -54,7 +61,8 @@ export default function Thread({ route, navigation }) {
         {/* text box */}
         <Layout style={ThreadStyles.headerTextBox}>
           <Text category='h5'> {title} </Text>
-          <Text style={{ marginRight: 10 }}> {description}</Text>
+          <Text style={{ marginTop: 2, marginRight: 10 }}> {description}</Text>
+          <Text style={{ marginTop: 2 }}> {num_members} Members</Text>
         </Layout>
         {/* image box */}
         <Layout style={{ backgroundColor: "#F3EAFF", maxHeight: 100 }}>
@@ -84,8 +92,6 @@ export default function Thread({ route, navigation }) {
                 paddingLeft: 10,
                 paddingRight: 5,
                 borderRadius: 20,
-                borderStyle: "solid",
-                borderColor: "#5505BA",
               }}
               placeholder='Search for a comment...'
               onChangeText={setQuery}
