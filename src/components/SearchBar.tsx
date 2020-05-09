@@ -13,8 +13,8 @@ const SearchBar = (props) => {
         paddingRight: 3,
         borderRadius: 20,
         borderStyle: "solid",
-        borderColor: focus ? "#8566AA" : "#DBDBDB",
-        backgroundColor: focus ? "white" : "#DBDBDB",
+        borderColor: focus ? "#8566AA" : "#F7F7F7",
+        backgroundColor: focus ? "white" : "#F7F7F7",
       }}
       onFocus={() => {
         setFocus(true);
