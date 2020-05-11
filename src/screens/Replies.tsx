@@ -25,17 +25,13 @@ export default function Replies({ route, navigation }) {
   const [value, setValue] = useState("");
   const [name, setName] = useState("");
   const [commenterColor, setCommenterColor] = useState(Colors.purple); // default
-  const { commenterId, userId, comment, commentId, date } = route.params;
-
   const [user, setUser] = useState();
+  const { commenterId, userId, comment, commentId, date } = route.params;
 
   useEffect(() => {
     getUser(userId).then((userData) => {
       setUser(userData);
     });
-  }, []);
-
-  useEffect(() => {
     getUser(commenterId).then((userData) => {
       setName(userData.name);
       setCommenterColor(Colors[userData.color]);

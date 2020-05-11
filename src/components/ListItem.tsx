@@ -1,11 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { TouchableOpacity } from "react-native";
-import { Card, Text, Layout } from "@ui-kitten/components";
-import { StyleSheet, View } from "react-native";
+import { Card, Text } from "@ui-kitten/components";
+import { View } from "react-native";
 import PropTypes from "prop-types";
-import Emojis from "../constants/emojis";
 import Colors from "../constants/userColors";
-import { getUser } from "../utils/FirebaseUtils";
 import ListItemStyles from "../StyleSheets/ListItemStyles";
 
 export default function ListItem({
@@ -41,7 +39,6 @@ export default function ListItem({
         <Text style={ListItemStyles.userName}> {commenterName}</Text>
         <Text style={ListItemStyles.date}> {date}</Text>
       </View>
-      {/* </View> */}
       <Text style={ListItemStyles.comments}>{text} </Text>
       <View style={ListItemStyles.bottomRow}>
         <RepliesNumber></RepliesNumber>

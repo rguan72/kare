@@ -47,13 +47,11 @@ export default function Thread({ route, navigation }) {
   const GroupTitle = React.memo(() => {
     return (
       <Layout style={ThreadStyles.header}>
-        {/* text box */}
         <Layout style={ThreadStyles.headerTextBox}>
           <Text category='h5'> {title} </Text>
           <Text style={{ marginTop: 2, marginRight: 10 }}> {description}</Text>
           <Text style={{ marginTop: 2 }}> {num_members} Members</Text>
         </Layout>
-        {/* image box */}
         <Layout style={{ backgroundColor: "#F3EAFF", maxHeight: 100 }}>
           <PureImage
             source={{ uri: image }}
@@ -65,7 +63,7 @@ export default function Thread({ route, navigation }) {
     );
   });
 
-  const SectionListView = () => {
+  const ListSearchView = () => {
     const [comments, setComments] = useState([]);
     const [commentStructure, setCommentStructure] = useState([]);
     const [query, setQuery] = useState("");
@@ -233,7 +231,7 @@ export default function Thread({ route, navigation }) {
       <SafeAreaView style={ThreadStyles.safeAreaView}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <React.Fragment>
-            <SectionListView />
+            <ListSearchView />
             <ButtonLayout />
           </React.Fragment>
         </TouchableWithoutFeedback>

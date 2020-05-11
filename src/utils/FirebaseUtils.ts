@@ -1,13 +1,6 @@
-import React from "react";
-import firebaseApp, { auth } from "firebase/app";
+import firebaseApp from "firebase/app";
 import firebase from "../constants/Firebase";
-import { Linking } from "expo";
-import { AsyncStorage } from "react-native";
-import { CommonActions } from "@react-navigation/native";
 import { collections } from "../constants/FirebaseStrings";
-import { community } from "../constants/community";
-import { func } from "prop-types";
-import screens from "../constants/screenNames";
 
 const db = firebase.firestore();
 const imageStorage = firebase.storage();
