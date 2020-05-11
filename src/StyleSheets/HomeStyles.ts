@@ -13,8 +13,6 @@ export default StyleSheet.create({
   },
   SignOut: {
     borderRadius: 30,
-    backgroundColor: "#5505BA",
-    borderColor: "#5505BA",
     position: "absolute",
     bottom: 65,
     right: 15,

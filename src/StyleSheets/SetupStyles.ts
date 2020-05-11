@@ -64,8 +64,4 @@ export default StyleSheet.create({
     color: "black",
     paddingRight: 30, // to ensure the text is never behind the icon
   },
-  button: {
-    borderColor: "#5505BA",
-    backgroundColor: "#5505BA",
-  },
 });

@@ -126,8 +126,6 @@ const styles = StyleSheet.create({
     marginTop: 24,
     marginLeft: 30,
     marginRight: 30,
-    borderColor: "#5505BA",
-    backgroundColor: "#5505BA",
   },
   row: {
     flexDirection: "row",

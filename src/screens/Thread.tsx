@@ -49,12 +49,12 @@ export default function Thread({ route, navigation }) {
     <Layout style={ThreadStyles.header}>
       {/* text box */}
       <Layout style={ThreadStyles.headerTextBox}>
-        <Text category='h5'> {title} </Text>
-        <Text style={{marginRight: 10}}> {description}</Text>
+        <Text category="h5"> {title} </Text>
+        <Text style={{ marginRight: 10 }}> {description}</Text>
       </Layout>
       {/* image box */}
       <Layout style={{ backgroundColor: "#F3EAFF", maxHeight: 100 }}>
-        <Image source={{uri: image}} style={ThreadStyles.icon} />
+        <Image source={{ uri: image }} style={ThreadStyles.icon} />
       </Layout>
     </Layout>
   );
@@ -90,7 +90,7 @@ export default function Thread({ route, navigation }) {
                     onReport={() => reportComment(item.id)}
                     date={date}
                     numReplies={item.numReplies}
-		    showReplies="True"
+                    showReplies="True"
                   />
                 );
               }}
@@ -101,7 +101,7 @@ export default function Thread({ route, navigation }) {
             />
             <Layout style={ThreadStyles.commentBox}>
               <Input
-                placeholder='Add comment'
+                placeholder="Add comment"
                 multiline
                 value={value}
                 onChangeText={setValue}

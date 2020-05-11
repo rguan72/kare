@@ -38,29 +38,34 @@ export default function SetupSurvey({ navigation, route }) {
   const [groupOptions, setGroupOptions] = useState([]);
   const [groups, setGroups] = useState([]);
 
-  
   useEffect(() => {
     getGroups()
       .then((querySnapshot) => {
         const options = [];
         querySnapshot.forEach((doc) => {
-          options.push({ id: doc.id, title: doc.data().title, 
-          description: doc.data().description, imageURL: doc.data().imageURL });
+          options.push({
+            id: doc.id,
+            title: doc.data().title,
+            description: doc.data().description,
+            imageURL: doc.data().imageURL,
+          });
         });
         setGroupOptions(options);
         console.log("options: " + options);
       })
       .catch(() => navigation.navigate(screens.error));
-    
+
     // will use this to create 3 random letters
     var num1 = Math.floor(Math.random() * 900 + 100).toString(10); // to ensure 3 digits
     var num2 = Math.floor(Math.random() * 900 + 100).toString(10); // to ensure 3 digits
-    var characters = 'abcdefghijklmnopqrstuvwxyz'
-    var rand_str = ''
-    for ( var i = 0; i < 3; i++ ){
-      rand_str += characters.charAt(Math.floor(Math.random() * characters.length));
+    var characters = "abcdefghijklmnopqrstuvwxyz";
+    var rand_str = "";
+    for (var i = 0; i < 3; i++) {
+      rand_str += characters.charAt(
+        Math.floor(Math.random() * characters.length)
+      );
     }
-    setUserName(num1+rand_str+num2)
+    setUserName(num1 + rand_str + num2);
   }, []);
 
   const renderOption = (group) => (
@@ -143,7 +148,9 @@ export default function SetupSurvey({ navigation, route }) {
           <Text>{userName}</Text>
         </Card>
         <Card style={SetupStyles.card}>
-          <Text style={SetupStyles.question}>How supported do you currently feel?</Text>
+          <Text style={SetupStyles.question}>
+            How supported do you currently feel?
+          </Text>
           <View
             style={{
               flex: 1,
@@ -201,7 +208,7 @@ export default function SetupSurvey({ navigation, route }) {
               justifyContent: "space-between",
             }}
           >
-            <Text style={{ paddingTop: 8}}>Introverted</Text>
+            <Text style={{ paddingTop: 8 }}>Introverted</Text>
             <Slider
               style={{ width: 165, height: 40 }}
               minimumValue={0}
@@ -268,7 +275,6 @@ export default function SetupSurvey({ navigation, route }) {
           >
             {groupOptions.map(renderOption)}
           </Select>
-
         </Card>
 
         <Button
@@ -300,7 +306,6 @@ export default function SetupSurvey({ navigation, route }) {
             }
           }}
           disabled={!((isEnabled && !loading) || (!isEnabled && loading))}
-          style={SetupStyles.button}
         >
           {buttonText}
         </Button>
