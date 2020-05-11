@@ -16,16 +16,8 @@ interface comment {
 }
 
 interface user {
-  userName: String;
+  name: String;
   color: String;
-}
-
-interface returnComment extends comment {
-  id: String;
-}
-
-interface commentList {
-  [index: number]: returnComment;
 }
 
 enum AuthState {
