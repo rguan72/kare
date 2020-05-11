@@ -22,16 +22,12 @@ import {
 } from "../utils/FirebaseUtils";
 import ThreadStyles from "../StyleSheets/ThreadStyles";
 import screens from "../constants/screenNames";
+import PureImage from "../components/PureImage";
 import { EvilIcons } from "@expo/vector-icons";
 import SearchBar from "../components/SearchBar";
 
 export default function Thread({ route, navigation }) {
   const [comments, setComments] = useState([]);
-  const [filteredComments, setFilteredComments] = useState([]);
-  const [commentStructure, setCommentStructure] = useState([]);
-  const [value, setValue] = useState("");
-  const [query, setQuery] = useState("");
-  const [loading, setLoading] = useState(false);
 
   const {
     userId,
@@ -42,11 +38,35 @@ export default function Thread({ route, navigation }) {
     num_members,
   } = route.params;
 
-  useEffect(() => {
-    const unsubscribe = watchComments(setComments, groupId);
 
-    return () => unsubscribe();
-  }, []);
+export default function Thread({ route, navigation }) {
+
+  const GroupTitle = React.memo(() => {
+    return (
+      <Layout style={ThreadStyles.header}>
+        {/* text box */}
+        <Layout style={ThreadStyles.headerTextBox}>
+          <Text category='h5'> {title} </Text>
+          <Text style={{ marginRight: 10 }}> {description}</Text>
+        </Layout>
+        {/* image box */}
+        <Layout style={{ backgroundColor: "#F3EAFF", maxHeight: 100 }}>
+          <PureImage
+            source={{ uri: image }}
+            style={ThreadStyles.icon}
+            resizeMode='cover'
+          />
+        </Layout>
+      </Layout>
+    );
+  });
+
+  const SectionListView = () => {
+    const [comments, setComments] = useState([]);
+    const [commentStructure, setCommentStructure] = useState([]);
+    const [value, setValue] = useState("");
+  const [query, setQuery] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setCommentStructure([
@@ -79,7 +99,7 @@ export default function Thread({ route, navigation }) {
         </Layout>
         {/* image box */}
         <Layout style={{ backgroundColor: "#F3EAFF", maxHeight: 100 }}>
-          <Image source={{ uri: image }} style={ThreadStyles.icon} />
+          <PureImage source={{ uri: image }} style={ThreadStyles.icon} />
         </Layout>
       </Layout>
     </>
@@ -96,16 +116,14 @@ export default function Thread({ route, navigation }) {
       )}
     </TouchableWithoutFeedback>
   );
+    useEffect(() => {
+      const unsubscribe = watchComments(setComments, groupId);
 
-  return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : null}
-      style={ThreadStyles.keyboardAvoidingView}
-    >
-      <SafeAreaView style={ThreadStyles.safeAreaView}>
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <React.Fragment>
-            <SearchBar
+      return () => unsubscribe();
+    }, []);
+
+    return (
+      <SearchBar
               placeholder='Search for a comment...'
               onChangeText={setQuery}
               value={query}
@@ -176,32 +194,52 @@ export default function Thread({ route, navigation }) {
                 stickySectionHeadersEnabled={false}
               />
             )}
-            <Layout style={ThreadStyles.commentBox}>
-              <Input
-                placeholder='Add comment'
-                value={value}
-                onChangeText={setValue}
-              />
-              <Button
-                onPress={() => {
-                  addComment(
-                    {
-                      userId: userId,
-                      text: value,
-                      reports: 0,
-                      show: true,
-                      numReplies: 0,
-                    },
-                    groupId
-                  );
-                  setValue("");
-                }}
-                style={ThreadStyles.submitButton}
-                disabled={value === ""}
-              >
-                Submit
-              </Button>
-            </Layout>
+    );
+  };
+
+  const ButtonLayout = () => {
+    const [value, setValue] = useState("");
+
+    return (
+      <Layout style={ThreadStyles.commentBox}>
+        <Input
+          placeholder='Add comment'
+          value={value}
+          onChangeText={(e) => setValue(e)}
+        />
+        <Button
+          onPress={() => {
+            addComment(
+              {
+                userId: userId,
+                text: value,
+                reports: 0,
+                show: true,
+                numReplies: 0,
+              },
+              groupId
+            );
+            setValue("");
+          }}
+          style={ThreadStyles.submitButton}
+          disabled={value === ""}
+        >
+          Submit
+        </Button>
+      </Layout>
+    );
+  };
+
+  return (
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : null}
+      style={ThreadStyles.keyboardAvoidingView}
+    >
+      <SafeAreaView style={ThreadStyles.safeAreaView}>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <React.Fragment>
+            <SectionListView />
+            <ButtonLayout />
           </React.Fragment>
         </TouchableWithoutFeedback>
       </SafeAreaView>
