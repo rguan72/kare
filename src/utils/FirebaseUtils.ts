@@ -74,7 +74,7 @@ async function addUser(email: string, password: string) {
     .set({ timestamp: firebaseApp.firestore.FieldValue.serverTimestamp() });
 }
 
-function updateUser(allUserInformation) {
+function setUserGroups(allUserInformation) {
   const user = firebaseApp.auth().currentUser;
   db.collection(collections.users).doc(user.uid).update(allUserInformation);
   allUserInformation["groups"].forEach((group) => {
@@ -85,6 +85,11 @@ function updateUser(allUserInformation) {
 }
 
 function addGroupsToUser(newGroups) {
+  /*
+  This function is used to add the groups that the user selects on setup to
+  his/her profile. Should only be called once to make sure we do not double
+  count the users group membership 
+   */
   const user = firebaseApp.auth().currentUser;
   newGroups.forEach((doc) => {
     db.collection(collections.users)
@@ -281,7 +286,7 @@ export {
   sendVerificationEmail,
   getCurrentUser,
   onAuthUserListener,
-  updateUser,
+  setUserGroups,
   AuthState,
   getGroups,
   getGroupsById,

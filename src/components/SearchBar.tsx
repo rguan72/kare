@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Input } from "@ui-kitten/components";
+import { Platform } from "react-native";
 
 const SearchBar = (props) => {
   const [focus, setFocus] = useState(false);
@@ -8,7 +9,7 @@ const SearchBar = (props) => {
     <Input
       {...props}
       style={{
-        marginTop: 40,
+        marginTop: Platform.OS === "ios" ? 40 : 80,
         paddingLeft: 3,
         paddingRight: 3,
         borderRadius: 20,
