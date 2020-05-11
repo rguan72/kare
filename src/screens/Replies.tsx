@@ -24,20 +24,28 @@ export default function Replies({ route, navigation }) {
   const [replies, setReplies] = useState([]);
   const [value, setValue] = useState("");
   const [name, setName] = useState("");
-  const [userColor, setUserColor] = useState(Colors.purple); // default
+  const [commenterColor, setCommenterColor] = useState(Colors.purple); // default
   const { commenterId, userId, comment, commentId, date } = route.params;
 
+  const [user, setUser] = useState();
+
   useEffect(() => {
-    const unsubscribe = watchReplies(commentId, setReplies);
-    return () => unsubscribe();
+    getUser(userId).then((userData) => {
+      setUser(userData);
+    });
   }, []);
 
   useEffect(() => {
     getUser(commenterId).then((userData) => {
       setName(userData.name);
-      setUserColor(Colors[userData.color]);
+      setCommenterColor(Colors[userData.color]);
     });
   }, []); // so it only runs once
+
+  useEffect(() => {
+    const unsubscribe = watchReplies(commentId, setReplies);
+    return () => unsubscribe();
+  }, []);
 
   const ReplyParent = () => (
     <Layout style={[RepliesStyles.mb, RepliesStyles.bgColor, RepliesStyles.mt]}>
@@ -57,7 +65,7 @@ export default function Replies({ route, navigation }) {
               <View
                 style={[
                   RepliesStyles.square,
-                  { backgroundColor: userColor, marginRight: 5 },
+                  { backgroundColor: commenterColor, marginRight: 5 },
                 ]}
               />
               <Text style={RepliesStyles.mb}> {name}</Text>
@@ -66,7 +74,7 @@ export default function Replies({ route, navigation }) {
                 {date}
               </Text>
             </View>
-            <Text category="h6"> {comment} </Text>
+            <Text category='h6'> {comment} </Text>
           </Card>
         </Layout>
       </Layout>
@@ -97,7 +105,6 @@ export default function Replies({ route, navigation }) {
                     : "";
                 return (
                   <ListItem
-                    userId={item.userId}
                     text={item.text}
                     onReport={() => reportComment(item.id)}
                     date={date}
@@ -109,7 +116,9 @@ export default function Replies({ route, navigation }) {
                       });
                     }}
                     numReplies={item.numReplies}
-		    showReplies="False"
+                    showReplies='False'
+                    color={item.color}
+                    commenterName={item.commenterName}
                   />
                 );
               }}
@@ -123,7 +132,7 @@ export default function Replies({ route, navigation }) {
               }}
             >
               <Input
-                placeholder="Add comment"
+                placeholder='Add comment'
                 value={value}
                 onChangeText={setValue}
               />
@@ -135,6 +144,8 @@ export default function Replies({ route, navigation }) {
                     reports: 0,
                     show: true,
                     numReplies: 0,
+                    color: user.color,
+                    commenterName: user.name,
                   });
                   setValue("");
                 }}

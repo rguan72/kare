@@ -18,6 +18,7 @@ import {
   addComment,
   watchComments,
   reportComment,
+  getUser,
 } from "../utils/FirebaseUtils";
 import ThreadStyles from "../StyleSheets/ThreadStyles";
 import screens from "../constants/screenNames";
@@ -34,6 +35,14 @@ export default function Thread({ route, navigation }) {
     image,
     num_members,
   } = route.params;
+
+  const [user, setUser] = useState();
+
+  useEffect(() => {
+    getUser(userId).then((userData) => {
+      setUser(userData);
+    });
+  }, []);
 
   const GroupTitle = React.memo(() => {
     return (
@@ -120,7 +129,6 @@ export default function Thread({ route, navigation }) {
                   : "";
               return (
                 <ListItem
-                  userId={item.userId}
                   text={item.text}
                   onReply={() => {
                     navigation.navigate(screens.replies, {
@@ -134,6 +142,8 @@ export default function Thread({ route, navigation }) {
                   date={date}
                   numReplies={item.numReplies}
                   showReplies='True'
+                  commenterName={item.commenterName}
+                  color={item.color}
                 />
               );
             }}
@@ -164,6 +174,8 @@ export default function Thread({ route, navigation }) {
                   date={date}
                   numReplies={item.numReplies}
                   showReplies='True'
+                  commenterName={item.commenterName}
+                  color={item.color}
                 />
               );
             }}
@@ -197,6 +209,8 @@ export default function Thread({ route, navigation }) {
                 reports: 0,
                 show: true,
                 numReplies: 0,
+                color: user.color,
+                commenterName: user.name,
               },
               groupId
             );

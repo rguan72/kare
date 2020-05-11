@@ -18,6 +18,8 @@ interface comment {
   reports: Number;
   numReplies: Number;
   show: Boolean;
+  color: String;
+  commenterName: String;
 }
 
 interface user {
@@ -271,6 +273,27 @@ function onAuthUserListener(next, fallback, notVerifiedFunc) {
       fallback();
     }
   });
+}
+
+async function editComments() {
+  /*Function used to add fields to all comments*/
+  db.collection(collections.comments)
+    .get()
+    .then((querySnapshot) => {
+      querySnapshot.forEach(async (doc) => {
+        try {
+          const user = getUser(doc.data().userId);
+          const color = (await user).color;
+          const name = (await user).name;
+          await db.collection(collections.comments).doc(doc.id).update({
+            color: color,
+            commenterName: name,
+          });
+        } catch (err) {
+          console.log(err);
+        }
+      });
+    });
 }
 
 export {
