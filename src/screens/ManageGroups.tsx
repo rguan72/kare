@@ -5,6 +5,7 @@ import UserGroupItem from "../components/UserGroupItem";
 import screens from "../constants/screenNames";
 import { Card, Button, Text, Select, SelectItem } from "@ui-kitten/components";
 import { getGroups, addGroupsToUser } from "../utils/FirebaseUtils";
+import * as Analytics from "expo-firebase-analytics";
 
 import HomeStyles from "../StyleSheets/HomeStyles";
 import SetupStyles from "../StyleSheets/SetupStyles";
@@ -72,6 +73,11 @@ export default function ManageGroups({ route, navigation }) {
     addGroupsToUser(newGroups);
     setSelectedIndexTwo([]);
     setReload(!reload);
+    Analytics.logEvent("Group Joined", {
+      name: "groups",
+      screen: "ManageGroups",
+      purpose: "Joins a group for user",
+    });
   };
 
   const onCancel = () => {
@@ -81,13 +87,13 @@ export default function ManageGroups({ route, navigation }) {
   return (
     <View style={HomeStyles.container}>
       <View style={HomeStyles.Heading}>
-        <Text category='h6'>Manage Communities</Text>
+        <Text category="h6">Manage Communities</Text>
       </View>
       {loading ? (
         <ActivityIndicator
-          size='large'
+          size="large"
           style={{ flex: 1 }}
-          color='#5505BA'
+          color="#5505BA"
           animating={loading}
         />
       ) : (
@@ -108,7 +114,7 @@ export default function ManageGroups({ route, navigation }) {
           />
           {groups.length < NUM_GROUPS && (
             <Card style={SetupStyles.card}>
-              <Text category='h6'>Would you like to join any new groups?</Text>
+              <Text category="h6">Would you like to join any new groups?</Text>
               <Select
                 multiSelect={true}
                 selectedIndex={selectedIndexTwo}

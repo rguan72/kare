@@ -39,6 +39,14 @@
       "bundleIdentifier": "me.kareapp",
       "buildNumber": "1.0.0"
     },
+    "web": {
+      "config": {
+        "firebase": {
+          "apiKey": "AIzaSyAWPbEf57Sj8zWT1fMPv1Sgyvjo6bmis-4",
+          "measurementId": "G-FSL56NGH61"
+        }
+      }
+    },
     "scheme": "kare"
   }
 }
