@@ -45,7 +45,8 @@ function SignupScreen({ navigation }) {
     if (!isUpper) caption = caption + "Password needs an upper case letter. \n";
     if (!isLower) caption = caption + "Password needs a lower case letter. \n";
     if (!isDigit) caption = caption + "Password needs a number. \n";
-    if (!isSpecial) caption = caption + "Password needs a special character. \n";
+    if (!isSpecial)
+      caption = caption + "Password needs a special character. \n";
     if (isInv) caption = caption + "Password uses invalid characters (< or >)";
     return caption;
   };
@@ -108,9 +109,9 @@ function SignupScreen({ navigation }) {
     var upper = false;
     var lower = false;
     var digit = false;
-    text.length >= 8 ? (setIsLong(true)) : (setIsLong(false));
-    specialChars.test(text) ? (setIsSpecial(true)) : (setIsSpecial(false));
-    unacceptable.test(text) ? (setIsInv(true)) : (setIsInv(false));
+    text.length >= 8 ? setIsLong(true) : setIsLong(false);
+    specialChars.test(text) ? setIsSpecial(true) : setIsSpecial(false);
+    unacceptable.test(text) ? setIsInv(true) : setIsInv(false);
     for (var i = 0; i < text.length; i++) {
       if (text[i] == text[i].toUpperCase() && text[i] != text[i].toLowerCase())
         upper = true;
@@ -126,7 +127,7 @@ function SignupScreen({ navigation }) {
   };
 
   return (
-    <View style={{ marginTop: 30, backgroundColor: "#F3EAFF", flex: 1 }}>
+    <View style={{ paddingTop: 30, backgroundColor: "#F3EAFF", flex: 1 }}>
       {/* <BackButton goBack={() => navigation.navigate('HomeScreen')} /> */}
 
       <View
