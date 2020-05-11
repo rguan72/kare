@@ -102,6 +102,7 @@ export default function Thread({ route, navigation }) {
             <Layout style={ThreadStyles.commentBox}>
               <Input
                 placeholder='Add comment'
+                multiline
                 value={value}
                 onChangeText={setValue}
               />
