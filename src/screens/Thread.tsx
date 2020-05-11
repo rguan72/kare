@@ -23,41 +23,115 @@ import {
 import { WOMEN } from "../../Images";
 import ThreadStyles from "../StyleSheets/ThreadStyles";
 import screens from "../constants/screenNames";
+import PureImage from "../components/PureImage";
 
 export default function Thread({ route, navigation }) {
-  const [comments, setComments] = useState([]);
-  const [firstComments, setFirstComments] = useState([]);
-  const [restComments, setRestComments] = useState([]);
-  const [commentStructure, setCommentStructure] = useState([]);
-  const [value, setValue] = useState("");
   const { userId, title, description, groupId, image } = route.params;
 
-  useEffect(() => {
-    const unsubscribe = watchComments(setComments, groupId);
-
-    return () => unsubscribe();
-  }, []);
-
-  useEffect(() => {
-    setCommentStructure([
-      { title: "Most Recent", data: comments.slice(0, 3) },
-      { title: "Older", data: comments.slice(4) },
-    ]);
-  }, [comments]);
-
-  const GroupTitle = () => (
-    <Layout style={ThreadStyles.header}>
-      {/* text box */}
-      <Layout style={ThreadStyles.headerTextBox}>
-        <Text category="h5"> {title} </Text>
-        <Text style={{ marginRight: 10 }}> {description}</Text>
+  const GroupTitle = React.memo(() => {
+    return (
+      <Layout style={ThreadStyles.header}>
+        {/* text box */}
+        <Layout style={ThreadStyles.headerTextBox}>
+          <Text category='h5'> {title} </Text>
+          <Text style={{ marginRight: 10 }}> {description}</Text>
+        </Layout>
+        {/* image box */}
+        <Layout style={{ backgroundColor: "#F3EAFF", maxHeight: 100 }}>
+          <PureImage
+            source={{ uri: image }}
+            style={ThreadStyles.icon}
+            resizeMode='cover'
+          />
+        </Layout>
       </Layout>
-      {/* image box */}
-      <Layout style={{ backgroundColor: "#F3EAFF", maxHeight: 100 }}>
-        <Image source={{ uri: image }} style={ThreadStyles.icon} />
+    );
+  });
+
+  const SectionListView = () => {
+    const [comments, setComments] = useState([]);
+    const [commentStructure, setCommentStructure] = useState([]);
+
+    useEffect(() => {
+      const unsubscribe = watchComments(setComments, groupId);
+      return () => unsubscribe();
+    }, []);
+
+    useEffect(() => {
+      setCommentStructure([
+        { title: "Most Recent", data: comments.slice(0, 3) },
+        { title: "Older", data: comments.slice(4) },
+      ]);
+    }, [comments]);
+
+    return (
+      <SectionList
+        sections={commentStructure}
+        ListHeaderComponent={GroupTitle}
+        renderItem={({ item }) => {
+          const date =
+            item && item.timestamp
+              ? item.timestamp.toDate().toLocaleDateString()
+              : "";
+          return (
+            <ListItem
+              userId={item.userId}
+              text={item.text}
+              onReply={() => {
+                navigation.navigate(screens.replies, {
+                  commenterId: item.userId,
+                  comment: item.text,
+                  commentId: item.id,
+                  date: date,
+                });
+              }}
+              onReport={() => reportComment(item.id)}
+              date={date}
+              numReplies={item.numReplies}
+              showReplies='True'
+            />
+          );
+        }}
+        keyExtractor={(item) => item.id}
+        renderSectionHeader={({ section: { title } }) => (
+          <Text style={ThreadStyles.sectionHeader}> {title} </Text>
+        )}
+      />
+    );
+  };
+
+  const ButtonLayout = () => {
+    const [value, setValue] = useState("");
+
+    return (
+      <Layout style={ThreadStyles.commentBox}>
+        <Input
+          placeholder='Add comment'
+          value={value}
+          onChangeText={(e) => setValue(e)}
+        />
+        <Button
+          onPress={() => {
+            addComment(
+              {
+                userId: userId,
+                text: value,
+                reports: 0,
+                show: true,
+                numReplies: 0,
+              },
+              groupId
+            );
+            setValue("");
+          }}
+          style={ThreadStyles.submitButton}
+          disabled={value === ""}
+        >
+          Submit
+        </Button>
       </Layout>
-    </Layout>
-  );
+    );
+  };
 
   return (
     <KeyboardAvoidingView
@@ -67,65 +141,8 @@ export default function Thread({ route, navigation }) {
       <SafeAreaView style={ThreadStyles.safeAreaView}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <React.Fragment>
-            <SectionList
-              sections={commentStructure}
-              ListHeaderComponent={GroupTitle}
-              renderItem={({ item }) => {
-                const date =
-                  item && item.timestamp
-                    ? item.timestamp.toDate().toLocaleDateString()
-                    : "";
-                return (
-                  <ListItem
-                    userId={item.userId}
-                    text={item.text}
-                    onReply={() => {
-                      navigation.navigate(screens.replies, {
-                        commenterId: item.userId,
-                        comment: item.text,
-                        commentId: item.id,
-                        date: date,
-                      });
-                    }}
-                    onReport={() => reportComment(item.id)}
-                    date={date}
-                    numReplies={item.numReplies}
-                    showReplies="True"
-                  />
-                );
-              }}
-              keyExtractor={(item) => item.id}
-              renderSectionHeader={({ section: { title } }) => (
-                <Text style={ThreadStyles.sectionHeader}> {title} </Text>
-              )}
-            />
-            <Layout style={ThreadStyles.commentBox}>
-              <Input
-                placeholder="Add comment"
-                multiline
-                value={value}
-                onChangeText={setValue}
-              />
-              <Button
-                onPress={() => {
-                  addComment(
-                    {
-                      userId: userId,
-                      text: value,
-                      reports: 0,
-                      show: true,
-                      numReplies: 0,
-                    },
-                    groupId
-                  );
-                  setValue("");
-                }}
-                style={ThreadStyles.submitButton}
-                disabled={value === ""}
-              >
-                Submit
-              </Button>
-            </Layout>
+            <SectionListView />
+            <ButtonLayout />
           </React.Fragment>
         </TouchableWithoutFeedback>
       </SafeAreaView>
