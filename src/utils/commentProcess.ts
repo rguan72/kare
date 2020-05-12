@@ -1,5 +1,5 @@
 function commentProcess(comment) {
-  comment = comment.toLowerCase().replace(/[’]/g, "");
+  comment = comment.toLowerCase().replace(/[’']/g, "");
   console.log(comment);
   return comment;
 }
