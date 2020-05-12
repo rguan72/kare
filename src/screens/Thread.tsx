@@ -25,6 +25,7 @@ import screens from "../constants/screenNames";
 import PureImage from "../components/PureImage";
 import { EvilIcons } from "@expo/vector-icons";
 import SearchBar from "../components/SearchBar";
+import { commentProcess } from "../utils/commentProcess";
 
 export default function Thread({ route, navigation }) {
   const {
@@ -86,10 +87,10 @@ export default function Thread({ route, navigation }) {
     useEffect(() => {
       setLoading(true);
       setTimeout(() => {
-        const lowerCaseQuery = query.toLowerCase();
+        const lowerCaseQuery = commentProcess(query);
         setFilteredComments(
           comments.filter((comment) => {
-            return comment["text"].toLowerCase().includes(lowerCaseQuery);
+            return commentProcess(comment["text"]).includes(lowerCaseQuery);
           })
         );
         setLoading(false);
@@ -123,7 +124,12 @@ export default function Thread({ route, navigation }) {
             renderItem={({ item }) => {
               const date =
                 item && item.timestamp
-                  ? item.timestamp.toDate().toLocaleDateString()
+                  ? item.timestamp.toDate().toLocaleDateString() +
+                    " " +
+                    item.timestamp.toDate().toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })
                   : "";
               return (
                 <ListItem
@@ -154,11 +160,15 @@ export default function Thread({ route, navigation }) {
             renderItem={({ item }) => {
               const date =
                 item && item.timestamp
-                  ? item.timestamp.toDate().toLocaleDateString()
+                  ? item.timestamp.toDate().toLocaleDateString() +
+                    " " +
+                    item.timestamp.toDate().toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })
                   : "";
               return (
                 <ListItem
-                  userId={item.userId}
                   text={item.text}
                   onReply={() => {
                     navigation.navigate(screens.replies, {
