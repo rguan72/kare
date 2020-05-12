@@ -34,14 +34,14 @@ export default function UserGroupItem({
         <View style={styles.buttonBox}>
           <View style={styles.textBox}>
             <View style={{ flex: 10 }}>
-              <Text category='h5'>{title}</Text>
+              <Text category="h5">{title}</Text>
               <Text>{description}</Text>
             </View>
             <TouchableOpacity
               style={{ flex: 1, paddingLeft: 5 }}
               onPress={onIconPress}
             >
-              <Ionicons name='ios-trash' size={40} />
+              <Ionicons name="ios-trash" size={40} />
             </TouchableOpacity>
           </View>
           <View style={styles.imageBox}>
@@ -88,8 +88,6 @@ const styles = StyleSheet.create({
     marginTop: 24,
     marginLeft: 30,
     marginRight: 30,
-    borderColor: "#5505BA",
-    backgroundColor: "#5505BA",
   },
   button: {
     backgroundColor: "#F3EAFF",

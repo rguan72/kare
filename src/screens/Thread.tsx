@@ -73,7 +73,6 @@ export default function Thread({ route, navigation }) {
 
     useEffect(() => {
       const unsubscribe = watchComments(setComments, groupId);
-
       return () => unsubscribe();
     }, []);
 
