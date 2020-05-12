@@ -306,7 +306,6 @@ export default function SetupSurvey({ navigation, route }) {
             }
           }}
           disabled={!((isEnabled && !loading) || (!isEnabled && loading))}
-          style={SetupStyles.button}
         >
           {buttonText}
         </Button>
