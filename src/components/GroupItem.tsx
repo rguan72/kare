@@ -10,7 +10,6 @@ export default function GroupItem({
   title,
   image,
   description,
-  text,
   onPress,
 }) {
   return (
@@ -30,7 +29,6 @@ export default function GroupItem({
 GroupItem.propTypes = {
   title: PropTypes.string.isRequired,
   image: PropTypes.string.isRequired,
-  text: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
   onPress: PropTypes.func.isRequired,
 };
