@@ -20,6 +20,7 @@ export default StyleSheet.create({
         marginLeft: 10,
         backgroundColor: "#F3EAFF",
         marginRight: 10,
+        width: "85%",
     },
     icon: {
         flexShrink: 1,
