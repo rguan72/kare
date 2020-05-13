@@ -1,25 +1,14 @@
-import React, { useState, useEffect, useImperativeHandle } from "react";
-import {
-  FlatList,
-  View,
-  TouchableOpacity,
-  Vibration,
-  Platform,
-} from "react-native";
-import { Button, Layout, Text, withStyles } from "@ui-kitten/components";
-import GroupItem from "../components/GroupItem";
-import PropTypes from "prop-types";
-import {
-  getGroupsById,
-  getUser,
-  addNotifTokenToUser,
-} from "../utils/FirebaseUtils";
-import screens from "../constants/screenNames";
+import React, { useState, useEffect } from "react";
+import { FlatList, View, TouchableOpacity } from "react-native";
 import firebase from "firebase/app";
+import PropTypes from "prop-types";
 import { Notifications } from "expo";
-import * as Permissions from "expo-permissions";
-import Constants from "expo-constants";
 import { Entypo } from "@expo/vector-icons";
+import { Button, Text } from "@ui-kitten/components";
+import { getGroupsById, getUser } from "../utils/FirebaseUtils";
+import { registerForPushNotificationsAsync } from "../utils/NotificationUtils";
+import GroupItem from "../components/GroupItem";
+import screens from "../constants/screenNames";
 import HomeStyles from "../StyleSheets/HomeStyles";
 
 interface Group {
@@ -29,9 +18,24 @@ interface Group {
 }
 
 export default function HomeScreen({ route, navigation }) {
+  const [currentUser, setCurrentUser] = useState({});
   const [groups, setGroups] = useState([]);
   const [refresh, setRefresh] = useState(false);
   const { userId } = route.params;
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", () => {
+      console.log("focused");
+      getUser(userId).then((user) => {
+        setCurrentUser(user);
+        getGroupsById(user.groups).then((fetchedGroups) =>
+          setGroups(fetchedGroups)
+        );
+      });
+    });
+
+    return unsubscribe;
+  }, [refresh]);
 
   const onSignOut = () => {
     firebase
@@ -42,70 +46,26 @@ export default function HomeScreen({ route, navigation }) {
       });
   };
 
-  const registerForPushNotificationsAsync = async () => {
-    if (Constants.isDevice) {
-      const { status: existingStatus } = await Permissions.getAsync(
-        Permissions.NOTIFICATIONS
-      );
-      let finalStatus = existingStatus;
-      if (existingStatus !== "granted") {
-        const { status } = await Permissions.askAsync(
-          Permissions.NOTIFICATIONS
-        );
-        finalStatus = status;
-      }
-      if (finalStatus !== "granted") {
-        alert("Failed to get push token for push notification!");
-        return;
-      }
-      const token = await Notifications.getExpoPushTokenAsync();
-      // TODO add token to user in db
-      console.log(`The exponent token for your device is ${token}`);
-      addNotifTokenToUser(userId, token);
-    } else {
-      alert("Must use physical device for Push Notifications");
-    }
-
-    if (Platform.OS === "android") {
-      Notifications.createChannelAndroidAsync("default", {
-        name: "default",
-        sound: true,
-        priority: "max",
-        vibrate: [0, 250, 250, 250],
-      });
-    }
-  };
-
-  const _handleNotification = (notification) => {
-    const data = notification.data;
-    console.log(
-      `Notification is being handled and you will be redirected to ${data.comment} thread`
-    );
+  const handleNotification = (notification) => {
+    const { commenterId, comment, commentId, date } = notification.data;
+    console.log(notification.data);
     navigation.navigate(screens.replies, {
-      commenterId: data.commenterId,
-      comment: data.comment,
-      commentId: data.commentId,
-      date: data.date,
-      userId: userId,
+      commenterId,
+      comment,
+      commentId,
+      date,
+      userId,
     });
   };
 
   useEffect(() => {
-    registerForPushNotificationsAsync();
+    if (!currentUser.notificationId) {
+      registerForPushNotificationsAsync(userId);
+    }
     const _notificationSubscription = Notifications.addListener(
-      _handleNotification
+      handleNotification
     );
   }, []);
-
-  useEffect(() => {
-    const unsubscribe = navigation.addListener("focus", () => {
-      getUser(userId)
-        .then((user) => getGroupsById(user.groups))
-        .then((fetchedGroups) => setGroups(fetchedGroups));
-    });
-
-    return unsubscribe;
-  }, [navigation]);
 
   const handleNavigateBack = () => {
     setRefresh(!refresh);

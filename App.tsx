@@ -73,7 +73,7 @@ export default function App() {
               <Stack.Screen
                 name={screens.userAgreement}
                 component={UserAgreement}
-                options={{title: "", headerTransparent: true}}
+                options={{ title: "", headerTransparent: true }}
               />
               <Stack.Screen
                 name={screens.login}

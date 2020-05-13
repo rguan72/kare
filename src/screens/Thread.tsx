@@ -33,14 +33,15 @@ export default function Thread({ route, navigation }) {
   const [value, setValue] = useState("");
   const { userId, title, description, groupId, image } = route.params;
 
-  const _handleNotification = (notification) => {
-    const data = notification.data;
+  const handleNotification = (notification) => {
+    const { commenterId, comment, commentId, date } = notification.data;
+    console.log(notification.data);
     navigation.navigate(screens.replies, {
-      commenterId: data.commenterId,
-      comment: data.comment,
-      commentId: data.commentId,
-      date: data.date,
-      userId: userId,
+      commenterId,
+      comment,
+      commentId,
+      date,
+      userId,
     });
   };
 
@@ -48,7 +49,7 @@ export default function Thread({ route, navigation }) {
     const unsubscribe = watchComments(setComments, groupId);
 
     const _notificationSubscription = Notifications.addListener(
-      _handleNotification
+      handleNotification
     );
 
     return () => unsubscribe();
@@ -66,11 +67,11 @@ export default function Thread({ route, navigation }) {
       {/* text box */}
       <Layout style={ThreadStyles.headerTextBox}>
         <Text category='h5'> {title} </Text>
-        <Text style={{marginRight: 10}}> {description}</Text>
+        <Text style={{ marginRight: 10 }}> {description}</Text>
       </Layout>
       {/* image box */}
       <Layout style={{ backgroundColor: "#F3EAFF", maxHeight: 100 }}>
-        <Image source={{uri: image}} style={ThreadStyles.icon} />
+        <Image source={{ uri: image }} style={ThreadStyles.icon} />
       </Layout>
     </Layout>
   );
@@ -106,7 +107,7 @@ export default function Thread({ route, navigation }) {
                     onReport={() => reportComment(item.id)}
                     date={date}
                     numReplies={item.numReplies}
-		    showReplies="True"
+                    showReplies='True'
                   />
                 );
               }}

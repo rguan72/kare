@@ -20,6 +20,7 @@ import screens from "../constants/screenNames";
 import Colors from "../constants/userColors";
 import RepliesStyles from "../StyleSheets/RepliesStyles";
 import { Notifications } from "expo";
+import { sendCommenterNotification } from "../utils/NotificationUtils";
 
 export default function Replies({ route, navigation }) {
   const [replies, setReplies] = useState([]);
@@ -29,15 +30,15 @@ export default function Replies({ route, navigation }) {
   const [commenterColor, setCommenterColor] = useState(Colors.purple); // default
   const { commenterId, userId, comment, commentId, date } = route.params;
 
-  const _handleNotification = (notification) => {
-    const data = notification.data;
-    console.log(data);
+  const handleNotification = (notification) => {
+    const { commenterId, comment, commentId, date } = notification.data;
+    console.log(notification.data);
     navigation.navigate(screens.replies, {
-      commenterId: data.commenterId,
-      comment: data.comment,
-      commentId: data.commentId,
-      date: data.date,
-      userId: userId,
+      commenterId,
+      comment,
+      commentId,
+      date,
+      userId,
     });
   };
 
@@ -56,39 +57,9 @@ export default function Replies({ route, navigation }) {
     });
 
     const _notificationSubscription = Notifications.addListener(
-      _handleNotification
+      handleNotification
     );
   }, []); // so it only runs once
-
-  const sendCommenterNotification = async (reply) => {
-    let commentUser = getUser(commenterId);
-    let notifId = (await commentUser).notificationId;
-    const message = await {
-      to: notifId,
-      sound: "default",
-      title: `${userName} replied to your comment!`,
-      body: reply,
-      data: {
-        commenterId: commenterId,
-        comment: comment,
-        commentId: commentId,
-        date: date,
-      },
-      _displayInForeground: true,
-    };
-
-    console.log(`sent ${message.title} to ${await commentUser}`);
-
-    const response = await fetch("https://exp.host/--/api/v2/push/send", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Accept-encoding": "gzip, deflate",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(message),
-    });
-  };
 
   const ReplyParent = () => (
     <Layout style={[RepliesStyles.mb, RepliesStyles.bgColor, RepliesStyles.mt]}>
@@ -181,7 +152,11 @@ export default function Replies({ route, navigation }) {
               <Button
                 onPress={() => {
                   //if (userName != commenterName)
-                  sendCommenterNotification(value);
+                  sendCommenterNotification(
+                    value,
+                    { commenterId, comment, commentId, date },
+                    userName
+                  );
                   addReply(commentId, {
                     userId: userId,
                     text: value,
