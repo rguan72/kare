@@ -6,10 +6,6 @@ const areEqual = (prevProps, nextProps) => {
 };
 
 const PureImage = (props) => {
-  useEffect(() => {
-    console.log("rendered");
-  });
-
   return <Image {...props} />;
 };
 

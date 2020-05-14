@@ -1,8 +1,7 @@
-import React, { useState } from "react";
-import { Card, CardHeader, Button, Text } from "@ui-kitten/components";
-import { StyleSheet, Image, TouchableOpacity, View } from "react-native";
+import React from "react";
+import { Text } from "@ui-kitten/components";
+import { TouchableOpacity, View } from "react-native";
 import PropTypes from "prop-types";
-import { WOMEN } from "../../Images";
 import GroupItemStyles from "../StyleSheets/GroupItemStyles";
 import PureImage from "../components/PureImage";
 
@@ -12,6 +11,7 @@ export default function GroupItem({
   description,
   onPress,
 }) {
+
   return (
     <TouchableOpacity onPress={onPress} style={GroupItemStyles.button}>
       <View style={GroupItemStyles.buttonBox}>
