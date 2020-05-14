@@ -20,7 +20,10 @@ import screens from "../constants/screenNames";
 import Colors from "../constants/userColors";
 import RepliesStyles from "../StyleSheets/RepliesStyles";
 import { Notifications } from "expo";
-import { sendCommenterNotification } from "../utils/NotificationUtils";
+import {
+  sendCommenterNotification,
+  sendRepliersNotification,
+} from "../utils/NotificationUtils";
 
 export default function Replies({ route, navigation }) {
   const [replies, setReplies] = useState([]);
@@ -151,12 +154,19 @@ export default function Replies({ route, navigation }) {
               />
               <Button
                 onPress={() => {
-                  //if (userName != commenterName)
+                  //if (userName != commenterName) {
                   sendCommenterNotification(
                     value,
                     { commenterId, comment, commentId, date },
                     userName
                   );
+                  sendRepliersNotification(userId, value, replies, userName, {
+                    commenterId,
+                    comment,
+                    commentId,
+                    date,
+                  });
+                  //}
                   addReply(commentId, {
                     userId: userId,
                     text: value,

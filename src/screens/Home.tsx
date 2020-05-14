@@ -25,7 +25,6 @@ export default function HomeScreen({ route, navigation }) {
 
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
-      console.log("focused");
       getUser(userId).then((user) => {
         setCurrentUser(user);
         getGroupsById(user.groups).then((fetchedGroups) =>
