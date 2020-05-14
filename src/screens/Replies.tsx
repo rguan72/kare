@@ -64,13 +64,13 @@ export default function Replies({ route, navigation }) {
                   { backgroundColor: commenterColor, marginRight: 5 },
                 ]}
               />
-              <Text style={RepliesStyles.mb}> {name}</Text>
-              <Text style={{ color: "rgba(0, 0, 0, 0.3)" }}>
+              <Text style={RepliesStyles.userName}> {name}</Text>
+              <Text style={RepliesStyles.date}>
                 {" * "}
                 {date}
               </Text>
             </View>
-            <Text category='h6'> {comment} </Text>
+            <Text style={RepliesStyles.comment}>{comment}</Text>
           </Card>
         </Layout>
       </Layout>
