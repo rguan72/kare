@@ -99,7 +99,6 @@ export default function ManageGroups({ route, navigation }) {
                 title={item.title}
                 image={item.imageURL}
                 description={item.description}
-                text={item.text}
                 onCancel={onCancel}
                 groupId={item.id}
               />
