@@ -73,7 +73,7 @@ export default function HomeScreen({ route, navigation }) {
   return (
     <View style={HomeStyles.container}>
       <View style={HomeStyles.Heading}>
-        <Text category='h5' style={{ alignSelf: "center" }}>
+        <Text category="h5" style={{ alignSelf: "center" }}>
           My Communities
         </Text>
         <TouchableOpacity
@@ -85,7 +85,7 @@ export default function HomeScreen({ route, navigation }) {
             })
           }
         >
-          <Entypo name='dots-three-horizontal' size={20} />
+          <Entypo name="dots-three-horizontal" size={20} />
         </TouchableOpacity>
       </View>
       <FlatList
@@ -95,7 +95,6 @@ export default function HomeScreen({ route, navigation }) {
             title={item.title}
             image={item.imageURL}
             description={item.description}
-            text={item.text}
             onPress={() =>
               navigation.navigate(screens.thread, {
                 userId: userId,
@@ -109,7 +108,7 @@ export default function HomeScreen({ route, navigation }) {
         )}
         keyExtractor={(item) => item.id}
       />
-      <Button onPress={onSignOut} style={HomeStyles.SignOut}>
+      <Button style={HomeStyles.SignOut} onPress={onSignOut}>
         Sign Out
       </Button>
     </View>

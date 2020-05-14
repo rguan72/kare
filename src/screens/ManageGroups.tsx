@@ -81,13 +81,13 @@ export default function ManageGroups({ route, navigation }) {
   return (
     <View style={HomeStyles.container}>
       <View style={HomeStyles.Heading}>
-        <Text category='h6'>Manage Communities</Text>
+        <Text category="h6">Manage Communities</Text>
       </View>
       {loading ? (
         <ActivityIndicator
-          size='large'
+          size="large"
           style={{ flex: 1 }}
-          color='#5505BA'
+          color="#5505BA"
           animating={loading}
         />
       ) : (
@@ -99,7 +99,6 @@ export default function ManageGroups({ route, navigation }) {
                 title={item.title}
                 image={item.imageURL}
                 description={item.description}
-                text={item.text}
                 onCancel={onCancel}
                 groupId={item.id}
               />
@@ -108,7 +107,7 @@ export default function ManageGroups({ route, navigation }) {
           />
           {groups.length < NUM_GROUPS && (
             <Card style={SetupStyles.card}>
-              <Text category='h6'>Would you like to join any new groups?</Text>
+              <Text category="h6">Would you like to join any new groups?</Text>
               <Select
                 multiSelect={true}
                 selectedIndex={selectedIndexTwo}
@@ -119,11 +118,7 @@ export default function ManageGroups({ route, navigation }) {
               >
                 {groupOptions.map(renderOption)}
               </Select>
-              <Button
-                style={{ backgroundColor: "#5505BA" }}
-                onPress={onPress}
-                disabled={selectedIndexTwo.length == 0}
-              >
+              <Button onPress={onPress} disabled={selectedIndexTwo.length == 0}>
                 Join!
               </Button>
             </Card>

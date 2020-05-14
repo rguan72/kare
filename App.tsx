@@ -21,8 +21,7 @@ import Error from "./src/screens/Error";
 import UserAgreement from "./src/screens/UserAgreement";
 import screens from "./src/constants/screenNames";
 import firebase from "firebase/app";
-import { onAuthUserListener, AuthState } from "./src/utils/FirebaseUtils";
-import AppStyles from "./src/StyleSheets/AppStyles";
+import { default as theme } from "./theme.json";
 
 import UserComments from "./src/screens/UserComments";
 
@@ -61,7 +60,10 @@ export default function App() {
   if (initializing) return null;
   return (
     <NavigationContainer>
-      <ApplicationProvider mapping={mapping} theme={lightTheme}>
+      <ApplicationProvider
+        mapping={mapping}
+        theme={{ ...lightTheme, ...theme }}
+      >
         <Stack.Navigator>
           {!user ? (
             <>

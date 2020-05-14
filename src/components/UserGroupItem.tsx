@@ -11,6 +11,7 @@ import PropTypes from "prop-types";
 import GroupItemStyles from "../StyleSheets/GroupItemStyles";
 import { Ionicons } from "@expo/vector-icons";
 import { removeGroupFromUser } from "../utils/FirebaseUtils";
+import PureImage from "../components/PureImage";
 
 export default function UserGroupItem({
   title,
@@ -33,18 +34,18 @@ export default function UserGroupItem({
         <View style={styles.buttonBox}>
           <View style={styles.textBox}>
             <View style={{ flex: 10 }}>
-              <Text category='h5'>{title}</Text>
+              <Text category="h5">{title}</Text>
               <Text>{description}</Text>
             </View>
             <TouchableOpacity
               style={{ flex: 1, paddingLeft: 5 }}
               onPress={onIconPress}
             >
-              <Ionicons name='ios-trash' size={40} />
+              <Ionicons name="ios-trash" size={40} />
             </TouchableOpacity>
           </View>
           <View style={styles.imageBox}>
-            <Image style={styles.image} source={{ uri: image }} />
+            <PureImage style={styles.image} source={{ uri: image }} />
           </View>
         </View>
         <Modal visible={visible}>
@@ -76,7 +77,6 @@ export default function UserGroupItem({
 UserGroupItem.propTypes = {
   title: PropTypes.string.isRequired,
   image: PropTypes.string.isRequired,
-  text: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
   onCancel: PropTypes.func.isRequired,
   groupId: PropTypes.string.isRequired,
@@ -87,8 +87,6 @@ const styles = StyleSheet.create({
     marginTop: 24,
     marginLeft: 30,
     marginRight: 30,
-    borderColor: "#5505BA",
-    backgroundColor: "#5505BA",
   },
   button: {
     backgroundColor: "#F3EAFF",

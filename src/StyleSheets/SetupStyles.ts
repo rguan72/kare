@@ -1,24 +1,21 @@
 import { Dimensions, Platform, PixelRatio, StyleSheet } from "react-native";
 
-const {
-  width: SCREEN_WIDTH,
-  height: SCREEN_HEIGHT,
-} = Dimensions.get('window');
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 const scale = SCREEN_WIDTH / 375;
 
 export function normalize(size) {
-  const newSize = size * scale 
-  if (Platform.OS === 'ios') {
-    return Math.round(PixelRatio.roundToNearestPixel(newSize))
+  const newSize = size * scale;
+  if (Platform.OS === "ios") {
+    return Math.round(PixelRatio.roundToNearestPixel(newSize));
   } else {
-    return Math.round(PixelRatio.roundToNearestPixel(newSize)) - 2
+    return Math.round(PixelRatio.roundToNearestPixel(newSize)) - 2;
   }
 }
 
 export default StyleSheet.create({
   container: {
-    marginTop: 30,
+    paddingTop: 30,
     backgroundColor: "#F3EAFF",
     flex: 1,
   },
@@ -63,9 +60,5 @@ export default StyleSheet.create({
     borderRadius: 8,
     color: "black",
     paddingRight: 30, // to ensure the text is never behind the icon
-  },
-  button: {
-    borderColor: "#5505BA",
-    backgroundColor: "#5505BA",
   },
 });
