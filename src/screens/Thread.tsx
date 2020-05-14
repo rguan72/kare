@@ -67,11 +67,11 @@ export default function Thread({ route, navigation }) {
 
     useEffect(() => {
       const unsubscribe = watchComments(setComments, groupId);
-      
+
       const _notificationSubscription = Notifications.addListener(
-      handleNotification
-    );
-      
+        handleNotification
+      );
+
       return () => unsubscribe();
     }, []);
 
