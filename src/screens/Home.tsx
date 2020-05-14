@@ -68,7 +68,6 @@ export default function HomeScreen({ route, navigation }) {
             title={item.title}
             image={item.imageURL}
             description={item.description}
-            text={item.text}
             onPress={() =>
               navigation.navigate(screens.thread, {
                 userId: userId,

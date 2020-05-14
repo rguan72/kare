@@ -5,7 +5,13 @@ import PropTypes from "prop-types";
 import GroupItemStyles from "../StyleSheets/GroupItemStyles";
 import PureImage from "../components/PureImage";
 
-export default function GroupItem({ title, image, onPress }) {
+export default function GroupItem({
+  title,
+  image,
+  description,
+  onPress,
+}) {
+
   return (
     <TouchableOpacity onPress={onPress} style={GroupItemStyles.button}>
       <View style={GroupItemStyles.buttonBox}>
@@ -23,7 +29,6 @@ export default function GroupItem({ title, image, onPress }) {
 GroupItem.propTypes = {
   title: PropTypes.string.isRequired,
   image: PropTypes.string.isRequired,
-  text: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
   onPress: PropTypes.func.isRequired,
 };

@@ -77,7 +77,6 @@ export default function UserGroupItem({
 UserGroupItem.propTypes = {
   title: PropTypes.string.isRequired,
   image: PropTypes.string.isRequired,
-  text: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
   onCancel: PropTypes.func.isRequired,
   groupId: PropTypes.string.isRequired,
