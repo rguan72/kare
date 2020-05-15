@@ -5672,10 +5672,15 @@ expo-firebase-analytics@^2.3.0:
   dependencies:
     expo-firebase-core "~1.0.0"
 
-expo-firebase-core@~1.0.0:
+expo-firebase-core@^1.0.0, expo-firebase-core@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/expo-firebase-core/-/expo-firebase-core-1.0.0.tgz#fb97e43cae68545ddb178adbb93a91c07973ef60"
   integrity sha512-wXEZrB3a1gH2LAmOK4tEtqtpxFTnClhnSReTNRkAkZYoRaScp+Cwn8jLz1nCqk1bXQYLFDBIqbAkPKw07xBbQg==
+
+expo-firebase@^0.0.0-alpha.0:
+  version "0.0.0-alpha.0"
+  resolved "https://registry.yarnpkg.com/expo-firebase/-/expo-firebase-0.0.0-alpha.0.tgz#d8399c3ff605bf0540d1e618509ba01b51f8064c"
+  integrity sha512-3SoF16xr6opFwl0YfUrU22qFgHx3BngVKXpzemIYamLdy1atZOY7NyPl5H5Iat2RVDM0gEoLeEqxo86NFnMDOA==
 
 expo-font@~8.0.0:
   version "8.0.0"
