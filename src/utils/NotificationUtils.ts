@@ -194,7 +194,7 @@ async function managePushNotification(
   data: data
 ) {
   const sent = {};
-  if (/*currentUserId != data.commenterId*/ true) {
+  if (currentUserId != data.commenterId) {
     // if you are not replying to your own comment
     const sentAfterInit = sendCommenterNotification(
       commentReply,

@@ -104,7 +104,7 @@ export default function Replies({ route, navigation }) {
               </Text>
               <TouchableOpacity style={RepliesStyles.touchable}>
                 <Text
-                  style={{ marginVertical: 1, marginHorizontal: 5 }}
+                  style={RepliesStyles.followText}
                   onPress={() => {
                     manageFollowing(following, commentId, userId, setFollowing);
                   }}

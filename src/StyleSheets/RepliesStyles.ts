@@ -64,12 +64,18 @@ export default StyleSheet.create({
     fontWeight: "bold",
   },
   touchable: {
-    marginTop: 3,
     borderStyle: "solid",
-    borderColor: "grey",
+    borderColor: "#5505BA",
     borderRadius: 7,
     borderWidth: 1,
     position: "absolute",
     right: 0,
+    backgroundColor: "#5505BA",
+  },
+  followText: {
+    marginVertical: 2,
+    marginHorizontal: 7,
+    color: "white",
+    fontSize: 14,
   },
 });
