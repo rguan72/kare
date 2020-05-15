@@ -29,10 +29,10 @@ export default function Replies({ route, navigation }) {
   const [replies, setReplies] = useState([]);
   const [value, setValue] = useState("");
   const [commenterName, setCommenterName] = useState("");
-  const [userName, setUserName] = useState("");
   const [commenterColor, setCommenterColor] = useState(Colors.purple); // default
-
+  const [user, setUser] = useState();
   const [following, setFollowing] = useState(null);
+  const [loading, setLoading] = useState(true);
   const { commenterId, userId, comment, commentId, date } = route.params;
 
   const handleNotification = (notification) => {
@@ -48,15 +48,18 @@ export default function Replies({ route, navigation }) {
   };
 
   useEffect(() => {
-    getUser(userId).then((userData) => {
-      setUser(userData);
-    });
+    const unsubscribe = watchReplies(commentId, setReplies);
+    return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    setLoading(true);
     getUser(commenterId).then((userData) => {
       setCommenterName(userData.name);
       setCommenterColor(Colors[userData.color]);
     });
     getUser(userId).then((userData) => {
-      setUserName(userData.name);
+      setUser(userData);
       if (
         Boolean(
           userData.comments_following.find((index) => index === commentId)
@@ -67,17 +70,13 @@ export default function Replies({ route, navigation }) {
       } else {
         setFollowing(false);
       }
+      setLoading(false);
     });
 
     const _notificationSubscription = Notifications.addListener(
       handleNotification
     );
   }, []); // so it only runs once
-
-  useEffect(() => {
-    const unsubscribe = watchReplies(commentId, setReplies);
-    return () => unsubscribe();
-  }, []);
 
   const ReplyParent = () => (
     <Layout style={[RepliesStyles.mb, RepliesStyles.bgColor, RepliesStyles.mt]}>
@@ -105,16 +104,25 @@ export default function Replies({ route, navigation }) {
                 {" * "}
                 {date}
               </Text>
-              <TouchableOpacity style={RepliesStyles.touchable}>
-                <Text
-                  style={RepliesStyles.followText}
-                  onPress={() => {
-                    manageFollowing(following, commentId, userId, setFollowing);
-                  }}
-                >
-                  {following ? "Unfollow" : "Follow"}
-                </Text>
-              </TouchableOpacity>
+              {loading ? (
+                <Text></Text>
+              ) : (
+                <TouchableOpacity style={RepliesStyles.touchable}>
+                  <Text
+                    style={RepliesStyles.followText}
+                    onPress={() => {
+                      manageFollowing(
+                        following,
+                        commentId,
+                        userId,
+                        setFollowing
+                      );
+                    }}
+                  >
+                    {following ? "Unfollow" : "Follow"}
+                  </Text>
+                </TouchableOpacity>
+              )}
             </View>
             <Text style={RepliesStyles.comment}>{comment}</Text>
           </Card>
@@ -180,7 +188,7 @@ export default function Replies({ route, navigation }) {
               />
               <Button
                 onPress={() => {
-                  managePushNotification(value, replies, userId, userName, {
+                  managePushNotification(value, replies, userId, user.name, {
                     commenterId,
                     comment,
                     commentId,
