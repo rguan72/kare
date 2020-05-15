@@ -48,11 +48,9 @@ export default function Replies({ route, navigation }) {
   };
 
   useEffect(() => {
-    const unsubscribe = watchReplies(commentId, setReplies);
-    return () => unsubscribe();
-  }, []);
-
-  useEffect(() => {
+    getUser(userId).then((userData) => {
+      setUser(userData);
+    });
     getUser(commenterId).then((userData) => {
       setCommenterName(userData.name);
       setCommenterColor(Colors[userData.color]);
@@ -75,6 +73,11 @@ export default function Replies({ route, navigation }) {
       handleNotification
     );
   }, []); // so it only runs once
+
+  useEffect(() => {
+    const unsubscribe = watchReplies(commentId, setReplies);
+    return () => unsubscribe();
+  }, []);
 
   const ReplyParent = () => (
     <Layout style={[RepliesStyles.mb, RepliesStyles.bgColor, RepliesStyles.mt]}>
@@ -144,7 +147,6 @@ export default function Replies({ route, navigation }) {
                     : "";
                 return (
                   <ListItem
-                    userId={item.userId}
                     text={item.text}
                     onReport={() => reportComment(item.id)}
                     date={date}
@@ -157,6 +159,8 @@ export default function Replies({ route, navigation }) {
                     }}
                     numReplies={item.numReplies}
                     showReplies='False'
+                    color={item.color}
+                    commenterName={item.commenterName}
                   />
                 );
               }}
@@ -188,6 +192,8 @@ export default function Replies({ route, navigation }) {
                     reports: 0,
                     show: true,
                     numReplies: 0,
+                    color: user.color,
+                    commenterName: user.name,
                   });
                   setValue("");
                 }}
