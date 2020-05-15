@@ -7,6 +7,7 @@ import {
   Platform,
   Keyboard,
   TouchableWithoutFeedback,
+  TouchableOpacity,
 } from "react-native";
 import { Layout, Button, Input, Text, Card } from "@ui-kitten/components";
 import ListItem from "../components/ListItem";
@@ -15,15 +16,14 @@ import {
   watchReplies,
   reportComment,
   getUser,
+  getComment,
+  manageFollowing,
 } from "../utils/FirebaseUtils";
 import screens from "../constants/screenNames";
 import Colors from "../constants/userColors";
 import RepliesStyles from "../StyleSheets/RepliesStyles";
 import { Notifications } from "expo";
-import {
-  sendCommenterNotification,
-  sendRepliersNotification,
-} from "../utils/NotificationUtils";
+import { managePushNotification } from "../utils/NotificationUtils";
 
 export default function Replies({ route, navigation }) {
   const [replies, setReplies] = useState([]);
@@ -31,6 +31,8 @@ export default function Replies({ route, navigation }) {
   const [commenterName, setCommenterName] = useState("");
   const [userName, setUserName] = useState("");
   const [commenterColor, setCommenterColor] = useState(Colors.purple); // default
+
+  const [following, setFollowing] = useState(null);
   const { commenterId, userId, comment, commentId, date } = route.params;
 
   const handleNotification = (notification) => {
@@ -57,6 +59,16 @@ export default function Replies({ route, navigation }) {
     });
     getUser(userId).then((userData) => {
       setUserName(userData.name);
+      if (
+        Boolean(
+          userData.comments_following.find((index) => index === commentId)
+        )
+      ) {
+        // if user is following
+        setFollowing(true);
+      } else {
+        setFollowing(false);
+      }
     });
 
     const _notificationSubscription = Notifications.addListener(
@@ -85,11 +97,21 @@ export default function Replies({ route, navigation }) {
                   { backgroundColor: commenterColor, marginRight: 5 },
                 ]}
               />
-              <Text style={RepliesStyles.userName}> {name}</Text>
+              <Text style={RepliesStyles.userName}> {commenterName}</Text>
               <Text style={RepliesStyles.date}>
                 {" * "}
                 {date}
               </Text>
+              <TouchableOpacity style={RepliesStyles.touchable}>
+                <Text
+                  style={{ marginVertical: 1, marginHorizontal: 5 }}
+                  onPress={() => {
+                    manageFollowing(following, commentId, userId, setFollowing);
+                  }}
+                >
+                  {following ? "Unfollow" : "Follow"}
+                </Text>
+              </TouchableOpacity>
             </View>
             <Text style={RepliesStyles.comment}>{comment}</Text>
           </Card>
@@ -154,19 +176,12 @@ export default function Replies({ route, navigation }) {
               />
               <Button
                 onPress={() => {
-                  //if (userName != commenterName) {
-                  sendCommenterNotification(
-                    value,
-                    { commenterId, comment, commentId, date },
-                    userName
-                  );
-                  sendRepliersNotification(userId, value, replies, userName, {
+                  managePushNotification(value, replies, userId, userName, {
                     commenterId,
                     comment,
                     commentId,
                     date,
                   });
-                  //}
                   addReply(commentId, {
                     userId: userId,
                     text: value,

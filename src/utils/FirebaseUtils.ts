@@ -164,6 +164,53 @@ function watchComments(setComments, groupId) {
     });
 }
 
+async function getComment(commentId) {
+  const data = (
+    await db.collection(collections.comments).doc(commentId).get()
+  ).data();
+  return data;
+}
+
+async function followComment(commentId, userId) {
+  db.collection(collections.comments)
+    .doc(commentId)
+    .update({
+      followers: firebaseApp.firestore.FieldValue.arrayUnion(userId),
+    });
+  db.collection(collections.users)
+    .doc(userId)
+    .update({
+      comments_following: firebaseApp.firestore.FieldValue.arrayUnion(
+        commentId
+      ),
+    });
+}
+
+async function unfollowComment(commentId, userId) {
+  db.collection(collections.comments)
+    .doc(commentId)
+    .update({
+      followers: firebaseApp.firestore.FieldValue.arrayRemove(userId),
+    });
+  db.collection(collections.users)
+    .doc(userId)
+    .update({
+      comments_following: firebaseApp.firestore.FieldValue.arrayRemove(
+        commentId
+      ),
+    });
+}
+
+async function manageFollowing(isFollowing, commentId, userId, setFollowing) {
+  if (isFollowing) {
+    unfollowComment(commentId, userId);
+    setFollowing(false);
+  } else {
+    followComment(commentId, userId);
+    setFollowing(true);
+  }
+}
+
 function getUserComments(user) {
   return db
     .collection(collections.comments)
@@ -282,4 +329,6 @@ export {
   addNotifTokenToUser,
   addGroupsToUser,
   removeGroupFromUser,
+  getComment,
+  manageFollowing,
 };
