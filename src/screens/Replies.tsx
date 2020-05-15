@@ -8,6 +8,7 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
   TouchableOpacity,
+  Image,
 } from "react-native";
 import { Layout, Button, Input, Text, Card } from "@ui-kitten/components";
 import ListItem from "../components/ListItem";
@@ -16,7 +17,7 @@ import {
   watchReplies,
   reportComment,
   getUser,
-  getComment,
+  followComment,
   manageFollowing,
 } from "../utils/FirebaseUtils";
 import screens from "../constants/screenNames";
@@ -32,7 +33,7 @@ export default function Replies({ route, navigation }) {
   const [commenterColor, setCommenterColor] = useState(Colors.purple); // default
   const [user, setUser] = useState();
   const [following, setFollowing] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [imageLoading, setImageLoading] = useState(true);
   const { commenterId, userId, comment, commentId, date } = route.params;
 
   const handleNotification = (notification) => {
@@ -53,7 +54,7 @@ export default function Replies({ route, navigation }) {
   }, []);
 
   useEffect(() => {
-    setLoading(true);
+    setImageLoading(true);
     getUser(commenterId).then((userData) => {
       setCommenterName(userData.name);
       setCommenterColor(Colors[userData.color]);
@@ -62,7 +63,9 @@ export default function Replies({ route, navigation }) {
       setUser(userData);
       if (
         Boolean(
-          userData.comments_following.find((index) => index === commentId)
+          userData.comments_following.find(
+            (commentIdx) => commentIdx === commentId
+          )
         )
       ) {
         // if user is following
@@ -70,7 +73,7 @@ export default function Replies({ route, navigation }) {
       } else {
         setFollowing(false);
       }
-      setLoading(false);
+      setImageLoading(false);
     });
 
     const _notificationSubscription = Notifications.addListener(
@@ -104,23 +107,26 @@ export default function Replies({ route, navigation }) {
                 {" * "}
                 {date}
               </Text>
-              {loading ? (
+              {imageLoading ? (
                 <Text></Text>
               ) : (
-                <TouchableOpacity style={RepliesStyles.touchable}>
-                  <Text
-                    style={RepliesStyles.followText}
-                    onPress={() => {
-                      manageFollowing(
-                        following,
-                        commentId,
-                        userId,
-                        setFollowing
-                      );
-                    }}
-                  >
-                    {following ? "Unfollow" : "Follow"}
-                  </Text>
+                <TouchableOpacity
+                  style={RepliesStyles.touchable}
+                  onPress={() => {
+                    manageFollowing(following, commentId, userId, setFollowing);
+                  }}
+                >
+                  {following ? (
+                    <Image
+                      source={require("../../assets/unfollow.png")}
+                      style={{ height: 20, width: 20, resizeMode: "contain" }}
+                    />
+                  ) : (
+                    <Image
+                      source={require("../../assets/follow-icon.png")}
+                      style={{ height: 20, width: 20, resizeMode: "contain" }}
+                    />
+                  )}
                 </TouchableOpacity>
               )}
             </View>
@@ -188,6 +194,8 @@ export default function Replies({ route, navigation }) {
               />
               <Button
                 onPress={() => {
+                  followComment(commentId, userId);
+                  setFollowing(true);
                   managePushNotification(value, replies, userId, user.name, {
                     commenterId,
                     comment,

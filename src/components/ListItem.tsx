@@ -1,5 +1,5 @@
 import React from "react";
-import { TouchableOpacity } from "react-native";
+import { TouchableOpacity, Image } from "react-native";
 import { Card, Text } from "@ui-kitten/components";
 import { View } from "react-native";
 import PropTypes from "prop-types";
@@ -15,6 +15,7 @@ export default function ListItem({
   showReplies,
   commenterName,
   color,
+  following,
 }) {
   const commentColor = Colors[color];
 
@@ -42,7 +43,23 @@ export default function ListItem({
       <Text style={ListItemStyles.comments}>{text} </Text>
       <View style={ListItemStyles.bottomRow}>
         <RepliesNumber></RepliesNumber>
-        <TouchableOpacity onPress={onReport}>
+        {showReplies === "False" ? (
+          <Text></Text>
+        ) : following ? (
+          <Image
+            source={require("../../assets/unfollow.png")}
+            style={ListItemStyles.image}
+          />
+        ) : (
+          <Image
+            source={require("../../assets/follow-icon.png")}
+            style={ListItemStyles.image}
+          />
+        )}
+        <TouchableOpacity
+          onPress={onReport}
+          style={{ position: "absolute", right: 0 }}
+        >
           <Text style={ListItemStyles.report}> Report</Text>
         </TouchableOpacity>
       </View>
@@ -57,4 +74,5 @@ ListItem.propTypes = {
   onReply: PropTypes.func.isRequired,
   commenterName: PropTypes.string.isRequired,
   color: PropTypes.string.isRequired,
+  following: PropTypes.bool.isRequired,
 };

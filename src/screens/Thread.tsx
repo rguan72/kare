@@ -77,6 +77,14 @@ export default function Thread({ route, navigation }) {
     );
   });
 
+  const handleFollowing = (item) => {
+    if (item && item.hasOwnProperty("followers")) {
+      return Boolean(item.followers.find((userIdx) => userIdx === userId));
+    } else {
+      return false;
+    }
+  };
+
   const ListSearchView = () => {
     const [comments, setComments] = useState([]);
     const [commentStructure, setCommentStructure] = useState([]);
@@ -148,6 +156,7 @@ export default function Thread({ route, navigation }) {
                       minute: "2-digit",
                     })
                   : "";
+              const following = handleFollowing(item);
               return (
                 <ListItem
                   text={item.text}
@@ -165,6 +174,7 @@ export default function Thread({ route, navigation }) {
                   showReplies='True'
                   commenterName={item.commenterName}
                   color={item.color}
+                  following={following}
                 />
               );
             }}
@@ -184,6 +194,7 @@ export default function Thread({ route, navigation }) {
                       minute: "2-digit",
                     })
                   : "";
+              const following = handleFollowing(item);
               return (
                 <ListItem
                   text={item.text}
@@ -201,6 +212,7 @@ export default function Thread({ route, navigation }) {
                   showReplies='True'
                   commenterName={item.commenterName}
                   color={item.color}
+                  following={following}
                 />
               );
             }}

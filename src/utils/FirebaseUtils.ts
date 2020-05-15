@@ -111,6 +111,7 @@ function addComment(comment: comment, groupId) {
       numReplies: 0,
       parentId: "",
       groupId: groupId,
+      followers: [],
       ...comment,
     });
 }
@@ -355,4 +356,5 @@ export {
   removeGroupFromUser,
   getComment,
   manageFollowing,
+  followComment,
 };
