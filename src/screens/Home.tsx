@@ -1,5 +1,10 @@
 import React, { useState, useEffect, useImperativeHandle } from "react";
-import { FlatList, View, TouchableOpacity } from "react-native";
+import {
+  FlatList,
+  View,
+  TouchableOpacity,
+  ActivityIndicator,
+} from "react-native";
 import { Button, Layout, Text, withStyles } from "@ui-kitten/components";
 import GroupItem from "../components/GroupItem";
 import PropTypes from "prop-types";
@@ -17,7 +22,7 @@ interface Group {
 
 export default function HomeScreen({ route, navigation }) {
   const [groups, setGroups] = useState([]);
-  const [refresh, setRefresh] = useState(false);
+  const [loading, setLoading] = useState(true);
   const { userId } = route.params;
 
   const onSignOut = () => {
@@ -30,23 +35,28 @@ export default function HomeScreen({ route, navigation }) {
   };
 
   useEffect(() => {
+    setLoading(true);
     const unsubscribe = navigation.addListener("focus", () => {
-      getUser(userId)
-        .then((user) => getGroupsById(user.groups))
-        .then((fetchedGroups) => setGroups(fetchedGroups));
+      getUser(userId).then((user) =>
+        getGroupsById(user.groups).then((fetchedGroups) =>
+          setGroups(fetchedGroups)
+        )
+      );
     });
 
     return unsubscribe;
   }, [navigation]);
 
-  const handleNavigateBack = () => {
-    setRefresh(!refresh);
-  };
+  useEffect(() => {
+    if (groups && groups.length > 0) {
+      setLoading(false);
+    }
+  }, [groups]);
 
   return (
     <View style={HomeStyles.container}>
       <View style={HomeStyles.Heading}>
-        <Text category="h5" style={{ alignSelf: "center" }}>
+        <Text category='h5' style={{ alignSelf: "center" }}>
           My Communities
         </Text>
         <TouchableOpacity
@@ -54,34 +64,42 @@ export default function HomeScreen({ route, navigation }) {
           onPress={() =>
             navigation.navigate(screens.manage, {
               userId: userId,
-              onNavigateBack: handleNavigateBack,
             })
           }
         >
-          <Entypo name="dots-three-horizontal" size={20} />
+          <Entypo name='dots-three-horizontal' size={20} />
         </TouchableOpacity>
       </View>
-      <FlatList
-        data={groups}
-        renderItem={({ item }) => (
-          <GroupItem
-            title={item.title}
-            image={item.imageURL}
-            description={item.description}
-            onPress={() =>
-              navigation.navigate(screens.thread, {
-                userId: userId,
-                title: item.title,
-                description: item.description,
-                groupId: item.id,
-                image: item.imageURL,
-                num_members: item.num_members,
-              })
-            }
-          />
-        )}
-        keyExtractor={(item) => item.id}
-      />
+      {loading ? (
+        <ActivityIndicator
+          size='large'
+          style={{ flex: 1 }}
+          color='#5505BA'
+          animating={loading}
+        />
+      ) : (
+        <FlatList
+          data={groups}
+          renderItem={({ item }) => (
+            <GroupItem
+              title={item.title}
+              image={item.imageURL}
+              description={item.description}
+              onPress={() =>
+                navigation.navigate(screens.thread, {
+                  userId: userId,
+                  title: item.title,
+                  description: item.description,
+                  groupId: item.id,
+                  image: item.imageURL,
+                  num_members: item.num_members,
+                })
+              }
+            />
+          )}
+          keyExtractor={(item) => item.id}
+        />
+      )}
       <Button style={HomeStyles.SignOut} onPress={onSignOut}>
         Sign Out
       </Button>

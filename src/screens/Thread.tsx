@@ -38,6 +38,7 @@ export default function Thread({ route, navigation }) {
   } = route.params;
 
   const [user, setUser] = useState();
+  const [commentsLoading, setCommentsLoading] = useState(true);
 
   useEffect(() => {
     getUser(userId).then((userData) => {
@@ -72,7 +73,12 @@ export default function Thread({ route, navigation }) {
     const [filteredComments, setFilteredComments] = useState([]);
 
     useEffect(() => {
-      const unsubscribe = watchComments(setComments, groupId);
+      //setCommentsLoading(true);
+      const unsubscribe = watchComments(
+        setComments,
+        groupId,
+        setCommentsLoading
+      );
       return () => unsubscribe();
     }, []);
 
@@ -116,7 +122,14 @@ export default function Thread({ route, navigation }) {
           value={query}
           accessoryRight={renderIcon}
         />
-        {query.length > 0 ? (
+        {commentsLoading ? (
+          <ActivityIndicator
+            size='large'
+            style={{ flex: 1 }}
+            color='#5505BA'
+            animating={commentsLoading}
+          />
+        ) : query.length > 0 ? (
           <FlatList
             style={{ marginTop: 5 }}
             data={filteredComments}

@@ -7,6 +7,7 @@ import {
   Platform,
   Keyboard,
   TouchableWithoutFeedback,
+  ActivityIndicator,
 } from "react-native";
 import { Layout, Button, Input, Text, Card } from "@ui-kitten/components";
 import ListItem from "../components/ListItem";
@@ -26,6 +27,7 @@ export default function Replies({ route, navigation }) {
   const [name, setName] = useState("");
   const [commenterColor, setCommenterColor] = useState(Colors.purple); // default
   const [user, setUser] = useState();
+  const [loading, setLoading] = useState(true);
   const { commenterId, userId, comment, commentId, date } = route.params;
 
   useEffect(() => {
@@ -39,7 +41,7 @@ export default function Replies({ route, navigation }) {
   }, []); // so it only runs once
 
   useEffect(() => {
-    const unsubscribe = watchReplies(commentId, setReplies);
+    const unsubscribe = watchReplies(commentId, setReplies, setLoading);
     return () => unsubscribe();
   }, []);
 
@@ -91,66 +93,77 @@ export default function Replies({ route, navigation }) {
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <React.Fragment>
-            <FlatList
-              data={replies}
-              ListHeaderComponent={ReplyParent} // going to be comment
-              renderItem={({ item }) => {
-                const date =
-                  item && item.timestamp
-                    ? item.timestamp.toDate().toLocaleDateString()
-                    : "";
-                return (
-                  <ListItem
-                    text={item.text}
-                    onReport={() => reportComment(item.id)}
-                    date={date}
-                    onReply={() => {
-                      navigation.navigate(screens.replies, {
-                        userId: item.userId,
-                        comment: item.text,
-                        commentId: item.id,
-                      });
-                    }}
-                    numReplies={item.numReplies}
-                    showReplies='False'
-                    color={item.color}
-                    commenterName={item.commenterName}
-                  />
-                );
-              }}
-              keyExtractor={(item) => item.id}
-            />
-            <Layout
-              style={{
-                justifyContent: "flex-end",
-                backgroundColor: "#F3EAFF",
-                flexDirection: "column",
-              }}
-            >
-              <Input
-                placeholder='Add comment'
-                value={value}
-                onChangeText={setValue}
+            {loading ? (
+              <ActivityIndicator
+                size='large'
+                style={{ flex: 1 }}
+                color='#5505BA'
+                animating={loading}
               />
-              <Button
-                onPress={() => {
-                  addReply(commentId, {
-                    userId: userId,
-                    text: value,
-                    reports: 0,
-                    show: true,
-                    numReplies: 0,
-                    color: user.color,
-                    commenterName: user.name,
-                  });
-                  setValue("");
-                }}
-                style={RepliesStyles.mt0}
-                disabled={value === ""}
-              >
-                Submit
-              </Button>
-            </Layout>
+            ) : (
+              <>
+                <FlatList
+                  data={replies}
+                  ListHeaderComponent={ReplyParent} // going to be comment
+                  renderItem={({ item }) => {
+                    const date =
+                      item && item.timestamp
+                        ? item.timestamp.toDate().toLocaleDateString()
+                        : "";
+                    return (
+                      <ListItem
+                        text={item.text}
+                        onReport={() => reportComment(item.id)}
+                        date={date}
+                        onReply={() => {
+                          navigation.navigate(screens.replies, {
+                            userId: item.userId,
+                            comment: item.text,
+                            commentId: item.id,
+                          });
+                        }}
+                        numReplies={item.numReplies}
+                        showReplies='False'
+                        color={item.color}
+                        commenterName={item.commenterName}
+                      />
+                    );
+                  }}
+                  keyExtractor={(item) => item.id}
+                />
+                <Layout
+                  style={{
+                    justifyContent: "flex-end",
+                    backgroundColor: "#F3EAFF",
+                    flexDirection: "column",
+                  }}
+                >
+                  <Input
+                    placeholder='Add comment'
+                    value={value}
+                    onChangeText={setValue}
+                  />
+                  <Button
+                    onPress={() => {
+                      addReply(commentId, {
+                        userId: userId,
+                        text: value,
+                        reports: 0,
+                        show: true,
+                        numReplies: 0,
+                        color: user.color,
+                        commenterName: user.name,
+                      });
+                      setValue("");
+                    }}
+                    style={RepliesStyles.mt0}
+                    disabled={value === ""}
+                  >
+                    Submit
+                  </Button>
+                </Layout>
+              </>
+            )}
           </React.Fragment>
         </TouchableWithoutFeedback>
       </SafeAreaView>
