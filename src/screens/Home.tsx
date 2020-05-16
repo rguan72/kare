@@ -52,11 +52,13 @@ export default function HomeScreen({ route, navigation }) {
   useEffect(() => {
     console.log("sub running");
     const unsubscribe = navigation.addListener("focus", () => {
+      setLoading(true);
       console.log("focusing");
       getUser(userId).then((user) =>
         getGroupsById(user.groups).then((fetchedGroups) => {
           setGroups(fetchedGroups);
           console.log("set groups");
+          setLoading(false);
         })
       );
     });
