@@ -39,6 +39,9 @@
       "bundleIdentifier": "me.kareapp",
       "buildNumber": "1.0.0"
     },
-    "scheme": "kare"
+    "scheme": "kare",
+    "notification": {
+      "icon": "./assets/notif_logo.png"
+    }
   }
 }

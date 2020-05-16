@@ -196,7 +196,7 @@ export default function Replies({ route, navigation }) {
                 onPress={() => {
                   followComment(commentId, userId);
                   setFollowing(true);
-                  managePushNotification(value, replies, userId, user.name, {
+                  managePushNotification(value, userId, user.name, {
                     commenterId,
                     comment,
                     commentId,

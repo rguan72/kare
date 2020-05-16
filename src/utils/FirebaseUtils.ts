@@ -175,7 +175,7 @@ async function getComment(commentId) {
   return data;
 }
 
-async function followComment(commentId, userId) {
+async function followComment(commentId: string, userId: string) {
   db.collection(collections.comments)
     .doc(commentId)
     .update({
@@ -190,7 +190,7 @@ async function followComment(commentId, userId) {
     });
 }
 
-async function unfollowComment(commentId, userId) {
+async function unfollowComment(commentId: string, userId: string) {
   db.collection(collections.comments)
     .doc(commentId)
     .update({
@@ -205,7 +205,18 @@ async function unfollowComment(commentId, userId) {
     });
 }
 
-async function manageFollowing(isFollowing, commentId, userId, setFollowing) {
+/* 
+isFollowing is a boolean of if the user is currently following the post
+commentId is the id of the comment
+userId is the id of the user
+setFollowing is the set state function for following
+*/
+async function manageFollowing(
+  isFollowing: boolean,
+  commentId: string,
+  userId: string,
+  setFollowing
+) {
   if (isFollowing) {
     unfollowComment(commentId, userId);
     setFollowing(false);

@@ -105,6 +105,7 @@ async function sendRepliersNotification(
   data: data,
   sent: object
 ) {
+  // might not need with new follow logic
   sent[currentUserId] = "seen"; // to make sure current user doesnt get a notif
   replies.forEach(async (reply) => {
     const userId = reply.userId;
@@ -188,12 +189,11 @@ async function sendFollowersNotification(
 
 async function managePushNotification(
   commentReply: string,
-  replies: Array<string>,
   currentUserId: string,
   userName: string,
   data: data
 ) {
-  const sent = {};
+  const sent = {}; //{ currentUserId: "seen" }; // so current user does not get notification
   if (currentUserId != data.commenterId) {
     // if you are not replying to your own comment
     const sentAfterInit = sendCommenterNotification(
@@ -201,35 +201,14 @@ async function managePushNotification(
       data,
       userName
     );
-    const sentAfterRepliers = sendRepliersNotification(
-      currentUserId,
+    sendFollowersNotification(
       commentReply,
-      replies,
       userName,
       data,
       await sentAfterInit
     );
-    sendFollowersNotification(
-      commentReply,
-      userName,
-      data,
-      await sentAfterRepliers
-    );
   } else {
-    const sentAfterRepliers = sendRepliersNotification(
-      currentUserId,
-      commentReply,
-      replies,
-      userName,
-      data,
-      sent
-    );
-    sendFollowersNotification(
-      commentReply,
-      userName,
-      data,
-      await sentAfterRepliers
-    );
+    sendFollowersNotification(commentReply, userName, data, sent);
   }
 }
 
