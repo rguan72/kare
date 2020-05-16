@@ -66,7 +66,7 @@ export default function Replies({ route, navigation }) {
                   { backgroundColor: commenterColor, marginRight: 5 },
                 ]}
               />
-              <Text style={RepliesStyles.userName}> {name}</Text>
+              <Text style={RepliesStyles.userName}>{name}</Text>
               <Text style={RepliesStyles.date}>
                 {" * "}
                 {date}
@@ -95,9 +95,9 @@ export default function Replies({ route, navigation }) {
           <React.Fragment>
             {loading ? (
               <ActivityIndicator
-                size='large'
+                size="large"
                 style={{ flex: 1 }}
-                color='#5505BA'
+                color="#5505BA"
                 animating={loading}
               />
             ) : (
@@ -123,7 +123,7 @@ export default function Replies({ route, navigation }) {
                           });
                         }}
                         numReplies={item.numReplies}
-                        showReplies='False'
+                        showReplies="False"
                         color={item.color}
                         commenterName={item.commenterName}
                       />
@@ -140,7 +140,7 @@ export default function Replies({ route, navigation }) {
                 >
                   <Input
                     multiline
-                    placeholder='Add comment'
+                    placeholder="Add comment"
                     value={value}
                     onChangeText={setValue}
                   />

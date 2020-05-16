@@ -36,14 +36,14 @@ export default function ListItem({
         <View
           style={[ListItemStyles.square, { backgroundColor: commentColor }]}
         />
-        <Text style={ListItemStyles.userName}> {commenterName}</Text>
-        <Text style={ListItemStyles.date}> {date}</Text>
+        <Text style={ListItemStyles.userName}>{commenterName}</Text>
+        <Text style={ListItemStyles.date}>{date}</Text>
       </View>
-      <Text style={ListItemStyles.comments}>{text} </Text>
+      <Text style={ListItemStyles.comments}>{text}</Text>
       <View style={ListItemStyles.bottomRow}>
         <RepliesNumber></RepliesNumber>
         <TouchableOpacity onPress={onReport}>
-          <Text style={ListItemStyles.report}> Report</Text>
+          <Text style={ListItemStyles.report}>Report</Text>
         </TouchableOpacity>
       </View>
     </Card>
