@@ -139,6 +139,7 @@ export default function Replies({ route, navigation }) {
                   }}
                 >
                   <Input
+                    multiline
                     placeholder='Add comment'
                     value={value}
                     onChangeText={setValue}

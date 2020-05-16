@@ -50,7 +50,7 @@ export default function Thread({ route, navigation }) {
     return (
       <Layout style={ThreadStyles.header}>
         <Layout style={ThreadStyles.headerTextBox}>
-          <Text category='h5'> {title} </Text>
+          <Text category="h5"> {title} </Text>
           <Text style={{ marginTop: 2, marginRight: 10 }}>{description}</Text>
           <Text style={{ marginTop: 2 }}>{num_members} Members</Text>
         </Layout>
@@ -58,7 +58,7 @@ export default function Thread({ route, navigation }) {
           <PureImage
             source={{ uri: image }}
             style={ThreadStyles.icon}
-            resizeMode='cover'
+            resizeMode="cover"
           />
         </Layout>
       </Layout>
@@ -105,9 +105,9 @@ export default function Thread({ route, navigation }) {
     const renderIcon = (props) => (
       <TouchableWithoutFeedback>
         {!query ? (
-          <EvilIcons name='search' size={25} />
+          <EvilIcons name="search" size={25} />
         ) : loading ? (
-          <ActivityIndicator size={25} color='#8566AA' />
+          <ActivityIndicator size={25} color="#8566AA" />
         ) : (
           <Text></Text>
         )}
@@ -117,16 +117,16 @@ export default function Thread({ route, navigation }) {
     return (
       <>
         <SearchBar
-          placeholder='Search for a comment...'
+          placeholder="Search for a comment..."
           onChangeText={setQuery}
           value={query}
           accessoryRight={renderIcon}
         />
         {commentsLoading ? (
           <ActivityIndicator
-            size='large'
+            size="large"
             style={{ flex: 1 }}
-            color='#5505BA'
+            color="#5505BA"
             animating={commentsLoading}
           />
         ) : query.length > 0 ? (
@@ -157,7 +157,7 @@ export default function Thread({ route, navigation }) {
                   onReport={() => reportComment(item.id)}
                   date={date}
                   numReplies={item.numReplies}
-                  showReplies='True'
+                  showReplies="True"
                   commenterName={item.commenterName}
                   color={item.color}
                 />
@@ -193,7 +193,7 @@ export default function Thread({ route, navigation }) {
                   onReport={() => reportComment(item.id)}
                   date={date}
                   numReplies={item.numReplies}
-                  showReplies='True'
+                  showReplies="True"
                   commenterName={item.commenterName}
                   color={item.color}
                 />
@@ -216,7 +216,8 @@ export default function Thread({ route, navigation }) {
     return (
       <Layout style={ThreadStyles.commentBox}>
         <Input
-          placeholder='Add comment'
+          multiline
+          placeholder="Add comment"
           value={value}
           onChangeText={(e) => setValue(e)}
         />
