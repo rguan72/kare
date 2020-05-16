@@ -9,6 +9,7 @@ import {
   TouchableWithoutFeedback,
   TouchableOpacity,
   Image,
+  ActivityIndicator,
 } from "react-native";
 import { Layout, Button, Input, Text, Card } from "@ui-kitten/components";
 import ListItem from "../components/ListItem";
@@ -34,6 +35,7 @@ export default function Replies({ route, navigation }) {
   const [user, setUser] = useState();
   const [following, setFollowing] = useState(null);
   const [imageLoading, setImageLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
   const { commenterId, userId, comment, commentId, date } = route.params;
 
   const handleNotification = (notification) => {
@@ -49,7 +51,7 @@ export default function Replies({ route, navigation }) {
   };
 
   useEffect(() => {
-    const unsubscribe = watchReplies(commentId, setReplies);
+    const unsubscribe = watchReplies(commentId, setReplies, setLoading);
     return () => unsubscribe();
   }, []);
 
@@ -151,26 +153,35 @@ export default function Replies({ route, navigation }) {
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <React.Fragment>
-            <FlatList
-              data={replies}
-              ListHeaderComponent={ReplyParent} // going to be comment
-              renderItem={({ item }) => {
-                const date =
-                  item && item.timestamp
-                    ? item.timestamp.toDate().toLocaleDateString()
-                    : "";
-                return (
-                  <ListItem
-                    text={item.text}
-                    onReport={() => reportComment(item.id)}
-                    date={date}
-                    onReply={() => {
-                      navigation.navigate(screens.replies, {
-                        userId: item.userId,
-                        comment: item.text,
-                        commentId: item.id,
-                      });
-                    }}
+            {loading ? (
+              <ActivityIndicator
+                size='large'
+                style={{ flex: 1 }}
+                color='#5505BA'
+                animating={loading}
+              />
+            ) : (
+              <>
+                <FlatList
+                  data={replies}
+                  ListHeaderComponent={ReplyParent} // going to be comment
+                  renderItem={({ item }) => {
+                    const date =
+                      item && item.timestamp
+                        ? item.timestamp.toDate().toLocaleDateString()
+                        : "";
+                    return (
+                      <ListItem
+                        text={item.text}
+                        onReport={() => reportComment(item.id)}
+                        date={date}
+                        onReply={() => {
+                          navigation.navigate(screens.replies, {
+                            userId: item.userId,
+                            comment: item.text,
+                            commentId: item.id,
+                          });
+                        }}
                     numReplies={item.numReplies}
                     showReplies='False'
                     color={item.color}
@@ -188,6 +199,7 @@ export default function Replies({ route, navigation }) {
               }}
             >
               <Input
+                multiline
                 placeholder='Add comment'
                 value={value}
                 onChangeText={setValue}
@@ -219,6 +231,8 @@ export default function Replies({ route, navigation }) {
                 Submit
               </Button>
             </Layout>
+              </>
+            )}
           </React.Fragment>
         </TouchableWithoutFeedback>
       </SafeAreaView>

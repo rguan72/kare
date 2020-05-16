@@ -149,7 +149,7 @@ function reportComment(id: string) {
   });
 }
 
-function watchComments(setComments, groupId) {
+function watchComments(setComments, groupId, setCommentsLoading) {
   return db
     .collection(collections.comments)
     .where("parentId", "==", "")
@@ -165,6 +165,7 @@ function watchComments(setComments, groupId) {
         });
       });
       setComments(comments);
+      setCommentsLoading(false);
     });
 }
 
@@ -245,7 +246,7 @@ function getUserComments(user) {
     });
 }
 
-function watchReplies(commentId, setReplies) {
+function watchReplies(commentId, setReplies, setLoading) {
   return db
     .collection(collections.comments)
     .where("parentId", "==", commentId)
@@ -260,6 +261,7 @@ function watchReplies(commentId, setReplies) {
         });
       });
       setReplies(replies);
+      setLoading(false);
     });
 }
 
