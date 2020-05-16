@@ -19,9 +19,11 @@ export default function UserGroupItem({
   description,
   onCancel,
   groupId,
+  num_groups,
 }) {
   const [visible, setVisible] = useState(false);
   const [caption, setCaption] = useState("");
+  const [error, setError] = useState(false);
 
   const onIconPress = () => {
     setCaption(`Are you sure you want to leave group ${title}?`);
@@ -34,14 +36,14 @@ export default function UserGroupItem({
         <View style={styles.buttonBox}>
           <View style={styles.textBox}>
             <View style={{ flex: 10 }}>
-              <Text category="h5">{title}</Text>
+              <Text category='h5'>{title}</Text>
               <Text>{description}</Text>
             </View>
             <TouchableOpacity
               style={{ flex: 1, paddingLeft: 5 }}
               onPress={onIconPress}
             >
-              <Ionicons name="ios-trash" size={40} />
+              <Ionicons name='ios-trash' size={40} />
             </TouchableOpacity>
           </View>
           <View style={styles.imageBox}>
@@ -53,9 +55,14 @@ export default function UserGroupItem({
             <Text>{caption}</Text>
             <Button
               onPress={() => {
-                removeGroupFromUser(groupId);
-                onCancel();
-                setVisible(false);
+                if (num_groups === 1) {
+                  setVisible(false);
+                  setError(true);
+                } else {
+                  removeGroupFromUser(groupId);
+                  onCancel();
+                  setVisible(false);
+                }
               }}
               style={styles.groupButton}
             >
@@ -66,6 +73,14 @@ export default function UserGroupItem({
               style={styles.groupButton}
             >
               NO
+            </Button>
+          </Card>
+        </Modal>
+        <Modal visible={error}>
+          <Card disabled={true}>
+            <Text>You cannot be in zero groups</Text>
+            <Button onPress={() => setError(false)} style={styles.groupButton}>
+              RETURN
             </Button>
           </Card>
         </Modal>
@@ -80,6 +95,7 @@ UserGroupItem.propTypes = {
   description: PropTypes.string.isRequired,
   onCancel: PropTypes.func.isRequired,
   groupId: PropTypes.string.isRequired,
+  num_groups: PropTypes.number.isRequired,
 };
 
 const styles = StyleSheet.create({
