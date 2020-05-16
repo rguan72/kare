@@ -8,7 +8,6 @@ import screens from "../constants/screenNames";
 import firebase from "firebase/app";
 import { Entypo } from "@expo/vector-icons";
 import HomeStyles from "../StyleSheets/HomeStyles";
-import ReportDiologue from "../components/ReportDiologue";
 
 interface Group {
   title: String;
@@ -46,7 +45,6 @@ export default function HomeScreen({ route, navigation }) {
 
   return (
     <View style={HomeStyles.container}>
-    <ReportDiologue></ReportDiologue>
       <View style={HomeStyles.Heading}>
         <Text category='h5' style={{ alignSelf: "center" }}>
           My Communities

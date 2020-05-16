@@ -32,6 +32,7 @@ export default function Thread({ route, navigation }) {
   const [commentStructure, setCommentStructure] = useState([]);
   const [value, setValue] = useState("");
   const { userId, title, description, groupId, image } = route.params;
+  const [showReportDiologue, setShowReportDiologue] = useState(false);
 
   useEffect(() => {
     const unsubscribe = watchComments(setComments, groupId);
@@ -59,6 +60,9 @@ export default function Thread({ route, navigation }) {
       </Layout>
     </Layout>
   );
+  const closeReportDiologue = () => {
+    setShowReportDiologue(!showReportDiologue);
+  }
 
   return (
     <KeyboardAvoidingView
@@ -66,6 +70,12 @@ export default function Thread({ route, navigation }) {
       style={ThreadStyles.keyboardAvoidingView}
     >
       <SafeAreaView style={ThreadStyles.safeAreaView}>
+      {showReportDiologue && <ReportDiologue 
+        reporterID={userId}
+        reporteeID={userId}
+        closeReportDiologue_={closeReportDiologue}
+      >
+      </ReportDiologue>}
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <React.Fragment>
             <SectionList
@@ -88,7 +98,7 @@ export default function Thread({ route, navigation }) {
                         date: date,
                       });
                     }}
-                    onReport={() => reportComment(item.id)}
+                    onReport={() => setShowReportDiologue(!showReportDiologue)}
                     date={date}
                     numReplies={item.numReplies}
 		    showReplies="True"
