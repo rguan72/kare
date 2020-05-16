@@ -182,55 +182,55 @@ export default function Replies({ route, navigation }) {
                             commentId: item.id,
                           });
                         }}
-                    numReplies={item.numReplies}
-                    showReplies='False'
-                    color={item.color}
-                    commenterName={item.commenterName}
+                        numReplies={item.numReplies}
+                        showReplies='False'
+                        color={item.color}
+                        commenterName={item.commenterName}
+                      />
+                    );
+                  }}
+                  keyExtractor={(item) => item.id}
+                />
+                <Layout
+                  style={{
+                    justifyContent: "flex-end",
+                    backgroundColor: "#F3EAFF",
+                    flexDirection: "column",
+                  }}
+                >
+                  <Input
+                    multiline
+                    placeholder='Add comment'
+                    value={value}
+                    onChangeText={setValue}
                   />
-                );
-              }}
-              keyExtractor={(item) => item.id}
-            />
-            <Layout
-              style={{
-                justifyContent: "flex-end",
-                backgroundColor: "#F3EAFF",
-                flexDirection: "column",
-              }}
-            >
-              <Input
-                multiline
-                placeholder='Add comment'
-                value={value}
-                onChangeText={setValue}
-              />
-              <Button
-                onPress={() => {
-                  followComment(commentId, userId);
-                  setFollowing(true);
-                  managePushNotification(value, userId, user.name, {
-                    commenterId,
-                    comment,
-                    commentId,
-                    date,
-                  });
-                  addReply(commentId, {
-                    userId: userId,
-                    text: value,
-                    reports: 0,
-                    show: true,
-                    numReplies: 0,
-                    color: user.color,
-                    commenterName: user.name,
-                  });
-                  setValue("");
-                }}
-                style={RepliesStyles.mt0}
-                disabled={value === ""}
-              >
-                Submit
-              </Button>
-            </Layout>
+                  <Button
+                    onPress={() => {
+                      followComment(commentId, userId);
+                      setFollowing(true);
+                      managePushNotification(value, userId, user.name, {
+                        commenterId,
+                        comment,
+                        commentId,
+                        date,
+                      });
+                      addReply(commentId, {
+                        userId: userId,
+                        text: value,
+                        reports: 0,
+                        show: true,
+                        numReplies: 0,
+                        color: user.color,
+                        commenterName: user.name,
+                      });
+                      setValue("");
+                    }}
+                    style={RepliesStyles.mt0}
+                    disabled={value === ""}
+                  >
+                    Submit
+                  </Button>
+                </Layout>
               </>
             )}
           </React.Fragment>

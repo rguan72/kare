@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useImperativeHandle } from "react";
 import {
   FlatList,
@@ -7,7 +6,6 @@ import {
   ActivityIndicator,
 } from "react-native";
 import firebase from "firebase/app";
-import { Button, Layout, Text, withStyles } from "@ui-kitten/components";
 import GroupItem from "../components/GroupItem";
 import PropTypes from "prop-types";
 import { Notifications } from "expo";
@@ -15,7 +13,6 @@ import { Entypo } from "@expo/vector-icons";
 import { Button, Text } from "@ui-kitten/components";
 import { getGroupsById, getUser } from "../utils/FirebaseUtils";
 import { registerForPushNotificationsAsync } from "../utils/NotificationUtils";
-import GroupItem from "../components/GroupItem";
 import screens from "../constants/screenNames";
 import HomeStyles from "../StyleSheets/HomeStyles";
 
@@ -40,7 +37,6 @@ export default function HomeScreen({ route, navigation }) {
       });
   };
 
-
   const handleNotification = (notification) => {
     const { commenterId, comment, commentId, date } = notification.data;
     console.log(notification.data);
@@ -50,21 +46,26 @@ export default function HomeScreen({ route, navigation }) {
       commentId,
       date,
       userId,
-    }
-                        }
-
-  useEffect(() => {
-    setLoading(true);
-    const unsubscribe = navigation.addListener("focus", () => {
-      getUser(userId).then((user) =>
-        getGroupsById(user.groups).then((fetchedGroups) =>
-          setGroups(fetchedGroups)
-        )
-      );
     });
   };
 
   useEffect(() => {
+    console.log("sub running");
+    const unsubscribe = navigation.addListener("focus", () => {
+      console.log("focusing");
+      getUser(userId).then((user) =>
+        getGroupsById(user.groups).then((fetchedGroups) => {
+          setGroups(fetchedGroups);
+          console.log("set groups");
+        })
+      );
+    });
+
+    return unsubscribe;
+  }, []);
+
+  useEffect(() => {
+    console.log("notif running");
     if (!currentUser.notificationId) {
       registerForPushNotificationsAsync(userId);
     }
