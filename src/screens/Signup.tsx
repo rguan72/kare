@@ -138,7 +138,7 @@ function SignupScreen({ navigation }) {
   };
 
   return (
-    <View style={{ marginTop: 30, backgroundColor: "#F3EAFF", flex: 1 }}>
+    <View style={{ paddingTop: 30, backgroundColor: "#F3EAFF", flex: 1 }}>
       {/* <BackButton goBack={() => navigation.navigate('HomeScreen')} /> */}
 
       <View
@@ -239,8 +239,6 @@ const styles = StyleSheet.create({
     marginTop: 24,
     marginLeft: 30,
     marginRight: 30,
-    borderColor: "#5505BA",
-    backgroundColor: "#5505BA",
   },
   row: {
     flexDirection: "row",

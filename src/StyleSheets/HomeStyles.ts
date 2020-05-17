@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 export default StyleSheet.create({
   container: {
-    marginTop: 30,
+    paddingTop: 30,
     backgroundColor: "#FFFDF4",
     flex: 1,
   },
@@ -13,8 +13,6 @@ export default StyleSheet.create({
   },
   SignOut: {
     borderRadius: 30,
-    backgroundColor: "#5505BA",
-    borderColor: "#5505BA",
     position: "absolute",
     bottom: 65,
     right: 15,

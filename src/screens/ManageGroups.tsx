@@ -56,7 +56,12 @@ export default function ManageGroups({ route, navigation }) {
         setGroupOptions(options);
       })
       .catch(() => navigation.navigate(screens.error));
-    setLoading(false);
+  }, [groups]);
+
+  useEffect(() => {
+    if (groups.length > 0) {
+      setLoading(false);
+    }
   }, [groups]);
 
   const makeArray = (groupData, selectedIndex) => {
@@ -90,8 +95,8 @@ export default function ManageGroups({ route, navigation }) {
 
   return (
     <View style={HomeStyles.container}>
-      <View style={HomeStyles.Heading}>
-        <Text category="h6">Manage Communities</Text>
+      <View style={[HomeStyles.Heading, { marginBottom: 10 }]}>
+        <Text category='h6'>Manage Communities</Text>
       </View>
       {loading ? (
         <ActivityIndicator
@@ -109,14 +114,16 @@ export default function ManageGroups({ route, navigation }) {
                 title={item.title}
                 image={item.imageURL}
                 description={item.description}
-                text={item.text}
                 onCancel={onCancel}
                 groupId={item.id}
+                num_groups={groups.length}
               />
             )}
             keyExtractor={(item) => item.id}
           />
-          {groups.length < NUM_GROUPS && (
+          {!(groups.length < NUM_GROUPS) ? (
+            <Text></Text>
+          ) : (
             <Card style={SetupStyles.card}>
               <Text category="h6">Would you like to join any new groups?</Text>
               <Select
@@ -129,11 +136,7 @@ export default function ManageGroups({ route, navigation }) {
               >
                 {groupOptions.map(renderOption)}
               </Select>
-              <Button
-                style={{ backgroundColor: "#5505BA" }}
-                onPress={onPress}
-                disabled={selectedIndexTwo.length == 0}
-              >
+              <Button onPress={onPress} disabled={selectedIndexTwo.length == 0}>
                 Join!
               </Button>
             </Card>

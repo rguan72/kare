@@ -1,3 +1,3 @@
-const NUM_GROUPS = 8;
+const NUM_GROUPS = 25;
 
 export default NUM_GROUPS;

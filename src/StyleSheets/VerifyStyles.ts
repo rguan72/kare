@@ -11,7 +11,6 @@ export default StyleSheet.create({
   },
   closeButton: {
     marginTop: 5,
-    backgroundColor: "#5505BA",
   },
   nextButton: {
     marginBottom: 20,
@@ -20,13 +19,7 @@ export default StyleSheet.create({
   mt: {
     marginTop: 10,
   },
-  verifyButton: {
-    backgroundColor: "#5505BA",
-    borderColor: "#5505BA",
-  },
   doneButton: {
     marginTop: 5,
-    backgroundColor: "#5505BA",
-    borderColor: "#5505BA",
   },
 });

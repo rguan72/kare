@@ -75,7 +75,6 @@ export default function VerifyEmail({ navigation }) {
               purpose: "Receive verification email",
             });
           }}
-          style={VerifyStyles.verifyButton}
         >
           {buttonTxt}
         </Button>
