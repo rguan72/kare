@@ -116,11 +116,7 @@ export default function Replies({ route, navigation }) {
                         onReport={() => reportComment(item.id)}
                         date={date}
                         onReply={() => {
-                          navigation.navigate(screens.replies, {
-                            userId: item.userId,
-                            comment: item.text,
-                            commentId: item.id,
-                          });
+                          return null;
                         }}
                         numReplies={item.numReplies}
                         showReplies='False'
