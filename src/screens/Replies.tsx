@@ -19,7 +19,7 @@ import {
 import screens from "../constants/screenNames";
 import Colors from "../constants/userColors";
 import RepliesStyles from "../StyleSheets/RepliesStyles";
-import ReportDiologue from "../components/ReportDiologue";
+import ReportDiologue from "../components/ReportDialogue";
 
 export default function Replies({ route, navigation }) {
   const [replies, setReplies] = useState([]);

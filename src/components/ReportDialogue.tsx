@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import {View, TouchableOpacity, KeyboardAvoidingView, Platform, Keyboard} from "react-native";
 import {Text, Input } from "@ui-kitten/components";
-import ReportDiologueStyles from "../StyleSheets/ReportDiologueStyles"
+import ReportDialogueStyles from "../StyleSheets/ReportDialogueStyles"
 import { TouchableWithoutFeedback } from "@ui-kitten/components/devsupport";
 import PropTypes from "prop-types";
 
 
-export default function ReportDiologue({reporterID, reporteeID, closeReportDiologue_}){
-    const [isInapropriate, setIsInappropriate] = useState(false);
+export default function ReportDialogue({reporterID, reporteeID, closeReportDialogue_}){
+    const [isInappropriate, setIsInappropriate] = useState(false);
     const [isSpam, setIsSpam] = useState(false);
     const [description, setDescription] = useState("");
     const submitReport = () => {
@@ -15,10 +15,10 @@ export default function ReportDiologue({reporterID, reporteeID, closeReportDiolo
         console.log(description);
         console.log(reporteeID);
         console.log(reporterID);
-        closeReportDiologue_();
+        closeReportDialogue_();
     }
-    const submitInapropriate = () => {
-        setIsInappropriate(!isInapropriate);
+    const submitInappropriate = () => {
+        setIsInappropriate(!isInappropriate);
     }
     const submitSpam = () => {
         setIsSpam(!isSpam);
@@ -26,28 +26,34 @@ export default function ReportDiologue({reporterID, reporteeID, closeReportDiolo
 
 
     return (
-        <KeyboardAvoidingView 
-        style={ReportDiologueStyles.container}
+        <KeyboardAvoidingView /* why does this need to be avoidingview */
+        style={ReportDialogueStyles.container}
         behavior={Platform.OS == "ios" ? "padding" : "height"}
         >   
             <TouchableWithoutFeedback style={{flex: 1}} onPress={Keyboard.dismiss}>
             {/* TODO: You will want two more touchable opacities, one to press if something is inapropriate, one for if it is spam. Also, make them react so you can tell if one is checked true or false. */}
                 <Input
-                    style={ReportDiologueStyles.descriptionBox}
+                    style={ReportDialogueStyles.descriptionBox}
                     placeholder="Why are you reporting this comment?"
                     value={description}
                     onChangeText={setDescription}
                 />
             </TouchableWithoutFeedback>
-            <TouchableOpacity style={ReportDiologueStyles.submitButton} onPress={submitReport}>
+            <TouchableOpacity style={ReportDialogueStyles.reportReasons} onPress={submitInappropriate}>
+                <Text>Content is inappropriate</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={ReportDialogueStyles.reportReasons} onPress={submitSpam}>
+                <Text>Content is spam</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={ReportDialogueStyles.submitButton} onPress={submitReport}>
                 <Text>submit</Text>
             </TouchableOpacity>
         </KeyboardAvoidingView>
     );
 };
 
-ReportDiologue.propTypes = {
+ReportDialogue.propTypes = {
     reporterID: PropTypes.string.isRequired,
     reporteeID: PropTypes.string.isRequired,
-    closeReportDiologue_: PropTypes.func.isRequired
+    closeReportDialogue_: PropTypes.func.isRequired
 };

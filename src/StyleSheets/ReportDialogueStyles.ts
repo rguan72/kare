@@ -1,20 +1,20 @@
 import { StyleSheet } from "react-native";
-// TODO: update the styles so it looks good. Also you will need to add new items for inapropriateButton and spamButtom
+// TODO: update the styles so it looks good. Also you will need to add new items for inapropriateButton and spamButton
 export default StyleSheet.create({
     container: {
-        height: "70%",
+        height: "50%",
         position: "absolute",
         bottom: 0,
-        zIndex:1,
+        zIndex: 1,
         backgroundColor: "dimgray",
-        width: "96%",
+        width: "90%",
         alignSelf: "center",
-        marginBottom: "2%",
+        marginBottom: "5%",
         borderRadius: 20,
         flexDirection: "column"
     },
     descriptionBox: {
-        width: "90%",
+        width: "80%",
         alignSelf: "center",
         bottom: "25%",
         position: "absolute"
@@ -24,5 +24,11 @@ export default StyleSheet.create({
         position: "absolute",
         bottom: "5%",
         backgroundColor: "white"
-    }
+    },
+    reportReasons: {
+        alignSelf: "center",
+        position: "absolute",
+        height: "10%",
+        
+    },
 })
