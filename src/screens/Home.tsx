@@ -3,6 +3,7 @@ import { FlatList, View, TouchableOpacity } from "react-native";
 import { Button, Layout, Text, withStyles } from "@ui-kitten/components";
 import GroupItem from "../components/GroupItem";
 import PropTypes from "prop-types";
+import * as Analytics from "expo-firebase-analytics";
 import { getGroupsById, getUser } from "../utils/FirebaseUtils";
 import screens from "../constants/screenNames";
 import firebase from "firebase/app";
@@ -30,10 +31,21 @@ export default function HomeScreen({ route, navigation }) {
   };
 
   useEffect(() => {
+    Analytics.setCurrentScreen("Home");
+  }, []);
+
+  useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
       getUser(userId)
         .then((user) => getGroupsById(user.groups))
-        .then((fetchedGroups) => setGroups(fetchedGroups));
+        .then((fetchedGroups) => {
+          setGroups(fetchedGroups);
+          // track number of communities joined
+          Analytics.setUserProperty(
+            "communitiesJoined",
+            fetchedGroups.length.toString()
+          );
+        });
     });
 
     return unsubscribe;
@@ -46,7 +58,7 @@ export default function HomeScreen({ route, navigation }) {
   return (
     <View style={HomeStyles.container}>
       <View style={HomeStyles.Heading}>
-        <Text category='h5' style={{ alignSelf: "center" }}>
+        <Text category="h5" style={{ alignSelf: "center" }}>
           My Communities
         </Text>
         <TouchableOpacity
@@ -58,7 +70,7 @@ export default function HomeScreen({ route, navigation }) {
             })
           }
         >
-          <Entypo name='dots-three-horizontal' size={20} />
+          <Entypo name="dots-three-horizontal" size={20} />
         </TouchableOpacity>
       </View>
       <FlatList
@@ -69,15 +81,20 @@ export default function HomeScreen({ route, navigation }) {
             image={item.imageURL}
             description={item.description}
             text={item.text}
-            onPress={() =>
+            onPress={() => {
+              Analytics.logEvent("openGroup", {
+                name: "groupOpen",
+                screen: "Home",
+                purpose: "Open a group to view contents",
+              });
               navigation.navigate(screens.thread, {
                 userId: userId,
                 title: item.title,
                 description: item.description,
                 groupId: item.id,
-		image: item.imageURL,
-              })
-            }
+                image: item.imageURL,
+              });
+            }}
           />
         )}
         keyExtractor={(item) => item.id}

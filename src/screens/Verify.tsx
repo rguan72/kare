@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import firebase from "firebase/app";
 import { View, TouchableOpacity, TouchableWithoutFeedback } from "react-native";
+import * as Analytics from "expo-firebase-analytics";
 import { Modal, Card, Text, Button } from "@ui-kitten/components";
 import screens from "../constants/screenNames";
 import { sendVerificationEmail, getCurrentUser } from "../utils/FirebaseUtils";
@@ -12,6 +13,11 @@ export default function VerifyEmail({ navigation }) {
   const user = getCurrentUser();
   const [visible, setVisible] = useState(false);
   const [buttonTxt, setButtonTxt] = useState("Send Verification");
+
+  useEffect(() => {
+    Analytics.setCurrentScreen("Verify");
+  }, []);
+
   const onSignOut = () => {
     setVisible(true);
     firebase
@@ -30,8 +36,22 @@ export default function VerifyEmail({ navigation }) {
       </Text>
       <Modal visible={visible}>
         <Card disabled={true}>
-          <TouchableWithoutFeedback onPress={() => {setVisible(false)}}>
-            <Ionicons name="ios-close-circle" size={25} style={{position: 'absolute', right: 10, top: 0, bottom: 0, color: "#5505BA"}}/>
+          <TouchableWithoutFeedback
+            onPress={() => {
+              setVisible(false);
+            }}
+          >
+            <Ionicons
+              name="ios-close-circle"
+              size={25}
+              style={{
+                position: "absolute",
+                right: 10,
+                top: 0,
+                bottom: 0,
+                color: "#5505BA",
+              }}
+            />
           </TouchableWithoutFeedback>
           <Text>
             {" "}
@@ -49,6 +69,11 @@ export default function VerifyEmail({ navigation }) {
             console.log("sent email");
             sendVerificationEmail();
             setButtonTxt("Resend Verification");
+            Analytics.logEvent("Email Verification Pressed", {
+              name: "verifyPress",
+              screen: "Verify",
+              purpose: "Receive verification email",
+            });
           }}
           style={VerifyStyles.verifyButton}
         >

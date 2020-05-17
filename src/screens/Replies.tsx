@@ -8,6 +8,7 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
 } from "react-native";
+import * as Analytics from "expo-firebase-analytics";
 import { Layout, Button, Input, Text, Card } from "@ui-kitten/components";
 import ListItem from "../components/ListItem";
 import {
@@ -26,6 +27,10 @@ export default function Replies({ route, navigation }) {
   const [name, setName] = useState("");
   const [userColor, setUserColor] = useState(Colors.purple); // default
   const { commenterId, userId, comment, commentId, date } = route.params;
+
+  useEffect(() => {
+    Analytics.setCurrentScreen("Replies");
+  }, []);
 
   useEffect(() => {
     const unsubscribe = watchReplies(commentId, setReplies);
@@ -109,7 +114,7 @@ export default function Replies({ route, navigation }) {
                       });
                     }}
                     numReplies={item.numReplies}
-		    showReplies="False"
+                    showReplies="False"
                   />
                 );
               }}
@@ -123,6 +128,7 @@ export default function Replies({ route, navigation }) {
               }}
             >
               <Input
+                multiline
                 placeholder="Add comment"
                 value={value}
                 onChangeText={setValue}
@@ -137,6 +143,11 @@ export default function Replies({ route, navigation }) {
                     numReplies: 0,
                   });
                   setValue("");
+                  Analytics.logEvent(`Reply Submitted`, {
+                    name: "reply",
+                    screen: "Replies",
+                    purpose: "Reply to a comment",
+                  });
                 }}
                 style={RepliesStyles.mt0}
                 disabled={value === ""}

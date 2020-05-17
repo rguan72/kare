@@ -34,6 +34,10 @@ export default function Thread({ route, navigation }) {
   const { userId, title, description, groupId, image } = route.params;
 
   useEffect(() => {
+    Analytics.setCurrentScreen(`Thread ${title}`);
+  }, []);
+
+  useEffect(() => {
     const unsubscribe = watchComments(setComments, groupId);
 
     return () => unsubscribe();
@@ -119,12 +123,12 @@ export default function Thread({ route, navigation }) {
                     },
                     groupId
                   );
-                  Analytics.logEvent("Comment Submitted", {
+                  setValue("");
+                  Analytics.logEvent(`Comment Submitted in ${title}`, {
                     name: "comment",
-                    screen: "thread",
+                    screen: `Thread ${title}`,
                     purpose: "Comment in a thread",
                   });
-                  setValue("");
                 }}
                 style={ThreadStyles.submitButton}
                 disabled={value === ""}

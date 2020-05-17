@@ -13,6 +13,7 @@ import {
   Button,
   Input,
 } from "@ui-kitten/components";
+import * as Analytics from "expo-firebase-analytics";
 import { Ionicons } from "@expo/vector-icons";
 import { authNav, AuthState } from "../utils/FirebaseUtils";
 import screens from "../constants/screenNames";
@@ -45,10 +46,15 @@ function SignupScreen({ navigation }) {
     if (!isUpper) caption = caption + "Password needs an upper case letter. \n";
     if (!isLower) caption = caption + "Password needs a lower case letter. \n";
     if (!isDigit) caption = caption + "Password needs a number. \n";
-    if (!isSpecial) caption = caption + "Password needs a special character. \n";
+    if (!isSpecial)
+      caption = caption + "Password needs a special character. \n";
     if (isInv) caption = caption + "Password uses invalid characters (< or >)";
     return caption;
   };
+
+  useEffect(() => {
+    Analytics.setCurrentScreen("SignUp");
+  }, []);
 
   useEffect(() => {
     var new_cap = newCaption();
@@ -101,6 +107,12 @@ function SignupScreen({ navigation }) {
         password: password.value,
       });
     }
+
+    return Analytics.logEvent("Signup Press", {
+      name: "signupPress",
+      screen: "Signup",
+      purpose: "To register account before going to Setup",
+    });
   };
 
   const onPasswordChange = (text) => {
@@ -108,9 +120,9 @@ function SignupScreen({ navigation }) {
     var upper = false;
     var lower = false;
     var digit = false;
-    text.length >= 8 ? (setIsLong(true)) : (setIsLong(false));
-    specialChars.test(text) ? (setIsSpecial(true)) : (setIsSpecial(false));
-    unacceptable.test(text) ? (setIsInv(true)) : (setIsInv(false));
+    text.length >= 8 ? setIsLong(true) : setIsLong(false);
+    specialChars.test(text) ? setIsSpecial(true) : setIsSpecial(false);
+    unacceptable.test(text) ? setIsInv(true) : setIsInv(false);
     for (var i = 0; i < text.length; i++) {
       if (text[i] == text[i].toUpperCase() && text[i] != text[i].toLowerCase())
         upper = true;
@@ -139,9 +151,9 @@ function SignupScreen({ navigation }) {
       </View>
 
       <Input
-        placeholder='Email'
-        autoCapitalize='none'
-        autoCompleteType='email'
+        placeholder="Email"
+        autoCapitalize="none"
+        autoCompleteType="email"
         value={email.value}
         onChangeText={(text) => setEmail({ value: text, error: "" })}
         error={!!email.error}
@@ -151,9 +163,9 @@ function SignupScreen({ navigation }) {
 
       <Input
         value={password.value}
-        placeholder='Password'
-        autoCapitalize='none'
-        autoCompleteType='password'
+        placeholder="Password"
+        autoCapitalize="none"
+        autoCompleteType="password"
         accessoryRight={renderIcon}
         caption={passCaption}
         onChangeText={onPasswordChange}
@@ -163,11 +175,11 @@ function SignupScreen({ navigation }) {
         style={styles.input}
       />
       <Input
-        returnKeyType='done'
+        returnKeyType="done"
         value={repassword.value}
-        autoCapitalize='none'
-        autoCompleteType='password'
-        placeholder='Retype Password'
+        autoCapitalize="none"
+        autoCompleteType="password"
+        placeholder="Retype Password"
         accessoryRight={renderIcon}
         caption={pass2Caption}
         onChangeText={(text) => {
@@ -186,7 +198,7 @@ function SignupScreen({ navigation }) {
       />
 
       <Button
-        mode='contained'
+        mode="contained"
         onPress={async () => {
           await onSignUpPressed();
         }}

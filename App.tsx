@@ -25,6 +25,7 @@ import { onAuthUserListener, AuthState } from "./src/utils/FirebaseUtils";
 import AppStyles from "./src/StyleSheets/AppStyles";
 
 import UserComments from "./src/screens/UserComments";
+import { setDebugModeEnabled } from "expo-firebase-analytics";
 
 // Firebase bug workaround: https://stackoverflow.com/questions/60361519/cant-find-a-variable-atob
 if (!global.btoa) {
@@ -58,6 +59,8 @@ export default function App() {
     return subscriber; // unsubscribe on unmount
   }, []);
 
+  if (__DEV__) setDebugModeEnabled(true);
+
   if (initializing) return null;
   return (
     <NavigationContainer>
@@ -73,7 +76,7 @@ export default function App() {
               <Stack.Screen
                 name={screens.userAgreement}
                 component={UserAgreement}
-                options={{title: "", headerTransparent: true}}
+                options={{ title: "", headerTransparent: true }}
               />
               <Stack.Screen
                 name={screens.login}

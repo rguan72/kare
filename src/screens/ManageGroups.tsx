@@ -30,6 +30,10 @@ export default function ManageGroups({ route, navigation }) {
   );
 
   useEffect(() => {
+    Analytics.setCurrentScreen("ManageGroups");
+  }, []);
+
+  useEffect(() => {
     setLoading(true);
     getUser(userId)
       .then((user) => getGroupsById(user.groups))
