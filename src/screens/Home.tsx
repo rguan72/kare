@@ -81,9 +81,9 @@ export default function HomeScreen({ route, navigation }) {
       </View>
       {loading ? (
         <ActivityIndicator
-          size='large'
+          size="large"
           style={{ flex: 1 }}
-          color='#5505BA'
+          color="#5505BA"
           animating={loading}
         />
       ) : (
@@ -94,7 +94,7 @@ export default function HomeScreen({ route, navigation }) {
               title={item.title}
               image={item.imageURL}
               description={item.description}
-              onPress={() =>
+              onPress={() => {
                 navigation.navigate(screens.thread, {
                   userId: userId,
                   title: item.title,
@@ -102,13 +102,13 @@ export default function HomeScreen({ route, navigation }) {
                   groupId: item.id,
                   image: item.imageURL,
                   num_members: item.num_members,
-                })
+                });
                 Analytics.logEvent("openGroup", {
                   name: "groupOpen",
                   screen: "Home",
                   purpose: "Open a group to view contents",
                 });
-              }
+              }}
             />
           )}
           keyExtractor={(item) => item.id}
