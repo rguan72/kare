@@ -224,6 +224,9 @@ export default function Thread({ route, navigation }) {
                   commenterName={item.commenterName}
                   color={item.color}
                   following={following}
+                  commentId={item.id}
+                  userId={userId}
+                  commenterId={item.userId}
                 />
               );
             }}

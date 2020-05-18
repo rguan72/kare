@@ -227,6 +227,18 @@ async function manageFollowing(
   }
 }
 
+async function manageFollowingComment(
+  isFollowing: boolean,
+  commentId: string,
+  userId: string
+) {
+  if (isFollowing) {
+    unfollowComment(commentId, userId);
+  } else {
+    followComment(commentId, userId);
+  }
+}
+
 function getUserComments(user) {
   return db
     .collection(collections.comments)
@@ -326,7 +338,13 @@ function onAuthUserListener(next, fallback, notVerifiedFunc) {
   });
 }
 
-async function editComments() {
+function editComment(commentId: string, newText: string) {
+  db.collection(collections.comments).doc(commentId).update({
+    text: newText,
+  });
+}
+
+async function editCommentsFields() {
   /*Function used to add fields to all comments*/
   db.collection(collections.comments)
     .get()
@@ -370,4 +388,6 @@ export {
   getComment,
   manageFollowing,
   followComment,
+  manageFollowingComment,
+  editComment,
 };

@@ -186,6 +186,9 @@ export default function Replies({ route, navigation }) {
                         showReplies='False'
                         color={item.color}
                         commenterName={item.commenterName}
+                        commentId={item.id}
+                        userId={userId}
+                        commenterId={item.userId}
                       />
                     );
                   }}
