@@ -124,6 +124,7 @@ function addReply(commentId, comment: comment) {
         .update({
           numReplies: firebaseApp.firestore.FieldValue.increment(1),
           replies: firebaseApp.firestore.FieldValue.arrayUnion(ref.id),
+	  latestTimestamp: firebaseApp.firestore.FieldValue.serverTimestamp(),
         });
     });
 }
@@ -269,13 +270,35 @@ async function editComments() {
     .then((querySnapshot) => {
       querySnapshot.forEach(async (doc) => {
         try {
-          const user = getUser(doc.data().userId);
-          const color = (await user).color;
-          const name = (await user).name;
-          await db.collection(collections.comments).doc(doc.id).update({
-            color: color,
-            commenterName: name,
-          });
+          const replies = doc.data().replies;
+	  var timestamp;
+	  var start = 1;
+	  for(let reply of replies) {
+	    await db.collection(collections.comments).doc(reply)
+	    .get()
+	    .then(function(doc) {
+	      console.log("ENTER PLEASE");
+	      console.log(doc.data().timestamp);
+	      if (start === 1 && doc.data().timestamp){
+		start = 0;
+		timestamp = doc.data().timestamp;
+		console.log("TIMESTAMP");
+		console.log(doc.data().timestamp);
+	      }
+	      if (doc.data().timestamp && doc.data().timestamp > timestamp){
+	        timestamp = doc.data().timestamp;
+		console.log("TIMESTAMP");
+		console.log(timestamp);
+	      }
+	    });
+	  }
+	  if ((replies.length > 0) && (doc.id === "EvHBpqa9TFOtsSEULad6")){
+	    console.log("Changing");
+	    console.log(timestamp);
+            await db.collection(collections.comments).doc(doc.id).update({
+              latestReplyTimestamp: timestamp,
+	    });
+  	  }
         } catch (err) {
           console.log(err);
         }
@@ -302,4 +325,5 @@ export {
   getGroupsById,
   addGroupsToUser,
   removeGroupFromUser,
+  editComments,
 };

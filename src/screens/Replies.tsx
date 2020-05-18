@@ -16,6 +16,7 @@ import {
   watchReplies,
   reportComment,
   getUser,
+  editComments,
 } from "../utils/FirebaseUtils";
 import screens from "../constants/screenNames";
 import Colors from "../constants/userColors";
@@ -41,6 +42,7 @@ export default function Replies({ route, navigation }) {
   }, []); // so it only runs once
 
   useEffect(() => {
+    editComments();
     const unsubscribe = watchReplies(commentId, setReplies, setLoading);
     return () => unsubscribe();
   }, []);
