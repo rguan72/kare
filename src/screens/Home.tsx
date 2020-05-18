@@ -28,7 +28,6 @@ export default function HomeScreen({ route, navigation }) {
   const { userId } = route.params;
   const [query, setQuery] = useState("");
   const [filteredGroups, setFilteredGroups] = useState([]);
-  const [groupStructure, setGroupStructure] = useState([]);
 
 
   const onSignOut = () => {
@@ -57,10 +56,6 @@ export default function HomeScreen({ route, navigation }) {
     if (groups && groups.length > 0) {
       setLoading(false);
     }
-    setGroupStructure([
-      {data: groups.slice(0, 3) },
-      {data: groups.slice(3) },
-    ]);
   }, [groups]);
 
   useEffect(() => {
@@ -69,11 +64,11 @@ export default function HomeScreen({ route, navigation }) {
       const lowerCaseQuery = commentProcess(query);
       setFilteredGroups(
         groups.filter((group) => {
-          return commentProcess(group["text"]).includes(lowerCaseQuery);
+          return commentProcess(group["title"]).includes(lowerCaseQuery);
         })
       );
       setLoading(false);
-    }, 500);
+    }, 500);  
   }, [query]);
 
   return (
@@ -105,6 +100,28 @@ export default function HomeScreen({ route, navigation }) {
           style={{ flex: 1 }}
           color='#5505BA'
           animating={loading}
+        />
+      ) : query.length > 0 ? (
+        <FlatList
+          data={filteredGroups}
+          renderItem={({ item }) => (
+            <GroupItem
+              title={item.title}
+              image={item.imageURL}
+              description={item.description}
+              onPress={() =>
+                navigation.navigate(screens.thread, {
+                  userId: userId,
+                  title: item.title,
+                  description: item.description,
+                  groupId: item.id,
+                  image: item.imageURL,
+                  num_members: item.num_members,
+                })
+              }
+            />
+          )}
+          keyExtractor={(item) => item.id}
         />
       ) : (
         <FlatList
