@@ -155,9 +155,9 @@ export default function Replies({ route, navigation }) {
           <React.Fragment>
             {loading ? (
               <ActivityIndicator
-                size='large'
+                size="large"
                 style={{ flex: 1 }}
-                color='#5505BA'
+                color="#5505BA"
                 animating={loading}
               />
             ) : (
@@ -176,14 +176,10 @@ export default function Replies({ route, navigation }) {
                         onReport={() => reportComment(item.id)}
                         date={date}
                         onReply={() => {
-                          navigation.navigate(screens.replies, {
-                            userId: item.userId,
-                            comment: item.text,
-                            commentId: item.id,
-                          });
+                          return null;
                         }}
                         numReplies={item.numReplies}
-                        showReplies='False'
+                        showReplies="False"
                         color={item.color}
                         commenterName={item.commenterName}
                         commentId={item.id}
@@ -203,7 +199,7 @@ export default function Replies({ route, navigation }) {
                 >
                   <Input
                     multiline
-                    placeholder='Add comment'
+                    placeholder="Add comment"
                     value={value}
                     onChangeText={setValue}
                   />
