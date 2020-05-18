@@ -47,7 +47,8 @@ export default function ListItem({
           style={[ListItemStyles.square, { backgroundColor: commentColor }]}
         />
         <Text style={ListItemStyles.userName}>{commenterName}</Text>
-        <Text style={ListItemStyles.date}>{date}</Text>
+        <Text style={ListItemStyles.date}> {date}</Text>
+        {/*This space has to be here to separate the date and username*/}
         <TouchableOpacity
           onPress={() => setVisible(true)}
           style={{ position: "absolute", right: 0 }}
@@ -154,14 +155,18 @@ export default function ListItem({
               >
                 Report
               </Button>
-              <Button
-                onPress={() => {
-                  manageFollowingComment(following, commentId, userId);
-                }}
-                style={{ marginTop: 5 }}
-              >
-                {following ? "Unfollow Post" : "Follow Post"}
-              </Button>
+              {showReplies == "True" ? (
+                <Button
+                  onPress={() => {
+                    manageFollowingComment(following, commentId, userId);
+                  }}
+                  style={{ marginTop: 5 }}
+                >
+                  {following ? "Unfollow Post" : "Follow Post"}
+                </Button>
+              ) : (
+                <></>
+              )}
               <Button
                 onPress={() => {
                   // reset everything on cancel
