@@ -13,6 +13,8 @@ import screens from "../constants/screenNames";
 import firebase from "firebase/app";
 import { Entypo } from "@expo/vector-icons";
 import HomeStyles from "../StyleSheets/HomeStyles";
+import SearchBar from "../components/SearchBar";
+import { commentProcess } from "../utils/commentProcess";
 
 interface Group {
   title: String;
@@ -24,6 +26,10 @@ export default function HomeScreen({ route, navigation }) {
   const [groups, setGroups] = useState([]);
   const [loading, setLoading] = useState(true);
   const { userId } = route.params;
+  const [query, setQuery] = useState("");
+  const [filteredGroups, setFilteredGroups] = useState([]);
+  const [groupStructure, setGroupStructure] = useState([]);
+
 
   const onSignOut = () => {
     firebase
@@ -51,7 +57,24 @@ export default function HomeScreen({ route, navigation }) {
     if (groups && groups.length > 0) {
       setLoading(false);
     }
+    setGroupStructure([
+      {data: groups.slice(0, 3) },
+      {data: groups.slice(3) },
+    ]);
   }, [groups]);
+
+  useEffect(() => {
+    setLoading(true);
+    setTimeout(() => {
+      const lowerCaseQuery = commentProcess(query);
+      setFilteredGroups(
+        groups.filter((group) => {
+          return commentProcess(group["text"]).includes(lowerCaseQuery);
+        })
+      );
+      setLoading(false);
+    }, 500);
+  }, [query]);
 
   return (
     <View style={HomeStyles.container}>
@@ -69,7 +92,13 @@ export default function HomeScreen({ route, navigation }) {
         >
           <Entypo name='dots-three-horizontal' size={20} />
         </TouchableOpacity>
+
       </View>
+      <SearchBar
+        placeholder="Search for a community..."
+        onChangeText={setQuery}
+        value={query}
+      />
       {loading ? (
         <ActivityIndicator
           size='large'
