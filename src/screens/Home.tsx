@@ -13,7 +13,7 @@ import screens from "../constants/screenNames";
 import firebase from "firebase/app";
 import { Entypo } from "@expo/vector-icons";
 import HomeStyles from "../StyleSheets/HomeStyles";
-import SearchBar from "../components/SearchBar";
+import HomeSearchBar from "../components/HomeSearchBar";
 import { commentProcess } from "../utils/commentProcess";
 
 interface Group {
@@ -89,7 +89,7 @@ export default function HomeScreen({ route, navigation }) {
         </TouchableOpacity>
 
       </View>
-      <SearchBar
+      <HomeSearchBar
         placeholder="Search for a community..."
         onChangeText={setQuery}
         value={query}
