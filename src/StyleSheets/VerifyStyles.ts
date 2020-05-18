@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import colors from "../constants/userColors";
+import Colors from "../constants/userColors";
 export default StyleSheet.create({
   parent: {
     display: "flex",

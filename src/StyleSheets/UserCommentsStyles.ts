@@ -36,10 +36,5 @@ export default StyleSheet.create({
     mt0: {
         marginTop: 0,
     },
-    // add the "..."
-    otherOptions: {
-        justifyContent: "flex-start",
-        align-content: "flex-end",
-        // something from uikitten?
-    },
+    // Eventually, we will need to add the "..." to replace the "report" option.
 });

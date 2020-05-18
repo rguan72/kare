@@ -19,14 +19,14 @@ import {
 import screens from "../constants/screenNames";
 import Colors from "../constants/userColors";
 import RepliesStyles from "../StyleSheets/RepliesStyles";
-import ReportDiologue from "../components/ReportDialogue";
+import ReportDialogue from "../components/ReportDialogue";
 
 export default function Replies({ route, navigation }) {
   const [replies, setReplies] = useState([]);
   const [value, setValue] = useState("");
   const [name, setName] = useState("");
   const [userColor, setUserColor] = useState(Colors.purple); // default
-  const [showReportDiologue, setShowReportDiologue] = useState(false);
+  const [showReportDialogue, setShowReportDialogue] = useState(false);
   const { commenterId, userId, comment, commentId, date } = route.params;
 
   useEffect(() => {
@@ -74,8 +74,8 @@ export default function Replies({ route, navigation }) {
       </Layout>
     </Layout>
   );
-  const closeReportDiologue = () => {
-    setShowReportDiologue(!showReportDiologue);
+  const closeReportDialogue = () => {
+    setShowReportDialogue(!showReportDialogue);
   }
 
   return (
@@ -90,12 +90,12 @@ export default function Replies({ route, navigation }) {
           backgroundColor: "#F3EAFF",
         }}
       >
-      {showReportDiologue && <ReportDiologue 
+      {showReportDialogue && <ReportDialogue 
         reporterID={userId}
         reporteeID={commenterId}
-        closeReportDiologue_={closeReportDiologue}
+        closeReportDialogue_={closeReportDialogue}
       >
-      </ReportDiologue>}
+      </ReportDialogue>}
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <React.Fragment>
             <FlatList
@@ -110,7 +110,7 @@ export default function Replies({ route, navigation }) {
                   <ListItem
                     userId={item.userId}
                     text={item.text}
-                    onReport={() => setShowReportDiologue(!showReportDiologue)}
+                    onReport={() => setShowReportDialogue(!showReportDialogue)}
                     date={date}
                     onReply={() => {
                       navigation.navigate(screens.replies, {

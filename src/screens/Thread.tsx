@@ -23,7 +23,7 @@ import {
 import { WOMEN } from "../../Images";
 import ThreadStyles from "../StyleSheets/ThreadStyles";
 import screens from "../constants/screenNames";
-import ReportDiologue from "../components/ReportDialogue";
+import ReportDialogue from "../components/ReportDialogue";
 
 export default function Thread({ route, navigation }) {
   const [comments, setComments] = useState([]);
@@ -32,7 +32,7 @@ export default function Thread({ route, navigation }) {
   const [commentStructure, setCommentStructure] = useState([]);
   const [value, setValue] = useState("");
   const { userId, title, description, groupId, image } = route.params;
-  const [showReportDiologue, setShowReportDiologue] = useState(false);
+  const [showReportDialogue, setShowReportDialogue] = useState(false);
 
   useEffect(() => {
     const unsubscribe = watchComments(setComments, groupId);
@@ -60,8 +60,8 @@ export default function Thread({ route, navigation }) {
       </Layout>
     </Layout>
   );
-  const closeReportDiologue = () => {
-    setShowReportDiologue(!showReportDiologue);
+  const closeReportDialogue = () => {
+    setShowReportDialogue(!showReportDialogue);
   }
 
   return (
@@ -70,12 +70,12 @@ export default function Thread({ route, navigation }) {
       style={ThreadStyles.keyboardAvoidingView}
     >
       <SafeAreaView style={ThreadStyles.safeAreaView}>
-      {showReportDiologue && <ReportDiologue 
+      {showReportDialogue && <ReportDialogue 
         reporterID={userId}
         reporteeID={userId}
-        closeReportDiologue_={closeReportDiologue}
+        closeReportDialogue_={closeReportDialogue}
       >
-      </ReportDiologue>}
+      </ReportDialogue>}
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <React.Fragment>
             <SectionList
@@ -98,7 +98,7 @@ export default function Thread({ route, navigation }) {
                         date: date,
                       });
                     }}
-                    onReport={() => setShowReportDiologue(!showReportDiologue)}
+                    onReport={() => setShowReportDialogue(!showReportDialogue)}
                     date={date}
                     numReplies={item.numReplies}
 		    showReplies="True"
