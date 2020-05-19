@@ -81,14 +81,15 @@ export default function Thread({ route, navigation }) {
       style={ThreadStyles.keyboardAvoidingView}
     >
       <SafeAreaView style={ThreadStyles.safeAreaView}>
-      {showReportDialogue && <ReportDialogue 
+      <ReportDialogue 
         reporterID={reporterID}
         reporteeID={reporteeID}
         comment={reportedComment}
         commentRef={reportedCommentID}
+        showReportDialogue_={showReportDialogue}
         closeReportDialogue_={closeReportDialogue}
       >
-      </ReportDialogue>}
+      </ReportDialogue>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <React.Fragment>
             <SectionList

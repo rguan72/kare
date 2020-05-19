@@ -6,9 +6,9 @@ export default StyleSheet.create({
         // placement
         height: "30%",
         width: "90%",
-        position: "absolute",
-        bottom: 0,
-        marginBottom: "10%",
+        // position: "absolute",
+        // bottom: 0,
+        // marginBottom: "10%",
         zIndex: 2,
         // styling
         backgroundColor: "#F3EAFF",
@@ -78,52 +78,4 @@ export default StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
     },
-    backdrop: { // WIP
-        // backdropStyle: 
-        position: "relative",
-        height: "100%",
-        width: "100%",
-        backgroundColor: "rgba(0,0,0,0.25)",
-        zIndex: -100,
-    }
 })
-
-/*import React, { useState, useEffect } from "react";
-import {
-	Animated,
-	KeyboardAvoidingView,
-	View,
-	Text,
-	Keyboard,
-	TouchableOpacity,
-	ActivityIndicator,
-	FlatList,
-  } from "react-native";
-  
-
-  export default function ReportPopup({ navigation }) {
-	  
-  };
-
-  const SlideUpView = (props) => {
-	  const slideAnim = useRef(new Animated.Value(0)).current
-
-	  React.useEffect(() => {
-		  Animated.timing(
-			  slideAnim,
-			  {
-				  toValue: 1,
-				  duration: 100,
-			  }
-		  ).start();
-	  }, [])
-
-	  return
-  }
-  Animated.timing(this.state.xPosition, {
-	toValue: 100,
-	easing: Easing.back(),
-	duration: 100
-  }).start();
-
-*/

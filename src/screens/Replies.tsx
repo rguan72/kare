@@ -101,14 +101,15 @@ export default function Replies({ route, navigation }) {
           backgroundColor: "#F3EAFF",
         }}
       >
-      {showReportDialogue && <ReportDialogue 
+      <ReportDialogue 
         reporterID={reporterID}
         reporteeID={reporteeID}
         comment={reportedComment}
         commentRef={reportedCommentID}
         closeReportDialogue_={closeReportDialogue}
+        showReportDialogue_={showReportDialogue}
       >
-      </ReportDialogue>}
+      </ReportDialogue>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <React.Fragment>
             <FlatList
