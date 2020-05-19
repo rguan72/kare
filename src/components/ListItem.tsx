@@ -37,7 +37,10 @@ export default function ListItem({
           style={[ListItemStyles.square, { backgroundColor: commentColor }]}
         />
         <Text style={ListItemStyles.userName}>{commenterName}</Text>
-        <Text style={ListItemStyles.date}>{date}</Text>
+        <Text style={ListItemStyles.date}>
+          {" * "}
+          {date}
+        </Text>
       </View>
       <Text style={ListItemStyles.comments}>{text}</Text>
       <View style={ListItemStyles.bottomRow}>
