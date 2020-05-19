@@ -25,6 +25,7 @@ export default function ListItem({
   const [visible, setVisible] = useState(false);
   const [value, setValue] = useState(text);
   const [editing, setEditing] = useState(false);
+  const [isFollowing, setIsFollowing] = useState(following);
 
   const commentColor = Colors[color];
 
@@ -65,7 +66,7 @@ export default function ListItem({
         <RepliesNumber></RepliesNumber>
         {showReplies === "False" ? (
           <Text></Text>
-        ) : following ? (
+        ) : !isFollowing ? (
           <Image
             source={require("../../assets/unfollow.png")}
             style={ListItemStyles.image}
@@ -76,12 +77,6 @@ export default function ListItem({
             style={ListItemStyles.image}
           />
         )}
-        {/*<TouchableOpacity
-          onPress={onReport}
-          style={{ position: "absolute", right: 0 }}
-        >
-          <Text style={ListItemStyles.report}> Report</Text>
-        </TouchableOpacity>*/}
       </View>
       <Modal
         visible={visible}
@@ -119,11 +114,7 @@ export default function ListItem({
                 </>
               ) : (
                 <>
-                  <Button
-                    onPress={() => setEditing(true) /* Set editing true */}
-                  >
-                    Edit
-                  </Button>
+                  <Button onPress={() => setEditing(true)}>Edit</Button>
                   <Button
                     onPress={
                       onReport /* currently "onReport" to make show false might have to change */
@@ -158,11 +149,12 @@ export default function ListItem({
               {showReplies == "True" ? (
                 <Button
                   onPress={() => {
-                    manageFollowingComment(following, commentId, userId);
+                    manageFollowingComment(isFollowing, commentId, userId);
+                    setIsFollowing(!isFollowing);
                   }}
                   style={{ marginTop: 5 }}
                 >
-                  {following ? "Unfollow Post" : "Follow Post"}
+                  {isFollowing ? "Unfollow Post" : "Follow Post"}
                 </Button>
               ) : (
                 <></>
@@ -193,7 +185,7 @@ ListItem.propTypes = {
   onReply: PropTypes.func.isRequired,
   commenterName: PropTypes.string.isRequired,
   color: PropTypes.string.isRequired,
-  following: PropTypes.bool.isRequired,
+  //following: PropTypes.bool.isRequired,
   commentId: PropTypes.string.isRequired,
   userId: PropTypes.string.isRequired,
   commenterId: PropTypes.string.isRequired,

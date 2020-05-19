@@ -63,7 +63,7 @@ export default function Thread({ route, navigation }) {
     return (
       <Layout style={ThreadStyles.header}>
         <Layout style={ThreadStyles.headerTextBox}>
-          <Text category="h5">{title}</Text>
+          <Text category='h5'>{title}</Text>
           <Text style={{ marginTop: 2, marginRight: 10 }}>{description}</Text>
           <Text style={{ marginTop: 2 }}>{num_members} Members</Text>
         </Layout>
