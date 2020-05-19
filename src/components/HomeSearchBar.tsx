@@ -9,7 +9,7 @@ const HomeSearchBar = (props) => {
     <Input
       {...props}
       style={{
-        marginTop: Platform.OS === "ios" ? 10 : 80,
+        marginTop: Platform.OS === "ios" ? 10 : 20,
         paddingLeft: 3,
         paddingRight: 3,
         borderRadius: 20,

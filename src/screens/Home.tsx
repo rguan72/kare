@@ -87,7 +87,6 @@ export default function HomeScreen({ route, navigation }) {
         >
           <Entypo name='dots-three-horizontal' size={20} />
         </TouchableOpacity>
-
       </View>
       <HomeSearchBar
         placeholder="Search for a community..."
