@@ -167,9 +167,14 @@ export default function Replies({ route, navigation }) {
                   ListHeaderComponent={ReplyParent} // going to be comment
                   renderItem={({ item }) => {
                     const date =
-                      item && item.timestamp
-                        ? item.timestamp.toDate().toLocaleDateString()
-                        : "";
+                item && item.timestamp
+                  ? item.timestamp.toDate().toLocaleDateString() +
+                    " " +
+                    item.timestamp.toDate().toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })
+                  : "";
                     return (
                       <ListItem
                         text={item.text}

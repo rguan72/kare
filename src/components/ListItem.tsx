@@ -48,8 +48,7 @@ export default function ListItem({
           style={[ListItemStyles.square, { backgroundColor: commentColor }]}
         />
         <Text style={ListItemStyles.userName}>{commenterName}</Text>
-        <Text style={ListItemStyles.date}> {date}</Text>
-        {/*This space has to be here to separate the date and username*/}
+        <Text style={ListItemStyles.date}>{" * "}{date}</Text>
         <TouchableOpacity
           onPress={() => setVisible(true)}
           style={{ position: "absolute", right: 0 }}
