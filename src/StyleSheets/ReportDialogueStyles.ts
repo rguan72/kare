@@ -9,7 +9,7 @@ export default StyleSheet.create({
         position: "absolute",
         bottom: 0,
         marginBottom: "10%",
-        zIndex: 1,
+        zIndex: 2,
         // styling
         backgroundColor: "#F3EAFF",
         borderColor: Colors["karePurple"],
@@ -29,6 +29,7 @@ export default StyleSheet.create({
         height: "10%",
         marginTop: 15,
         marginBottom: 10,
+        zIndex: 2,
         //styling
         color: Colors["karePurple"],
         fontWeight: "bold",
@@ -44,6 +45,7 @@ export default StyleSheet.create({
         position: "absolute",
         width: "25%",
         height: "12.5%",
+        zIndex: 2,
         // styling
         backgroundColor: Colors["karePurple"],
         borderColor: 'black',
@@ -63,6 +65,7 @@ export default StyleSheet.create({
         marginTop: 3,
         height: "15%",
         width: "90%",
+        zIndex: 2,
         //styling
         backgroundColor: "#F3EAFF",
         elevation: 1,
@@ -75,6 +78,14 @@ export default StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
     },
+    backdrop: { // WIP
+        // backdropStyle: 
+        position: "relative",
+        height: "100%",
+        width: "100%",
+        backgroundColor: "rgba(0,0,0,0.25)",
+        zIndex: -100,
+    }
 })
 
 /*import React, { useState, useEffect } from "react";

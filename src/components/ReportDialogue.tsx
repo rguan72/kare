@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import {View, TouchableOpacity, KeyboardAvoidingView, Platform, Keyboard} from "react-native";
-import {Text, Input } from "@ui-kitten/components";
+import {View, TouchableOpacity, KeyboardAvoidingView, Platform, Keyboard, Modal,} from "react-native";
+import {Text, Input, Button, Card } from "@ui-kitten/components";
 import ReportDialogueStyles from "../StyleSheets/ReportDialogueStyles"
 import { TouchableWithoutFeedback } from "@ui-kitten/components/devsupport";
 import PropTypes from "prop-types";
@@ -19,6 +19,7 @@ export default function ReportDialogue({reporterID, reporteeID, comment, comment
     const [inappropriateButtonText, setInnapropriateButtonText] = useState(helpButtonText);
     const [spamButtonBackground, setSpamButtonBackground] = useState(helpButtonBackground);
     const [spamButtonText, setSpamButtonText] = useState(helpButtonText);
+    // backdrop
 
     const submitReport = () => {
         console.log("Report has been sent to Kare, with the following reasons: "); 
@@ -66,7 +67,43 @@ export default function ReportDialogue({reporterID, reporteeID, comment, comment
 
 
     return (
-        <View  style={ReportDialogueStyles.container}>   
+    //     <View style={ReportDialogueStyles.container}>
+    //   <Modal
+    //     animationType="slide"
+    //     transparent={true}
+    //     visible={modalVisible}
+    //     onRequestClose={() => {
+    //       Alert.alert("Modal has been closed.");
+    //     }}
+    //   >
+    //     <View style={ReportDialogueStyles.descriptionBox}>
+    //       <View style={styles.modalView}>
+    //         <Text style={styles.modalText}>Hello World!</Text>
+
+    //         <TouchableHighlight
+    //           style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
+    //           onPress={() => {
+    //             setModalVisible(!modalVisible);
+    //           }}
+    //         >
+    //           <Text style={styles.textStyle}>Hide Modal</Text>
+    //         </TouchableHighlight>
+    //       </View>
+    //     </View>
+    //   </Modal>
+
+    //   <TouchableHighlight
+    //     style={styles.openButton}
+    //     onPress={() => {
+    //       setModalVisible(true);
+    //     }}
+    //   >
+    //     <Text style={styles.textStyle}>Show Modal</Text>
+    //   </TouchableHighlight>
+    // </View>
+        <Modal style={ReportDialogueStyles.backdrop}>
+        <View style={ReportDialogueStyles.container}>   
+        
             <Text style={ReportDialogueStyles.descriptionBox} category="h6">
                 Why are you reporting this post?
             </Text>
@@ -83,6 +120,7 @@ export default function ReportDialogue({reporterID, reporteeID, comment, comment
                 <View><Text style={{ color: "white" }}>Submit</Text></View>
             </TouchableOpacity>
         </View>
+        </Modal>
     );
 };
 
