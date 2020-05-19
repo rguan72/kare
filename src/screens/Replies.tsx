@@ -27,6 +27,10 @@ export default function Replies({ route, navigation }) {
   const [name, setName] = useState("");
   const [userColor, setUserColor] = useState(Colors.purple); // default
   const [showReportDialogue, setShowReportDialogue] = useState(false);
+  const [reporterID, setReporterID] = useState("");
+  const [reporteeID, setReporteeID] = useState("");
+  const [reportedComment, setReportedComment] = useState("");
+  const [reportedCommentID, setReportedCommentID] = useState("");
   const { commenterId, userId, comment, commentId, date } = route.params;
 
   useEffect(() => {
@@ -74,6 +78,13 @@ export default function Replies({ route, navigation }) {
       </Layout>
     </Layout>
   );
+  const handleReportDialogue = (reporterID,reporteeID,comment,commentId) => {
+    setReporterID(reporterID);
+    setReporteeID(reporteeID);
+    setReportedComment(comment);
+    setReportedCommentID(commentId);
+    closeReportDialogue();
+  }
   const closeReportDialogue = () => {
     setShowReportDialogue(!showReportDialogue);
   }
@@ -91,8 +102,10 @@ export default function Replies({ route, navigation }) {
         }}
       >
       {showReportDialogue && <ReportDialogue 
-        reporterID={userId}
-        reporteeID={commenterId}
+        reporterID={reporterID}
+        reporteeID={reporteeID}
+        comment={reportedComment}
+        commentRef={reportedCommentID}
         closeReportDialogue_={closeReportDialogue}
       >
       </ReportDialogue>}
@@ -110,7 +123,7 @@ export default function Replies({ route, navigation }) {
                   <ListItem
                     userId={item.userId}
                     text={item.text}
-                    onReport={() => setShowReportDialogue(!showReportDialogue)}
+                    onReport={() => handleReportDialogue(item.userId,route.params.userId,item.text,item.id)}
                     date={date}
                     onReply={() => {
                       navigation.navigate(screens.replies, {

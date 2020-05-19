@@ -8,6 +8,7 @@ import { collections } from "../constants/FirebaseStrings";
 import { community } from "../constants/community";
 import { func } from "prop-types";
 import screens from "../constants/screenNames";
+import Report from "../constants/Report";
 
 const db = firebase.firestore();
 const imageStorage = firebase.storage();
@@ -139,7 +140,21 @@ function reportComment(id: string) {
     }
   });
 }
-
+function addReport(report: Report) {
+  db.collection(collections.reports)
+    .doc()
+    .set({
+      timestamp: firebaseApp.firestore.FieldValue.serverTimestamp(),
+      reporterID: report.reporterID,
+      reporteeID: report.reporteeID,
+      comment: report.comment,
+      commentRef: report.commentRef,
+      helpFlag: report.helpFlag,
+      inappropriateFlag: report.inappropriateFlag,
+      spamFlag: report.spamFlag
+    });
+    reportComment(report.commentRef);
+}
 function watchComments(setComments, groupId) {
   return db
     .collection(collections.comments)
@@ -266,6 +281,7 @@ export {
   addUser,
   watchReplies,
   addReply,
+  addReport,
   getUserComments,
   sendVerificationEmail,
   getCurrentUser,

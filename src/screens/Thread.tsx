@@ -33,6 +33,10 @@ export default function Thread({ route, navigation }) {
   const [value, setValue] = useState("");
   const { userId, title, description, groupId, image } = route.params;
   const [showReportDialogue, setShowReportDialogue] = useState(false);
+  const [reporterID, setReporterID] = useState("");
+  const [reporteeID, setReporteeID] = useState("");
+  const [reportedComment, setReportedComment] = useState("");
+  const [reportedCommentID, setReportedCommentID] = useState("");
 
   useEffect(() => {
     const unsubscribe = watchComments(setComments, groupId);
@@ -60,6 +64,13 @@ export default function Thread({ route, navigation }) {
       </Layout>
     </Layout>
   );
+  const handleReportDialogue = (reporterID,reporteeID,comment,commentId) => {
+    setReporterID(reporterID);
+    setReporteeID(reporteeID);
+    setReportedComment(comment);
+    setReportedCommentID(commentId);
+    closeReportDialogue();
+  }
   const closeReportDialogue = () => {
     setShowReportDialogue(!showReportDialogue);
   }
@@ -71,8 +82,10 @@ export default function Thread({ route, navigation }) {
     >
       <SafeAreaView style={ThreadStyles.safeAreaView}>
       {showReportDialogue && <ReportDialogue 
-        reporterID={userId}
-        reporteeID={userId}
+        reporterID={reporterID}
+        reporteeID={reporteeID}
+        comment={reportedComment}
+        commentRef={reportedCommentID}
         closeReportDialogue_={closeReportDialogue}
       >
       </ReportDialogue>}
@@ -91,6 +104,7 @@ export default function Thread({ route, navigation }) {
                     userId={item.userId}
                     text={item.text}
                     onReply={() => {
+                      setShowReportDialogue(false);
                       navigation.navigate(screens.replies, {
                         commenterId: item.userId,
                         comment: item.text,
@@ -98,7 +112,7 @@ export default function Thread({ route, navigation }) {
                         date: date,
                       });
                     }}
-                    onReport={() => setShowReportDialogue(!showReportDialogue)}
+                    onReport={() => handleReportDialogue(item.userId,route.params.userId,item.text,item.id)}
                     date={date}
                     numReplies={item.numReplies}
 		    showReplies="True"
