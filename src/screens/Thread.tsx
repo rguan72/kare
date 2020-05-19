@@ -12,8 +12,16 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
 } from "react-native";
-import { Layout, Button, Input, Text, Icon } from "@ui-kitten/components";
+import {
+  Layout,
+  Button,
+  Input,
+  Text,
+  Modal,
+  Card,
+} from "@ui-kitten/components";
 import ListItem from "../components/ListItem";
+import Anchor from "../components/Anchor";
 import {
   addComment,
   watchComments,
@@ -26,6 +34,7 @@ import PureImage from "../components/PureImage";
 import { EvilIcons } from "@expo/vector-icons";
 import SearchBar from "../components/SearchBar";
 import { commentProcess } from "../utils/commentProcess";
+import { flagSelfHarm } from "../utils/moderation";
 
 export default function Thread({ route, navigation }) {
   const {
@@ -210,8 +219,26 @@ export default function Thread({ route, navigation }) {
     );
   };
 
+  const ModModal = ({ shVisible, setshVisible }) => {
+    return (
+      <Modal
+        visible={shVisible}
+        backdropStyle={ThreadStyles.backdrop}
+        onBackdropPress={() => setshVisible(false)}
+      >
+        <Card disabled={true}>
+          <Text>Click </Text>
+          <Anchor href="https://google.com">Here</Anchor>
+          <Text>Welcome to UI Kitten 😻</Text>
+          <Button onPress={() => setshVisible(false)}>DISMISS</Button>
+        </Card>
+      </Modal>
+    );
+  };
+
   const ButtonLayout = () => {
     const [value, setValue] = useState("");
+    const [shVisible, setshVisible] = useState(false);
 
     return (
       <Layout style={ThreadStyles.commentBox}>
@@ -223,6 +250,11 @@ export default function Thread({ route, navigation }) {
         />
         <Button
           onPress={() => {
+            if (flagSelfHarm(value)) {
+              console.log("flagged");
+              setshVisible(true);
+              return;
+            }
             addComment(
               {
                 userId: userId,
@@ -242,6 +274,7 @@ export default function Thread({ route, navigation }) {
         >
           Submit
         </Button>
+        <ModModal shVisible={shVisible} setshVisible={setshVisible} />
       </Layout>
     );
   };
