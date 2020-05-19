@@ -19,6 +19,7 @@ import {
   watchComments,
   reportComment,
   getUser,
+  editCommentsFields,
 } from "../utils/FirebaseUtils";
 import ThreadStyles from "../StyleSheets/ThreadStyles";
 import screens from "../constants/screenNames";

@@ -193,7 +193,7 @@ async function managePushNotification(
   userName: string,
   data: data
 ) {
-  const sent = {}; //{ currentUserId: "seen" }; // so current user does not get notification
+  const sent = { currentUserId: "seen" }; // so current user does not get notification
   if (currentUserId != data.commenterId) {
     // if you are not replying to your own comment
     const sentAfterInit = sendCommenterNotification(

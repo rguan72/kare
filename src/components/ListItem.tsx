@@ -48,7 +48,10 @@ export default function ListItem({
           style={[ListItemStyles.square, { backgroundColor: commentColor }]}
         />
         <Text style={ListItemStyles.userName}>{commenterName}</Text>
-        <Text style={ListItemStyles.date}>{" * "}{date}</Text>
+        <Text style={ListItemStyles.date}>
+          {" * "}
+          {date}
+        </Text>
         <TouchableOpacity
           onPress={() => setVisible(true)}
           style={{ position: "absolute", right: 0 }}
@@ -66,15 +69,19 @@ export default function ListItem({
         {showReplies === "False" ? (
           <Text></Text>
         ) : !isFollowing ? (
-          <Image
+          /*<Image
             source={require("../../assets/unfollow.png")}
             style={ListItemStyles.image}
-          />
+          />*/
+          <Text></Text>
         ) : (
-          <Image
+          /*<Image
             source={require("../../assets/follow-icon.png")}
             style={ListItemStyles.image}
-          />
+          />*/
+          <Text style={{ fontSize: 12, opacity: 0.5, padding: 1 }}>
+            Following
+          </Text>
         )}
       </View>
       <Modal

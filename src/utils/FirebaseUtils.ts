@@ -351,12 +351,8 @@ async function editCommentsFields() {
     .then((querySnapshot) => {
       querySnapshot.forEach(async (doc) => {
         try {
-          const user = getUser(doc.data().userId);
-          const color = (await user).color;
-          const name = (await user).name;
           await db.collection(collections.comments).doc(doc.id).update({
-            color: color,
-            commenterName: name,
+            //whatever fields you want to edit
           });
         } catch (err) {
           console.log(err);
@@ -390,4 +386,5 @@ export {
   followComment,
   manageFollowingComment,
   editComment,
+  editCommentsFields,
 };

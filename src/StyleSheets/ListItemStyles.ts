@@ -32,6 +32,7 @@ export default StyleSheet.create({
     flex: 1,
     flexDirection: "row",
     alignItems: "flex-start",
+    justifyContent: "space-between",
     marginTop: 8,
   },
   comments: {
