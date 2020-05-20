@@ -32,7 +32,6 @@ async function registerForPushNotificationsAsync(userId: string) {
     }
     const token = await Notifications.getExpoPushTokenAsync();
     // TODO add token to user in db
-    console.log(`The exponent token for your device is ${token}`);
     addNotifTokenToUser(userId, token);
   } else {
     alert("Must use physical device for Push Notifications");
@@ -72,8 +71,6 @@ async function sendCommenterNotification(
     data,
     _displayInForeground: true,
   };
-
-  console.log(`sent ${message.title} to ${await commentUser}`);
 
   setTimeout(async () => {
     const response = await fetch("https://exp.host/--/api/v2/push/send", {

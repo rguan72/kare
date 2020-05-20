@@ -40,7 +40,7 @@ export default function Replies({ route, navigation }) {
 
   const handleNotification = (notification) => {
     const { commenterId, comment, commentId, date } = notification.data;
-    console.log(notification.data);
+
     navigation.navigate(screens.replies, {
       commenterId,
       comment,

@@ -39,7 +39,7 @@ export default function HomeScreen({ route, navigation }) {
 
   const handleNotification = (notification) => {
     const { commenterId, comment, commentId, date } = notification.data;
-    console.log(notification.data);
+
     navigation.navigate(screens.replies, {
       commenterId,
       comment,
@@ -50,14 +50,11 @@ export default function HomeScreen({ route, navigation }) {
   };
 
   useEffect(() => {
-    console.log("sub running");
     const unsubscribe = navigation.addListener("focus", () => {
       setLoading(true);
-      console.log("focusing");
       getUser(userId).then((user) =>
         getGroupsById(user.groups).then((fetchedGroups) => {
           setGroups(fetchedGroups);
-          console.log("set groups");
           setLoading(false);
         })
       );
@@ -67,7 +64,6 @@ export default function HomeScreen({ route, navigation }) {
   }, []);
 
   useEffect(() => {
-    console.log("notif running");
     if (!currentUser.notificationId) {
       registerForPushNotificationsAsync(userId);
     }
