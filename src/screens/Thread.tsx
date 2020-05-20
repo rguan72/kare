@@ -1,10 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  SafeAreaView,
-  FlatList,
-  SectionList,
-  ActivityIndicator,
-} from "react-native";
+import { SafeAreaView } from "react-native";
 import PropTypes from "prop-types";
 import {
   KeyboardAvoidingView,
@@ -12,22 +7,10 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
 } from "react-native";
-import { Layout, Button, Input, Text, Icon } from "@ui-kitten/components";
-import ListItem from "../components/ListItem";
-import {
-  addComment,
-  watchComments,
-  reportComment,
-  getUser,
-  editCommentsFields,
-} from "../utils/FirebaseUtils";
+import { Layout, Button, Input } from "@ui-kitten/components";
+import ListSearchView from "../components/ListSearchView";
+import { addComment, getUser } from "../utils/FirebaseUtils";
 import ThreadStyles from "../StyleSheets/ThreadStyles";
-import screens from "../constants/screenNames";
-import { Notifications } from "expo";
-import PureImage from "../components/PureImage";
-import { EvilIcons } from "@expo/vector-icons";
-import SearchBar from "../components/SearchBar";
-import { commentProcess } from "../utils/commentProcess";
 import ReportDialogue from "../components/ReportDialogue";
 
 export default function Thread({ route, navigation }) {
@@ -54,218 +37,13 @@ export default function Thread({ route, navigation }) {
     });
   }, []);
 
-  const handleNotification = (notification) => {
-    const { commenterId, comment, commentId, date } = notification.data;
-
-    navigation.navigate(screens.replies, {
-      commenterId,
-      comment,
-      commentId,
-      date,
-      userId,
-    });
-  };
-
-  const GroupTitle = React.memo(() => {
-    return (
-      <Layout style={ThreadStyles.header}>
-        <Layout style={ThreadStyles.headerTextBox}>
-          <Text category='h5'>{title}</Text>
-          <Text style={{ marginTop: 2, marginRight: 10 }}>{description}</Text>
-          <Text style={{ marginTop: 2 }}>{num_members} Members</Text>
-        </Layout>
-        <Layout style={{ backgroundColor: "#F3EAFF", maxHeight: 100 }}>
-          <PureImage
-            source={{ uri: image }}
-            style={ThreadStyles.icon}
-            resizeMode='cover'
-          />
-        </Layout>
-      </Layout>
-    );
-  });
-
-  const handleFollowing = (item) => {
-    if (item && item.hasOwnProperty("followers")) {
-      return Boolean(item.followers.find((userIdx) => userIdx === userId));
-    } else {
-      return false;
-    }
-  };
-
-  const ListSearchView = () => {
-    const [comments, setComments] = useState([]);
-    const [commentStructure, setCommentStructure] = useState([]);
-    const [query, setQuery] = useState("");
-    const [loading, setLoading] = useState(false);
-    const [filteredComments, setFilteredComments] = useState([]);
-
-    useEffect(() => {
-      const _notificationSubscription = Notifications.addListener(
-        handleNotification
-      );
-      //setCommentsLoading(true);
-      const unsubscribe = watchComments(
-        setComments,
-        groupId,
-        setCommentsLoading
-      );
-      return () => unsubscribe();
-    }, []);
-
-    useEffect(() => {
-      setCommentStructure([
-        { title: "Most Recent", data: comments.slice(0, 3) },
-        { title: "Older", data: comments.slice(3) },
-      ]);
-    }, [comments]);
-
-    useEffect(() => {
-      setLoading(true);
-      setTimeout(() => {
-        const lowerCaseQuery = commentProcess(query);
-        setFilteredComments(
-          comments.filter((comment) => {
-            return commentProcess(comment["text"]).includes(lowerCaseQuery);
-          })
-        );
-        setLoading(false);
-      }, 500);
-    }, [query]);
-
-    const renderIcon = (props) => (
-      <TouchableWithoutFeedback>
-        {!query ? (
-          <EvilIcons name='search' size={25} />
-        ) : loading ? (
-          <ActivityIndicator size={25} color='#8566AA' />
-        ) : (
-          <Text></Text>
-        )}
-      </TouchableWithoutFeedback>
-    );
-
-    return (
-      <>
-        <SearchBar
-          placeholder='Search for a comment...'
-          onChangeText={setQuery}
-          value={query}
-          accessoryRight={renderIcon}
-        />
-        {commentsLoading ? (
-          <ActivityIndicator
-            size='large'
-            style={{ flex: 1 }}
-            color='#5505BA'
-            animating={commentsLoading}
-          />
-        ) : query.length > 0 ? (
-          <FlatList
-            style={{ marginTop: 5 }}
-            data={filteredComments}
-            renderItem={({ item }) => {
-              const date =
-                item && item.timestamp
-                  ? item.timestamp.toDate().toLocaleDateString() +
-                    " " +
-                    item.timestamp.toDate().toLocaleTimeString([], {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })
-                  : "";
-              const following = handleFollowing(item);
-              return (
-                <ListItem
-                  text={item.text}
-                  onReply={() => {
-                    navigation.navigate(screens.replies, {
-                      commenterId: item.userId,
-                      comment: item.text,
-                      commentId: item.id,
-                      date: date,
-                    });
-                  }}
-                  onReport={() => reportComment(item.id)}
-                  date={date}
-                  numReplies={item.numReplies}
-                  showReplies='True'
-                  commenterName={item.commenterName}
-                  color={item.color}
-                  following={following}
-                  userId={userId}
-                  commenterId={item.userId}
-                  commentId={item.id}
-                />
-              );
-            }}
-            keyExtractor={(item) => item.id}
-          />
-        ) : (
-          <SectionList
-            sections={commentStructure}
-            ListHeaderComponent={GroupTitle}
-            renderItem={({ item }) => {
-              const date =
-                item && item.timestamp
-                  ? item.timestamp.toDate().toLocaleDateString() +
-                    " " +
-                    item.timestamp.toDate().toLocaleTimeString([], {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })
-                  : "";
-              const following = handleFollowing(item);
-              return (
-                <ListItem
-                  text={item.text}
-                  onReply={() => {
-                    navigation.navigate(screens.replies, {
-                      commenterId: item.userId,
-                      comment: item.text,
-                      commentId: item.id,
-                      date: date,
-                    });
-                  }}
-                  onReport={() =>
-                    handleReportDialogue(
-                      item.userId,
-                      route.params.userId,
-                      item.text,
-                      item.id
-                    )
-                  }
-                  date={date}
-                  numReplies={item.numReplies}
-                  showReplies='True'
-                  commenterName={item.commenterName}
-                  color={item.color}
-                  following={following}
-                  commentId={item.id}
-                  userId={userId}
-                  commenterId={item.userId}
-                />
-              );
-            }}
-            keyExtractor={(item) => item.id}
-            renderSectionHeader={({ section: { title } }) => (
-              <Text style={ThreadStyles.sectionHeader}>{title}</Text>
-            )}
-            stickySectionHeadersEnabled={false}
-          />
-        )}
-      </>
-    );
-  };
-
   const ButtonLayout = () => {
     const [value, setValue] = useState("");
-
     return (
       <Layout style={ThreadStyles.commentBox}>
         <Input
           multiline
-          placeholder='Add comment'
+          placeholder="Add comment"
           value={value}
           onChangeText={(e) => setValue(e)}
         />
@@ -293,7 +71,12 @@ export default function Thread({ route, navigation }) {
       </Layout>
     );
   };
-  const handleReportDialogue = (reporterID, reporteeID, comment, commentId) => {
+  const handleReportDialogue = (
+    reporterID: string,
+    reporteeID: string,
+    comment: string,
+    commentId: string
+  ) => {
     setReporterID(reporterID);
     setReporteeID(reporteeID);
     setReportedComment(comment);
@@ -317,10 +100,21 @@ export default function Thread({ route, navigation }) {
           commentRef={reportedCommentID}
           showReportDialogue_={showReportDialogue}
           closeReportDialogue_={closeReportDialogue}
-        ></ReportDialogue>
+        />
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <React.Fragment>
-            <ListSearchView />
+            <ListSearchView
+              userId={userId}
+              groupId={groupId}
+              commentsLoading={commentsLoading}
+              setCommentsLoading={setCommentsLoading}
+              navigation={navigation}
+              handleReportDialogue={handleReportDialogue}
+              title={title}
+              description={description}
+              image={image}
+              num_members={num_members}
+            />
             <ButtonLayout />
           </React.Fragment>
         </TouchableWithoutFeedback>
