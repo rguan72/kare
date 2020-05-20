@@ -15,6 +15,8 @@ import { getGroupsById, getUser } from "../utils/FirebaseUtils";
 import { registerForPushNotificationsAsync } from "../utils/NotificationUtils";
 import screens from "../constants/screenNames";
 import HomeStyles from "../StyleSheets/HomeStyles";
+import HomeSearchBar from "../components/HomeSearchBar";
+import { commentProcess } from "../utils/commentProcess";
 
 interface Group {
   title: String;
@@ -27,6 +29,9 @@ export default function HomeScreen({ route, navigation }) {
   const [groups, setGroups] = useState([]);
   const [loading, setLoading] = useState(true);
   const { userId } = route.params;
+  const [query, setQuery] = useState("");
+  const [filteredGroups, setFilteredGroups] = useState([]);
+
 
   const onSignOut = () => {
     firebase
@@ -78,6 +83,19 @@ export default function HomeScreen({ route, navigation }) {
     }
   }, [groups]);
 
+  useEffect(() => {
+    setLoading(true);
+    setTimeout(() => {
+      const lowerCaseQuery = commentProcess(query);
+      setFilteredGroups(
+        groups.filter((group) => {
+          return commentProcess(group["title"]).includes(lowerCaseQuery);
+        })
+      );
+      setLoading(false);
+    }, 500);  
+  }, [query]);
+
   return (
     <View style={HomeStyles.container}>
       <View style={HomeStyles.Heading}>
@@ -95,12 +113,39 @@ export default function HomeScreen({ route, navigation }) {
           <Entypo name='dots-three-horizontal' size={20} />
         </TouchableOpacity>
       </View>
+      <HomeSearchBar
+        placeholder="Search for a community..."
+        onChangeText={setQuery}
+        value={query}
+      />
       {loading ? (
         <ActivityIndicator
           size='large'
           style={{ flex: 1 }}
           color='#5505BA'
           animating={loading}
+        />
+      ) : query.length > 0 ? (
+        <FlatList
+          data={filteredGroups}
+          renderItem={({ item }) => (
+            <GroupItem
+              title={item.title}
+              image={item.imageURL}
+              description={item.description}
+              onPress={() =>
+                navigation.navigate(screens.thread, {
+                  userId: userId,
+                  title: item.title,
+                  description: item.description,
+                  groupId: item.id,
+                  image: item.imageURL,
+                  num_members: item.num_members,
+                })
+              }
+            />
+          )}
+          keyExtractor={(item) => item.id}
         />
       ) : (
         <FlatList
