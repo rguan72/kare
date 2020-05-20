@@ -26,6 +26,7 @@ import PureImage from "../components/PureImage";
 import { EvilIcons } from "@expo/vector-icons";
 import SearchBar from "../components/SearchBar";
 import { commentProcess } from "../utils/commentProcess";
+import { sortThreads } from  "../utils/sortThreads";
 
 export default function Thread({ route, navigation }) {
   const {
@@ -67,7 +68,7 @@ export default function Thread({ route, navigation }) {
 
   const ListSearchView = () => {
     const [comments, setComments] = useState([]);
-    const [commentStructure, setCommentStructure] = useState([]);
+    const [sortedComments, setSortedComments] = useState([]);
     const [query, setQuery] = useState("");
     const [loading, setLoading] = useState(false);
     const [filteredComments, setFilteredComments] = useState([]);
@@ -83,10 +84,12 @@ export default function Thread({ route, navigation }) {
     }, []);
 
     useEffect(() => {
-      setCommentStructure([
-        { title: "Most Recent", data: comments.slice(0, 3) },
-        { title: "Older", data: comments.slice(3) },
-      ]);
+      setLoading(true);
+      setTimeout(() => {
+	var sorted_comments = sortThreads(comments);
+        setSortedComments(sorted_comments);
+        setLoading(false);
+      }, 500);
     }, [comments]);
 
     useEffect(() => {
@@ -94,9 +97,9 @@ export default function Thread({ route, navigation }) {
       setTimeout(() => {
         const lowerCaseQuery = commentProcess(query);
         setFilteredComments(
-          comments.filter((comment) => {
+          sortThreads(comments.filter((comment) => {
             return commentProcess(comment["text"]).includes(lowerCaseQuery);
-          })
+          }))
         );
         setLoading(false);
       }, 500);
@@ -166,8 +169,8 @@ export default function Thread({ route, navigation }) {
             keyExtractor={(item) => item.id}
           />
         ) : (
-          <SectionList
-            sections={commentStructure}
+          <FlatList
+            data={sortedComments}
             ListHeaderComponent={GroupTitle}
             renderItem={({ item }) => {
               const date =

@@ -263,8 +263,31 @@ function onAuthUserListener(next, fallback, notVerifiedFunc) {
   });
 }
 
-async function editComments() {
+function editComment(commentId: string, newText: string) {
+  db.collection(collections.comments).doc(commentId).update({
+    text: newText,
+  });
+}
+
+async function editCommentsFields() {
   /*Function used to add fields to all comments*/
+  db.collection(collections.comments)
+    .get()
+    .then((querySnapshot) => {
+      querySnapshot.forEach(async (doc) => {
+        try {
+          await db.collection(collections.comments).doc(doc.id).update({
+            //whatever fields you want to edit
+          });
+        } catch (err) {
+          console.log(err);
+        }
+      });
+    });
+}
+
+async function addReplyTimestamp() {
+  /*Function used to add latest reply field to all comments with numReplies > 0 */
   db.collection(collections.comments)
     .get()
     .then((querySnapshot) => {
@@ -277,24 +300,16 @@ async function editComments() {
 	    await db.collection(collections.comments).doc(reply)
 	    .get()
 	    .then(function(doc) {
-	      console.log("ENTER PLEASE");
-	      console.log(doc.data().timestamp);
 	      if (start === 1 && doc.data().timestamp){
 		start = 0;
 		timestamp = doc.data().timestamp;
-		console.log("TIMESTAMP");
-		console.log(doc.data().timestamp);
 	      }
 	      if (doc.data().timestamp && doc.data().timestamp > timestamp){
 	        timestamp = doc.data().timestamp;
-		console.log("TIMESTAMP");
-		console.log(timestamp);
 	      }
 	    });
 	  }
-	  if ((replies.length > 0) && (doc.id === "EvHBpqa9TFOtsSEULad6")){
-	    console.log("Changing");
-	    console.log(timestamp);
+	  if ((replies.length > 0)){
             await db.collection(collections.comments).doc(doc.id).update({
               latestReplyTimestamp: timestamp,
 	    });
@@ -325,5 +340,7 @@ export {
   getGroupsById,
   addGroupsToUser,
   removeGroupFromUser,
-  editComments,
+  editComment,
+  editCommentsFields,
+  addReplyTimestamp,
 };
