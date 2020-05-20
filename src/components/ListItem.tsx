@@ -26,6 +26,7 @@ export default function ListItem({
   commentId,
   userId,
   commenterId,
+  setQuery,
 }) {
   const [visible, setVisible] = useState(false);
   const [value, setValue] = useState(text);
@@ -62,7 +63,7 @@ export default function ListItem({
           style={{ position: "absolute", right: 0 }}
         >
           <Entypo
-            name="dots-three-horizontal"
+            name='dots-three-horizontal'
             size={20}
             style={{ opacity: 0.7 }}
           />
@@ -125,6 +126,7 @@ export default function ListItem({
                     setVisible(false);
                     setValue(value);
                     setEditing(false);
+                    setQuery("");
                   }}
                   style={[
                     ReportDialogueStyles.reportReasons,
@@ -258,4 +260,5 @@ ListItem.propTypes = {
   commentId: PropTypes.string.isRequired,
   userId: PropTypes.string.isRequired,
   commenterId: PropTypes.string.isRequired,
+  setQuery: PropTypes.func,
 };

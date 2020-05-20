@@ -116,9 +116,9 @@ export default function ListSearchView(props: ListSearchViewProps) {
   const renderIcon = () => (
     <TouchableWithoutFeedback>
       {!query ? (
-        <EvilIcons name="search" size={25} />
+        <EvilIcons name='search' size={25} />
       ) : loading ? (
-        <ActivityIndicator size={25} color="#8566AA" />
+        <ActivityIndicator size={25} color='#8566AA' />
       ) : (
         <Text></Text>
       )}
@@ -128,16 +128,16 @@ export default function ListSearchView(props: ListSearchViewProps) {
   return (
     <>
       <SearchBar
-        placeholder="Search for a comment..."
+        placeholder='Search for a comment...'
         onChangeText={setQuery}
         value={query}
         accessoryRight={renderIcon}
       />
       {commentsLoading ? (
         <ActivityIndicator
-          size="large"
+          size='large'
           style={{ flex: 1 }}
-          color="#5505BA"
+          color='#5505BA'
           animating={commentsLoading}
         />
       ) : query.length > 0 ? (
@@ -171,13 +171,14 @@ export default function ListSearchView(props: ListSearchViewProps) {
                 }
                 date={date}
                 numReplies={item.numReplies}
-                showReplies="True"
+                showReplies='True'
                 commenterName={item.commenterName}
                 color={item.color}
                 following={following}
                 userId={userId}
                 commenterId={item.userId}
                 commentId={item.id}
+                setQuery={setQuery}
               />
             );
           }}
@@ -214,13 +215,14 @@ export default function ListSearchView(props: ListSearchViewProps) {
                 }
                 date={date}
                 numReplies={item.numReplies}
-                showReplies="True"
+                showReplies='True'
                 commenterName={item.commenterName}
                 color={item.color}
                 following={following}
                 commentId={item.id}
                 userId={userId}
                 commenterId={item.userId}
+                setQuery={setQuery}
               />
             );
           }}
