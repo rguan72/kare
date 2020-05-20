@@ -195,6 +195,7 @@ export default function Thread({ route, navigation }) {
                   following={following}
                   userId={userId}
                   commenterId={item.userId}
+                  commentId={item.id}
                 />
               );
             }}
