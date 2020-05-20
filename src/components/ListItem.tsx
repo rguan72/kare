@@ -72,7 +72,7 @@ export default function ListItem({
           /*<Image
             source={require("../../assets/unfollow.png")}
             style={ListItemStyles.image}
-          />*/
+          /> Keep these comments in case we want to change back*/
           <Text></Text>
         ) : (
           /*<Image
