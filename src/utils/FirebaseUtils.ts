@@ -1,32 +1,11 @@
 import firebaseApp from "firebase/app";
 import firebase from "../constants/Firebase";
 import { collections } from "../constants/FirebaseStrings";
+import { NewComment, User } from "../Models";
 import Report from "../constants/Report";
 
 const db = firebase.firestore();
 const imageStorage = firebase.storage();
-
-interface comment {
-  userId: String;
-  text: String;
-  reports: Number;
-  numReplies: Number;
-  show: Boolean;
-  color: String;
-  commenterName: String;
-}
-
-interface user {
-  name: String;
-  color: String;
-  notificationId: String;
-}
-
-enum AuthState {
-  loggedin,
-  emailverify,
-  loggedout,
-}
 
 function getCurrentUser() {
   return firebaseApp.auth().currentUser;
@@ -108,7 +87,7 @@ function removeGroupFromUser(group) {
     .update({ num_members: firebaseApp.firestore.FieldValue.increment(-1) });
 }
 
-function addComment(comment: comment, groupId) {
+function addComment(comment: NewComment, groupId) {
   db.collection(collections.comments)
     .doc()
     .set({
@@ -121,7 +100,7 @@ function addComment(comment: comment, groupId) {
     });
 }
 
-function addReply(commentId, comment: comment) {
+function addReply(commentId, comment: Comment) {
   db.collection(collections.comments) // add a new comment
     .add({
       timestamp: firebaseApp.firestore.FieldValue.serverTimestamp(),
@@ -295,7 +274,7 @@ function watchReplies(commentId, setReplies, setLoading) {
 }
 
 // not sure how to get correct Typescript return type
-async function getUser(id): Promise<user> {
+async function getUser(id): Promise<User> {
   return db
     .collection(collections.users)
     .doc(id)
@@ -393,7 +372,6 @@ export {
   getCurrentUser,
   onAuthUserListener,
   setUserGroups,
-  AuthState,
   getGroups,
   getGroupsById,
   addNotifTokenToUser,
