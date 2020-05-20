@@ -1,13 +1,6 @@
-import React from "react";
-import firebaseApp, { auth } from "firebase/app";
+import firebaseApp from "firebase/app";
 import firebase from "../constants/Firebase";
-import { Linking } from "expo";
-import { AsyncStorage } from "react-native";
-import { CommonActions } from "@react-navigation/native";
 import { collections } from "../constants/FirebaseStrings";
-import { community } from "../constants/community";
-import { func } from "prop-types";
-import screens from "../constants/screenNames";
 import Report from "../constants/Report";
 
 const db = firebase.firestore();
@@ -19,19 +12,13 @@ interface comment {
   reports: Number;
   numReplies: Number;
   show: Boolean;
+  color: String;
+  commenterName: String;
 }
 
 interface user {
-  userName: String;
+  name: String;
   color: String;
-}
-
-interface returnComment extends comment {
-  id: String;
-}
-
-interface commentList {
-  [index: number]: returnComment;
 }
 
 enum AuthState {
@@ -75,17 +62,30 @@ async function addUser(email: string, password: string) {
     .set({ timestamp: firebaseApp.firestore.FieldValue.serverTimestamp() });
 }
 
-function updateUser(allUserInformation) {
+function setUserGroups(allUserInformation) {
   const user = firebaseApp.auth().currentUser;
   db.collection(collections.users).doc(user.uid).update(allUserInformation);
+  allUserInformation["groups"].forEach((group) => {
+    db.collection(collections.groups)
+      .doc(group)
+      .update({ num_members: firebaseApp.firestore.FieldValue.increment(1) });
+  });
 }
 
 function addGroupsToUser(newGroups) {
+  /*
+  This function is used to add the groups that the user selects on setup to
+  his/her profile. Should only be called once to make sure we do not double
+  count the users group membership 
+   */
   const user = firebaseApp.auth().currentUser;
   newGroups.forEach((doc) => {
     db.collection(collections.users)
       .doc(user.uid)
       .update({ groups: firebaseApp.firestore.FieldValue.arrayUnion(doc) });
+    db.collection(collections.groups)
+      .doc(doc)
+      .update({ num_members: firebaseApp.firestore.FieldValue.increment(1) });
   });
 }
 
@@ -94,6 +94,9 @@ function removeGroupFromUser(group) {
   db.collection(collections.users)
     .doc(user.uid)
     .update({ groups: firebaseApp.firestore.FieldValue.arrayRemove(group) });
+  db.collection(collections.groups)
+    .doc(group)
+    .update({ num_members: firebaseApp.firestore.FieldValue.increment(-1) });
 }
 
 function addComment(comment: comment, groupId) {
@@ -155,7 +158,8 @@ function addReport(report: Report) {
     });
     reportComment(report.commentRef);
 }
-function watchComments(setComments, groupId) {
+
+function watchComments(setComments, groupId, setCommentsLoading) {
   return db
     .collection(collections.comments)
     .where("parentId", "==", "")
@@ -171,6 +175,7 @@ function watchComments(setComments, groupId) {
         });
       });
       setComments(comments);
+      setCommentsLoading(false);
     });
 }
 
@@ -193,7 +198,7 @@ function getUserComments(user) {
     });
 }
 
-function watchReplies(commentId, setReplies) {
+function watchReplies(commentId, setReplies, setLoading) {
   return db
     .collection(collections.comments)
     .where("parentId", "==", commentId)
@@ -208,6 +213,7 @@ function watchReplies(commentId, setReplies) {
         });
       });
       setReplies(replies);
+      setLoading(false);
     });
 }
 
@@ -272,6 +278,27 @@ function onAuthUserListener(next, fallback, notVerifiedFunc) {
   });
 }
 
+async function editComments() {
+  /*Function used to add fields to all comments*/
+  db.collection(collections.comments)
+    .get()
+    .then((querySnapshot) => {
+      querySnapshot.forEach(async (doc) => {
+        try {
+          const user = getUser(doc.data().userId);
+          const color = (await user).color;
+          const name = (await user).name;
+          await db.collection(collections.comments).doc(doc.id).update({
+            color: color,
+            commenterName: name,
+          });
+        } catch (err) {
+          console.log(err);
+        }
+      });
+    });
+}
+
 export {
   addComment,
   watchComments,
@@ -286,7 +313,7 @@ export {
   sendVerificationEmail,
   getCurrentUser,
   onAuthUserListener,
-  updateUser,
+  setUserGroups,
   AuthState,
   getGroups,
   getGroupsById,

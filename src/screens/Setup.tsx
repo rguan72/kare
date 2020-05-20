@@ -10,7 +10,7 @@ import {
 } from "@ui-kitten/components";
 import RNPickerSelect from "react-native-picker-select";
 import { ScrollView } from "react-native-gesture-handler";
-import { addUser, updateUser, getGroups } from "../utils/FirebaseUtils";
+import { addUser, setUserGroups, getGroups } from "../utils/FirebaseUtils";
 import screens from "../constants/screenNames";
 import { stressOptions } from "../constants/community";
 import SetupStyles from "../StyleSheets/SetupStyles";
@@ -38,29 +38,34 @@ export default function SetupSurvey({ navigation, route }) {
   const [groupOptions, setGroupOptions] = useState([]);
   const [groups, setGroups] = useState([]);
 
-  
   useEffect(() => {
     getGroups()
       .then((querySnapshot) => {
         const options = [];
         querySnapshot.forEach((doc) => {
-          options.push({ id: doc.id, title: doc.data().title, 
-          description: doc.data().description, imageURL: doc.data().imageURL });
+          options.push({
+            id: doc.id,
+            title: doc.data().title,
+            description: doc.data().description,
+            imageURL: doc.data().imageURL,
+          });
         });
         setGroupOptions(options);
         console.log("options: " + options);
       })
       .catch(() => navigation.navigate(screens.error));
-    
+
     // will use this to create 3 random letters
     var num1 = Math.floor(Math.random() * 900 + 100).toString(10); // to ensure 3 digits
     var num2 = Math.floor(Math.random() * 900 + 100).toString(10); // to ensure 3 digits
-    var characters = 'abcdefghijklmnopqrstuvwxyz'
-    var rand_str = ''
-    for ( var i = 0; i < 3; i++ ){
-      rand_str += characters.charAt(Math.floor(Math.random() * characters.length));
+    var characters = "abcdefghijklmnopqrstuvwxyz";
+    var rand_str = "";
+    for (var i = 0; i < 3; i++) {
+      rand_str += characters.charAt(
+        Math.floor(Math.random() * characters.length)
+      );
     }
-    setUserName(num1+rand_str+num2)
+    setUserName(num1 + rand_str + num2);
   }, []);
 
   const renderOption = (group) => (
@@ -116,7 +121,7 @@ export default function SetupSurvey({ navigation, route }) {
     <View style={SetupStyles.container}>
       <ScrollView>
         <View style={SetupStyles.header}>
-          <Text category="h5">User Survey</Text>
+          <Text category='h5'>User Survey</Text>
         </View>
         <Card style={SetupStyles.card}>
           <Text style={SetupStyles.question}>Select your favorite Color:</Text>
@@ -143,7 +148,9 @@ export default function SetupSurvey({ navigation, route }) {
           <Text>{userName}</Text>
         </Card>
         <Card style={SetupStyles.card}>
-          <Text style={SetupStyles.question}>How supported do you currently feel?</Text>
+          <Text style={SetupStyles.question}>
+            How supported do you currently feel?
+          </Text>
           <View
             style={{
               flex: 1,
@@ -156,8 +163,8 @@ export default function SetupSurvey({ navigation, route }) {
               style={{ width: 200, height: 40 }}
               minimumValue={0}
               maximumValue={10}
-              minimumTrackTintColor="#000000"
-              maximumTrackTintColor="#000000"
+              minimumTrackTintColor='#000000'
+              maximumTrackTintColor='#000000'
               onSlidingComplete={(e) => {
                 setValues({ ...values, ["val1"]: Math.floor(e) });
                 //console.log(values);
@@ -183,8 +190,8 @@ export default function SetupSurvey({ navigation, route }) {
               style={{ width: 200, height: 40 }}
               minimumValue={0}
               maximumValue={10}
-              minimumTrackTintColor="#000000"
-              maximumTrackTintColor="#000000"
+              minimumTrackTintColor='#000000'
+              maximumTrackTintColor='#000000'
               onSlidingComplete={(e) => {
                 setValues({ ...values, ["val2"]: Math.floor(e) });
               }}
@@ -201,13 +208,13 @@ export default function SetupSurvey({ navigation, route }) {
               justifyContent: "space-between",
             }}
           >
-            <Text style={{ paddingTop: 8}}>Introverted</Text>
+            <Text style={{ paddingTop: 8 }}>Introverted</Text>
             <Slider
               style={{ width: 165, height: 40 }}
               minimumValue={0}
               maximumValue={10}
-              minimumTrackTintColor="#000000"
-              maximumTrackTintColor="#000000"
+              minimumTrackTintColor='#000000'
+              maximumTrackTintColor='#000000'
               onSlidingComplete={(e) => {
                 setValues({ ...values, ["val3"]: Math.floor(e) });
                 //console.log(values);
@@ -228,7 +235,7 @@ export default function SetupSurvey({ navigation, route }) {
             onSelect={(index) => {
               setSelectedIndexOne(index);
             }}
-            placeholder="Select TWO or more"
+            placeholder='Select TWO or more'
             caption={`Select ${
               selectedIndexOne.length < 2 ? 2 - selectedIndexOne.length : "any"
             } more`}
@@ -261,14 +268,13 @@ export default function SetupSurvey({ navigation, route }) {
             onSelect={(index) => {
               setSelectedIndexTwo(index);
             }}
-            placeholder="Select THREE or more"
+            placeholder='Select THREE or more'
             caption={`Select ${
               selectedIndexTwo.length < 3 ? 3 - selectedIndexTwo.length : "any"
             } more`}
           >
             {groupOptions.map(renderOption)}
           </Select>
-
         </Card>
 
         <Button
@@ -278,7 +284,7 @@ export default function SetupSurvey({ navigation, route }) {
               addUser(route.params.email, route.params.password)
                 .then(() => {
                   console.log("User account created & signed in!");
-                  updateUser(allUserInformation()); // this will be subbed for creating the linked user db entry
+                  setUserGroups(allUserInformation()); // this will be subbed for creating the linked user db entry
                 })
                 .catch((error) => {
                   if (error.code === "auth/email-already-in-use") {
@@ -300,7 +306,6 @@ export default function SetupSurvey({ navigation, route }) {
             }
           }}
           disabled={!((isEnabled && !loading) || (!isEnabled && loading))}
-          style={SetupStyles.button}
         >
           {buttonText}
         </Button>
