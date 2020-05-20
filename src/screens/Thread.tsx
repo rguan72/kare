@@ -29,6 +29,7 @@ import { commentProcess } from "../utils/commentProcess";
 import ReportDialogue from "../components/ReportDialogue";
 
 
+
 export default function Thread({ route, navigation }) {
   const {
     userId,
@@ -126,6 +127,8 @@ export default function Thread({ route, navigation }) {
         <SearchBar
           placeholder="Search for a comment..."
           onChangeText={setQuery}
+          
+          
           value={query}
           accessoryRight={renderIcon}
         />
