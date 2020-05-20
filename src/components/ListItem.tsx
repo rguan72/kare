@@ -5,7 +5,12 @@ import { View } from "react-native";
 import PropTypes from "prop-types";
 import Colors from "../constants/userColors";
 import ListItemStyles from "../StyleSheets/ListItemStyles";
-import { manageFollowingComment, editComment } from "../utils/FirebaseUtils";
+import ReportDialogueStyles from "../StyleSheets/ReportDialogueStyles";
+import {
+  manageFollowingComment,
+  editComment,
+  deleteComment,
+} from "../utils/FirebaseUtils";
 import { Entypo } from "@expo/vector-icons";
 
 export default function ListItem({
@@ -21,6 +26,7 @@ export default function ListItem({
   commentId,
   userId,
   commenterId,
+  setQuery,
 }) {
   const [visible, setVisible] = useState(false);
   const [value, setValue] = useState(text);
@@ -65,7 +71,7 @@ export default function ListItem({
       </View>
       <Text style={ListItemStyles.comments}>{text}</Text>
       <View style={ListItemStyles.bottomRow}>
-        <RepliesNumber></RepliesNumber>
+        <RepliesNumber />
         {showReplies === "False" ? (
           <Text></Text>
         ) : !isFollowing ? (
@@ -86,6 +92,7 @@ export default function ListItem({
       </View>
       <Modal
         visible={visible}
+        style={[ReportDialogueStyles.container, { height: "25%" }]}
         backdropStyle={{
           backgroundColor: "rgba(0, 0, 0, 0.5)",
         }}
@@ -96,89 +103,147 @@ export default function ListItem({
           setEditing(false);
         }}
       >
-        <Card style={ListItemStyles.card}>
-          {userId == commenterId ? (
-            <>
-              {editing ? ( // if editing is pressed edit comment
-                <>
-                  <Input
-                    multiline
-                    value={value}
-                    onChangeText={(e) => setValue(e)}
-                  />
-                  <Button
-                    onPress={() => {
-                      //edit comments and close/reset modal
-                      editComment(commentId, value);
-                      setVisible(false);
-                      setValue(value);
-                      setEditing(false);
-                    }}
-                  >
-                    Save Changes
-                  </Button>
-                </>
-              ) : (
-                <>
-                  <Button onPress={() => setEditing(true)}>Edit</Button>
-                  <Button
-                    onPress={
-                      onReport /* currently "onReport" to make show false might have to change */
-                    }
-                    style={{ marginTop: 5 }}
-                  >
-                    Delete
-                  </Button>
-                </>
-              )}
-              <Button
-                onPress={() => {
-                  // reset everything on cancel
-                  setVisible(false);
-                  setValue(text);
-                  setEditing(false);
-                }}
-                style={{ marginTop: 30, paddingHorizontal: 85 }}
-              >
-                Cancel
-              </Button>
-            </>
-          ) : (
-            <>
-              <Button
-                onPress={
-                  onReport /* currently "onReport" to make show false might have to change */
-                }
-              >
-                Report
-              </Button>
-              {showReplies == "True" ? (
-                <Button
-                  onPress={() => {
-                    manageFollowingComment(isFollowing, commentId, userId);
-                    setIsFollowing(!isFollowing);
+        {userId == commenterId ? (
+          <>
+            {editing ? ( // if editing is pressed edit comment
+              <>
+                <Input
+                  multiline
+                  value={value}
+                  onChangeText={(e) => setValue(e)}
+                  style={{
+                    marginTop: 10,
+                    marginBottom: 5,
+                    width: "90%",
+                    alignSelf: "center",
+                    height: "20%",
                   }}
-                  style={{ marginTop: 5 }}
+                />
+                <TouchableOpacity
+                  onPress={() => {
+                    //edit comments and close/reset modal
+                    editComment(commentId, value);
+                    setVisible(false);
+                    setValue(value);
+                    setEditing(false);
+                    setQuery("");
+                  }}
+                  style={[
+                    ReportDialogueStyles.reportReasons,
+                    {
+                      marginBottom: 50,
+                      height: "20%",
+                      backgroundColor: "#5505BA",
+                    },
+                  ]}
                 >
-                  {isFollowing ? "Unfollow Post" : "Follow Post"}
-                </Button>
-              ) : (
-                <></>
-              )}
-              <Button
+                  <Text style={{ color: "white" }}>Save Changes</Text>
+                </TouchableOpacity>
+              </>
+            ) : (
+              <>
+                <TouchableOpacity
+                  onPress={() => setEditing(true)}
+                  style={[
+                    ReportDialogueStyles.reportReasons,
+                    {
+                      marginBottom: 5,
+                      marginTop: 10,
+                      height: "20%",
+                      backgroundColor: "#5505BA",
+                    },
+                  ]}
+                >
+                  <Text style={{ color: "white" }}>Edit</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => deleteComment(commentId)}
+                  style={[
+                    ReportDialogueStyles.reportReasons,
+                    {
+                      marginBottom: 50,
+                      marginTop: 5,
+                      height: "20%",
+                      backgroundColor: "#5505BA",
+                    },
+                  ]}
+                >
+                  <Text style={{ color: "white" }}>Delete</Text>
+                </TouchableOpacity>
+              </>
+            )}
+            <TouchableOpacity
+              onPress={() => {
+                // reset everything on cancel
+                setVisible(false);
+                setValue(text);
+                setEditing(false);
+              }}
+              style={[
+                ReportDialogueStyles.reportReasons,
+                { marginTop: 5, height: "20%", backgroundColor: "#5505BA" },
+              ]}
+            >
+              <Text style={{ color: "white" }}>Cancel</Text>
+            </TouchableOpacity>
+          </>
+        ) : (
+          <>
+            <TouchableOpacity
+              onPress={
+                onReport /* currently "onReport" to make show false might have to change */
+              }
+              style={[
+                ReportDialogueStyles.reportReasons,
+                {
+                  marginBottom: 5,
+                  marginTop: 10,
+                  height: "20%",
+                  backgroundColor: "#5505BA",
+                },
+              ]}
+            >
+              <Text style={{ color: "white" }}>Report</Text>
+            </TouchableOpacity>
+            {showReplies == "True" ? (
+              <TouchableOpacity
                 onPress={() => {
-                  // reset everything on cancel
-                  setVisible(false);
-                  setValue(text);
-                  setEditing(false);
+                  manageFollowingComment(isFollowing, commentId, userId);
+                  setIsFollowing(!isFollowing);
                 }}
-                style={{ marginTop: 30, paddingHorizontal: 85 }}
+                style={[
+                  ReportDialogueStyles.reportReasons,
+                  {
+                    marginBottom: 50,
+                    marginTop: 10,
+                    height: "20%",
+                    backgroundColor: "#5505BA",
+                  },
+                ]}
               >
-                Cancel
-              </Button>
-            </>
-          )}
-        </Card>
+                <Text style={{ color: "white" }}>
+                  {isFollowing ? "Unfollow Post" : "Follow Post"}
+                </Text>
+              </TouchableOpacity>
+            ) : (
+              <></>
+            )}
+            <TouchableOpacity
+              onPress={() => {
+                // reset everything on cancel
+                setVisible(false);
+                setValue(text);
+                setEditing(false);
+              }}
+              style={[
+                ReportDialogueStyles.reportReasons,
+                { marginTop: 5, height: "20%", backgroundColor: "#5505BA" },
+              ]}
+            >
+              <Text style={{ color: "white" }}>Cancel</Text>
+            </TouchableOpacity>
+          </>
+        )}
       </Modal>
     </Card>
   );
@@ -195,4 +260,5 @@ ListItem.propTypes = {
   commentId: PropTypes.string.isRequired,
   userId: PropTypes.string.isRequired,
   commenterId: PropTypes.string.isRequired,
+  setQuery: PropTypes.func,
 };

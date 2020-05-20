@@ -24,12 +24,19 @@ import {
 import screens from "../constants/screenNames";
 import Colors from "../constants/userColors";
 import RepliesStyles from "../StyleSheets/RepliesStyles";
+import ReportDialogue from "../components/ReportDialogue";
 import { Notifications } from "expo";
 import { managePushNotification } from "../utils/NotificationUtils";
 
 export default function Replies({ route, navigation }) {
   const [replies, setReplies] = useState([]);
   const [value, setValue] = useState("");
+  const [name, setName] = useState("");
+  const [showReportDialogue, setShowReportDialogue] = useState(false);
+  const [reporterID, setReporterID] = useState("");
+  const [reporteeID, setReporteeID] = useState("");
+  const [reportedComment, setReportedComment] = useState("");
+  const [reportedCommentID, setReportedCommentID] = useState("");
   const [commenterName, setCommenterName] = useState("");
   const [commenterColor, setCommenterColor] = useState(Colors.purple); // default
   const [user, setUser] = useState();
@@ -142,6 +149,16 @@ export default function Replies({ route, navigation }) {
       </Layout>
     </Layout>
   );
+  const handleReportDialogue = (reporterID, reporteeID, comment, commentId) => {
+    setReporterID(reporterID);
+    setReporteeID(reporteeID);
+    setReportedComment(comment);
+    setReportedCommentID(commentId);
+    closeReportDialogue();
+  };
+  const closeReportDialogue = () => {
+    setShowReportDialogue(!showReportDialogue);
+  };
 
   return (
     <KeyboardAvoidingView
@@ -155,6 +172,14 @@ export default function Replies({ route, navigation }) {
           backgroundColor: "#F3EAFF",
         }}
       >
+        <ReportDialogue
+          reporterID={reporterID}
+          reporteeID={reporteeID}
+          comment={reportedComment}
+          commentRef={reportedCommentID}
+          closeReportDialogue_={closeReportDialogue}
+          showReportDialogue_={showReportDialogue}
+        ></ReportDialogue>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <React.Fragment>
             {loading ? (
@@ -182,7 +207,14 @@ export default function Replies({ route, navigation }) {
                     return (
                       <ListItem
                         text={item.text}
-                        onReport={() => reportComment(item.id)}
+                        onReport={() =>
+                          handleReportDialogue(
+                            item.userId,
+                            route.params.userId,
+                            item.text,
+                            item.id
+                          )
+                        }
                         date={date}
                         onReply={() => {
                           return null;

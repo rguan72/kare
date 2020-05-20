@@ -1,6 +1,6 @@
 let colors = {
   karePurple: "#5505BA",
-  fushiaPurple: "#9915C8",
+  fuchsiaPurple: "#9915C8",
   pink: "#F1C6E7",
   red: "#C81911",          
   orange: "#FF9D76",
