@@ -1,60 +1,51 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { TouchableOpacity } from "react-native";
-import { Card, Text, Layout } from "@ui-kitten/components";
-import { StyleSheet, View } from "react-native";
+import { Card, Text } from "@ui-kitten/components";
+import { View } from "react-native";
 import PropTypes from "prop-types";
-import Emojis from "../constants/emojis";
 import Colors from "../constants/userColors";
-import { getUser } from "../utils/FirebaseUtils";
 import ListItemStyles from "../StyleSheets/ListItemStyles";
 
 export default function ListItem({
-  userId,
   text,
   onReport,
   date,
   onReply,
   numReplies,
   showReplies,
+  commenterName,
+  color,
 }) {
-  const [name, setName] = useState("");
-  const [color, setColor] = useState(Colors["purple"]); //defualt purple
-  useEffect(() => {
-    if (userId) {
-      getUser(userId).then((userData) => {
-        setName(userData.name);
-        setColor(userData.color);
-      });
-    }
-  }, [name]);
-  const userColor = Colors[color];
+  const commentColor = Colors[color];
+
   const RepliesNumber = () => {
     if (showReplies == "True") {
       return (
         <View>
           <Text>{numReplies ? numReplies : 0} Replies </Text>
-	</View>
+        </View>
       );
     } else {
-      return (null);
+      return null;
     }
   };
 
   return (
     <Card style={ListItemStyles.card} onPress={onReply}>
       <View style={{ flexDirection: "row" }}>
-        <View style={[ListItemStyles.square, { backgroundColor: userColor }]} />
-        <Text style={ListItemStyles.userName}> {name}</Text>
+        <View
+          style={[ListItemStyles.square, { backgroundColor: commentColor }]}
+        />
+        <Text style={ListItemStyles.userName}>{commenterName}</Text>
         <Text style={ListItemStyles.date}>
-          {" "}
+          {" * "}
           {date}
         </Text>
       </View>
-      {/* </View> */}
-      <Text style={ListItemStyles.comments}>{text} </Text>
+      <Text style={ListItemStyles.comments}>{text}</Text>
       <View style={ListItemStyles.bottomRow}>
         <TouchableOpacity onPress={onReport}>
-          <Text style={ListItemStyles.report}> Report</Text>
+          <Text style={ListItemStyles.report}>Report</Text>
         </TouchableOpacity>
       </View>
     </Card>
@@ -62,9 +53,10 @@ export default function ListItem({
 }
 
 ListItem.propTypes = {
-  userId: PropTypes.string.isRequired,
   text: PropTypes.string.isRequired,
   date: PropTypes.string.isRequired,
   onReport: PropTypes.func.isRequired,
   onReply: PropTypes.func.isRequired,
+  commenterName: PropTypes.string.isRequired,
+  color: PropTypes.string.isRequired,
 };

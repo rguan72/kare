@@ -11,6 +11,7 @@ import PropTypes from "prop-types";
 import GroupItemStyles from "../StyleSheets/GroupItemStyles";
 import { Ionicons } from "@expo/vector-icons";
 import { removeGroupFromUser } from "../utils/FirebaseUtils";
+import PureImage from "../components/PureImage";
 
 export default function UserGroupItem({
   title,
@@ -18,9 +19,11 @@ export default function UserGroupItem({
   description,
   onCancel,
   groupId,
+  num_groups,
 }) {
   const [visible, setVisible] = useState(false);
   const [caption, setCaption] = useState("");
+  const [error, setError] = useState(false);
 
   const onIconPress = () => {
     setCaption(`Are you sure you want to leave group ${title}?`);
@@ -44,7 +47,7 @@ export default function UserGroupItem({
             </TouchableOpacity>
           </View>
           <View style={styles.imageBox}>
-            <Image style={styles.image} source={{ uri: image }} />
+            <PureImage style={styles.image} source={{ uri: image }} />
           </View>
         </View>
         <Modal visible={visible}>
@@ -52,9 +55,14 @@ export default function UserGroupItem({
             <Text>{caption}</Text>
             <Button
               onPress={() => {
-                removeGroupFromUser(groupId);
-                onCancel();
-                setVisible(false);
+                if (num_groups === 1) {
+                  setVisible(false);
+                  setError(true);
+                } else {
+                  removeGroupFromUser(groupId);
+                  onCancel();
+                  setVisible(false);
+                }
               }}
               style={styles.groupButton}
             >
@@ -68,6 +76,14 @@ export default function UserGroupItem({
             </Button>
           </Card>
         </Modal>
+        <Modal visible={error}>
+          <Card disabled={true}>
+            <Text>You cannot be in zero groups</Text>
+            <Button onPress={() => setError(false)} style={styles.groupButton}>
+              RETURN
+            </Button>
+          </Card>
+        </Modal>
       </React.Fragment>
     </View>
   );
@@ -76,10 +92,10 @@ export default function UserGroupItem({
 UserGroupItem.propTypes = {
   title: PropTypes.string.isRequired,
   image: PropTypes.string.isRequired,
-  text: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
   onCancel: PropTypes.func.isRequired,
   groupId: PropTypes.string.isRequired,
+  num_groups: PropTypes.number.isRequired,
 };
 
 const styles = StyleSheet.create({
@@ -87,8 +103,6 @@ const styles = StyleSheet.create({
     marginTop: 24,
     marginLeft: 30,
     marginRight: 30,
-    borderColor: "#5505BA",
-    backgroundColor: "#5505BA",
   },
   button: {
     backgroundColor: "#F3EAFF",

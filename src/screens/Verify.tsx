@@ -30,8 +30,22 @@ export default function VerifyEmail({ navigation }) {
       </Text>
       <Modal visible={visible}>
         <Card disabled={true}>
-          <TouchableWithoutFeedback onPress={() => {setVisible(false)}}>
-            <Ionicons name="ios-close-circle" size={25} style={{position: 'absolute', right: 10, top: 0, bottom: 0, color: "#5505BA"}}/>
+          <TouchableWithoutFeedback
+            onPress={() => {
+              setVisible(false);
+            }}
+          >
+            <Ionicons
+              name="ios-close-circle"
+              size={25}
+              style={{
+                position: "absolute",
+                right: 10,
+                top: 0,
+                bottom: 0,
+                color: "#5505BA",
+              }}
+            />
           </TouchableWithoutFeedback>
           <Text>
             {" "}
@@ -50,7 +64,6 @@ export default function VerifyEmail({ navigation }) {
             sendVerificationEmail();
             setButtonTxt("Resend Verification");
           }}
-          style={VerifyStyles.verifyButton}
         >
           {buttonTxt}
         </Button>
