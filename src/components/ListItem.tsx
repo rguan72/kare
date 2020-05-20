@@ -62,7 +62,7 @@ export default function ListItem({
           style={{ position: "absolute", right: 0 }}
         >
           <Entypo
-            name='dots-three-horizontal'
+            name="dots-three-horizontal"
             size={20}
             style={{ opacity: 0.7 }}
           />
@@ -70,7 +70,7 @@ export default function ListItem({
       </View>
       <Text style={ListItemStyles.comments}>{text}</Text>
       <View style={ListItemStyles.bottomRow}>
-        <RepliesNumber></RepliesNumber>
+        <RepliesNumber />
         {showReplies === "False" ? (
           <Text></Text>
         ) : !isFollowing ? (
