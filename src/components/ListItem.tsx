@@ -1,10 +1,12 @@
-import React from "react";
-import { TouchableOpacity } from "react-native";
-import { Card, Text } from "@ui-kitten/components";
+import React, { useState } from "react";
+import { TouchableOpacity, Image } from "react-native";
+import { Card, Text, Modal, Button, Input } from "@ui-kitten/components";
 import { View } from "react-native";
 import PropTypes from "prop-types";
 import Colors from "../constants/userColors";
 import ListItemStyles from "../StyleSheets/ListItemStyles";
+import { manageFollowingComment, editComment } from "../utils/FirebaseUtils";
+import { Entypo } from "@expo/vector-icons";
 
 export default function ListItem({
   text,
@@ -15,7 +17,16 @@ export default function ListItem({
   showReplies,
   commenterName,
   color,
+  following,
+  commentId,
+  userId,
+  commenterId,
 }) {
+  const [visible, setVisible] = useState(false);
+  const [value, setValue] = useState(text);
+  const [editing, setEditing] = useState(false);
+  const [isFollowing, setIsFollowing] = useState(following);
+
   const commentColor = Colors[color];
 
   const RepliesNumber = () => {
@@ -41,14 +52,134 @@ export default function ListItem({
           {" * "}
           {date}
         </Text>
+        <TouchableOpacity
+          onPress={() => setVisible(true)}
+          style={{ position: "absolute", right: 0 }}
+        >
+          <Entypo
+            name='dots-three-horizontal'
+            size={20}
+            style={{ opacity: 0.7 }}
+          />
+        </TouchableOpacity>
       </View>
       <Text style={ListItemStyles.comments}>{text}</Text>
       <View style={ListItemStyles.bottomRow}>
         <RepliesNumber></RepliesNumber>
-        <TouchableOpacity onPress={onReport}>
-          <Text style={ListItemStyles.report}>Report</Text>
-        </TouchableOpacity>
+        {showReplies === "False" ? (
+          <Text></Text>
+        ) : !isFollowing ? (
+          /*<Image
+            source={require("../../assets/unfollow.png")}
+            style={ListItemStyles.image}
+          /> Keep these comments in case we want to change back*/
+          <Text></Text>
+        ) : (
+          /*<Image
+            source={require("../../assets/follow-icon.png")}
+            style={ListItemStyles.image}
+          />*/
+          <Text style={{ fontSize: 12, opacity: 0.5, padding: 1 }}>
+            Following
+          </Text>
+        )}
       </View>
+      <Modal
+        visible={visible}
+        backdropStyle={{
+          backgroundColor: "rgba(0, 0, 0, 0.5)",
+        }}
+        onBackdropPress={() => {
+          // on touching anything but modal close and reset
+          setVisible(false);
+          setValue(text);
+          setEditing(false);
+        }}
+      >
+        <Card style={ListItemStyles.card}>
+          {userId == commenterId ? (
+            <>
+              {editing ? ( // if editing is pressed edit comment
+                <>
+                  <Input
+                    multiline
+                    value={value}
+                    onChangeText={(e) => setValue(e)}
+                  />
+                  <Button
+                    onPress={() => {
+                      //edit comments and close/reset modal
+                      editComment(commentId, value);
+                      setVisible(false);
+                      setValue(value);
+                      setEditing(false);
+                    }}
+                  >
+                    Save Changes
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button onPress={() => setEditing(true)}>Edit</Button>
+                  <Button
+                    onPress={
+                      onReport /* currently "onReport" to make show false might have to change */
+                    }
+                    style={{ marginTop: 5 }}
+                  >
+                    Delete
+                  </Button>
+                </>
+              )}
+              <Button
+                onPress={() => {
+                  // reset everything on cancel
+                  setVisible(false);
+                  setValue(text);
+                  setEditing(false);
+                }}
+                style={{ marginTop: 30, paddingHorizontal: 85 }}
+              >
+                Cancel
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button
+                onPress={
+                  onReport /* currently "onReport" to make show false might have to change */
+                }
+              >
+                Report
+              </Button>
+              {showReplies == "True" ? (
+                <Button
+                  onPress={() => {
+                    manageFollowingComment(isFollowing, commentId, userId);
+                    setIsFollowing(!isFollowing);
+                  }}
+                  style={{ marginTop: 5 }}
+                >
+                  {isFollowing ? "Unfollow Post" : "Follow Post"}
+                </Button>
+              ) : (
+                <></>
+              )}
+              <Button
+                onPress={() => {
+                  // reset everything on cancel
+                  setVisible(false);
+                  setValue(text);
+                  setEditing(false);
+                }}
+                style={{ marginTop: 30, paddingHorizontal: 85 }}
+              >
+                Cancel
+              </Button>
+            </>
+          )}
+        </Card>
+      </Modal>
     </Card>
   );
 }
@@ -60,4 +191,8 @@ ListItem.propTypes = {
   onReply: PropTypes.func.isRequired,
   commenterName: PropTypes.string.isRequired,
   color: PropTypes.string.isRequired,
+  //following: PropTypes.bool.isRequired,
+  commentId: PropTypes.string.isRequired,
+  userId: PropTypes.string.isRequired,
+  commenterId: PropTypes.string.isRequired,
 };

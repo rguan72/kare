@@ -5,13 +5,15 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from "react-native";
-import { Button, Layout, Text, withStyles } from "@ui-kitten/components";
+import firebase from "firebase/app";
 import GroupItem from "../components/GroupItem";
 import PropTypes from "prop-types";
-import { getGroupsById, getUser } from "../utils/FirebaseUtils";
-import screens from "../constants/screenNames";
-import firebase from "firebase/app";
+import { Notifications } from "expo";
 import { Entypo } from "@expo/vector-icons";
+import { Button, Text } from "@ui-kitten/components";
+import { getGroupsById, getUser } from "../utils/FirebaseUtils";
+import { registerForPushNotificationsAsync } from "../utils/NotificationUtils";
+import screens from "../constants/screenNames";
 import HomeStyles from "../StyleSheets/HomeStyles";
 
 interface Group {
@@ -21,6 +23,7 @@ interface Group {
 }
 
 export default function HomeScreen({ route, navigation }) {
+  const [currentUser, setCurrentUser] = useState({});
   const [groups, setGroups] = useState([]);
   const [loading, setLoading] = useState(true);
   const { userId } = route.params;
@@ -34,18 +37,40 @@ export default function HomeScreen({ route, navigation }) {
       });
   };
 
+  const handleNotification = (notification) => {
+    const { commenterId, comment, commentId, date } = notification.data;
+
+    navigation.navigate(screens.replies, {
+      commenterId,
+      comment,
+      commentId,
+      date,
+      userId,
+    });
+  };
+
   useEffect(() => {
-    setLoading(true);
     const unsubscribe = navigation.addListener("focus", () => {
+      setLoading(true);
       getUser(userId).then((user) =>
-        getGroupsById(user.groups).then((fetchedGroups) =>
-          setGroups(fetchedGroups)
-        )
+        getGroupsById(user.groups).then((fetchedGroups) => {
+          setGroups(fetchedGroups);
+          setLoading(false);
+        })
       );
     });
 
     return unsubscribe;
-  }, [navigation]);
+  }, []);
+
+  useEffect(() => {
+    if (!currentUser.notificationId) {
+      registerForPushNotificationsAsync(userId);
+    }
+    const _notificationSubscription = Notifications.addListener(
+      handleNotification
+    );
+  }, []);
 
   useEffect(() => {
     if (groups && groups.length > 0) {
