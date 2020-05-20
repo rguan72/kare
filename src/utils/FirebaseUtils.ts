@@ -67,6 +67,15 @@ function sendVerificationEmail() {
   }
 }
 
+function sendPasswordResetEmail(email: string):string {
+  var auth = firebaseApp.auth();
+  auth.sendPasswordResetEmail(email).then(function() {
+    return "Email was sent.";
+  }).catch(function(error){
+    return error.message;
+  })
+  return "Error.";
+}
 async function addUser(email: string, password: string) {
   await firebaseApp.auth().createUserWithEmailAndPassword(email, password);
   const user = firebaseApp.auth().currentUser;
@@ -284,6 +293,7 @@ export {
   addReport,
   getUserComments,
   sendVerificationEmail,
+  sendPasswordResetEmail,
   getCurrentUser,
   onAuthUserListener,
   updateUser,
