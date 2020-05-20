@@ -30,8 +30,6 @@ import SearchBar from "../components/SearchBar";
 import { commentProcess } from "../utils/commentProcess";
 import ReportDialogue from "../components/ReportDialogue";
 
-
-
 export default function Thread({ route, navigation }) {
   const {
     userId,
@@ -152,8 +150,6 @@ export default function Thread({ route, navigation }) {
         <SearchBar
           placeholder='Search for a comment...'
           onChangeText={setQuery}
-          
-          
           value={query}
           accessoryRight={renderIcon}
         />
@@ -197,6 +193,8 @@ export default function Thread({ route, navigation }) {
                   commenterName={item.commenterName}
                   color={item.color}
                   following={following}
+                  userId={userId}
+                  commenterId={item.userId}
                 />
               );
             }}
@@ -228,7 +226,14 @@ export default function Thread({ route, navigation }) {
                       date: date,
                     });
                   }}
-                  onReport={() => handleReportDialogue(item.userId,route.params.userId,item.text,item.id)}
+                  onReport={() =>
+                    handleReportDialogue(
+                      item.userId,
+                      route.params.userId,
+                      item.text,
+                      item.id
+                    )
+                  }
                   date={date}
                   numReplies={item.numReplies}
                   showReplies='True'
@@ -287,16 +292,16 @@ export default function Thread({ route, navigation }) {
       </Layout>
     );
   };
-  const handleReportDialogue = (reporterID,reporteeID,comment,commentId) => {
+  const handleReportDialogue = (reporterID, reporteeID, comment, commentId) => {
     setReporterID(reporterID);
     setReporteeID(reporteeID);
     setReportedComment(comment);
     setReportedCommentID(commentId);
     closeReportDialogue();
-  }
+  };
   const closeReportDialogue = () => {
     setShowReportDialogue(!showReportDialogue);
-  }
+  };
 
   return (
     <KeyboardAvoidingView
@@ -304,15 +309,14 @@ export default function Thread({ route, navigation }) {
       style={ThreadStyles.keyboardAvoidingView}
     >
       <SafeAreaView style={ThreadStyles.safeAreaView}>
-      <ReportDialogue 
-        reporterID={reporterID}
-        reporteeID={reporteeID}
-        comment={reportedComment}
-        commentRef={reportedCommentID}
-        showReportDialogue_={showReportDialogue}
-        closeReportDialogue_={closeReportDialogue}
-      >
-      </ReportDialogue>
+        <ReportDialogue
+          reporterID={reporterID}
+          reporteeID={reporteeID}
+          comment={reportedComment}
+          commentRef={reportedCommentID}
+          showReportDialogue_={showReportDialogue}
+          closeReportDialogue_={closeReportDialogue}
+        ></ReportDialogue>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <React.Fragment>
             <ListSearchView />
