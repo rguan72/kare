@@ -3,7 +3,8 @@ import { Layout, Button, Input } from "@ui-kitten/components";
 import { addComment, incrementGroupConnectors } from "../utils/FirebaseUtils";
 import ThreadStyles from "../StyleSheets/ThreadStyles";
 import ModModal from "./ModModal";
-import { User } from "../Models";
+import { User, ModTypesEnum } from "../Models";
+import moderate from "../utils/moderation";
 
 interface ButtonLayoutProps {
   userId: string;
@@ -13,8 +14,11 @@ interface ButtonLayoutProps {
 
 export default function ButtonLayout(props: ButtonLayoutProps) {
   const { userId, user, groupId } = props;
-  const [value, setValue] = useState("");
-  const [modVisible, setmodVisible] = useState(false);
+  const [value, setValue] = useState<string>("");
+  const [modVisible, setmodVisible] = useState<boolean>(false);
+  const [flagType, setFlagType] = useState<ModTypesEnum>(
+    ModTypesEnum.offensive
+  );
   return (
     <Layout style={ThreadStyles.commentBox}>
       <Input
@@ -25,6 +29,12 @@ export default function ButtonLayout(props: ButtonLayoutProps) {
       />
       <Button
         onPress={() => {
+          const messageProblem = moderate(value);
+          if (messageProblem != ModTypesEnum.ok) {
+            setmodVisible(true);
+            setFlagType(messageProblem);
+            return;
+          }
           addComment(
             {
               userId: userId,
@@ -45,7 +55,11 @@ export default function ButtonLayout(props: ButtonLayoutProps) {
       >
         Submit
       </Button>
-      <ModModal shVisible={modVisible} setshVisible={setmodVisible} />
+      <ModModal
+        shVisible={modVisible}
+        setshVisible={setmodVisible}
+        type={flagType}
+      />
     </Layout>
   );
 }
