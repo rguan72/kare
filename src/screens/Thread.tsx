@@ -49,17 +49,17 @@ export default function Thread({ route, navigation }) {
   const GroupTitle = React.memo(() => {
     return (
       <Layout style={ThreadStyles.header}>
-        <Layout style={ThreadStyles.headerTextBox}>
-          <Text category="h5">{title}</Text>
-          <Text style={{ marginTop: 2, marginRight: 10 }}>{description}</Text>
-          <Text style={{ marginTop: 2 }}>{num_members} Members</Text>
-        </Layout>
-        <Layout style={{ backgroundColor: "#F3EAFF", maxHeight: 100 }}>
+        <Layout style={{ backgroundColor: "#F3EAFF", maxHeight: 100, marginBottom: 1 }}>
           <PureImage
             source={{ uri: image }}
             style={ThreadStyles.icon}
             resizeMode="cover"
           />
+        </Layout>
+        <Layout style={ThreadStyles.headerTextBox}>
+          <Text category="h5">{title}</Text>
+          <Text style={{ marginTop: 2 }}>{num_members} Members</Text>
+          <Text style={{ marginTop: 2, marginRight: 10 }}>{description}</Text>
         </Layout>
       </Layout>
     );
