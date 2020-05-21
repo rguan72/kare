@@ -11,6 +11,7 @@ import ThreadStyles from "../StyleSheets/ThreadStyles";
 import screens from "../constants/screenNames";
 import { EvilIcons } from "@expo/vector-icons";
 import { commentProcess } from "../utils/commentProcess";
+import { sortThreads } from  "../utils/sortThreads";
 
 interface ListSearchViewProps {
   groupId: string;
@@ -44,7 +45,7 @@ export default function ListSearchView(props: ListSearchViewProps) {
     image,
   } = props;
   const [comments, setComments] = useState([]);
-  const [commentStructure, setCommentStructure] = useState([]);
+  const [sortedComments, setSortedComments] = useState([]);
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(false);
   const [filteredComments, setFilteredComments] = useState([]);
@@ -56,10 +57,12 @@ export default function ListSearchView(props: ListSearchViewProps) {
   }, []);
 
   useEffect(() => {
-    setCommentStructure([
-      { title: "Most Recent", data: comments.slice(0, 3) },
-      { title: "Older", data: comments.slice(3) },
-    ]);
+    setLoading(true);
+    setTimeout(() => {
+      var sorted_comments = sortThreads(comments);
+      setSortedComments(sorted_comments);
+      setLoading(false);
+    }, 500);
   }, [comments]);
 
   useEffect(() => {
@@ -67,9 +70,9 @@ export default function ListSearchView(props: ListSearchViewProps) {
     setTimeout(() => {
       const lowerCaseQuery = commentProcess(query);
       setFilteredComments(
-        comments.filter((comment) => {
-          return commentProcess(comment["text"]).includes(lowerCaseQuery);
-        })
+          sortThreads(comments.filter((comment) => {
+            return commentProcess(comment["text"]).includes(lowerCaseQuery);
+          }))
       );
       setLoading(false);
     }, 500);
@@ -185,8 +188,8 @@ export default function ListSearchView(props: ListSearchViewProps) {
           keyExtractor={(item) => item.id}
         />
       ) : (
-        <SectionList
-          sections={commentStructure}
+        <FlatList
+          data={sortedComments}
           ListHeaderComponent={GroupTitleMemo}
           renderItem={({ item }) => {
             const date =

@@ -357,6 +357,41 @@ async function editCommentsFields() {
     });
 }
 
+async function addReplyTimestamp() {
+  /*Function used to add latest reply field to all comments with numReplies > 0 */
+  db.collection(collections.comments)
+    .get()
+    .then((querySnapshot) => {
+      querySnapshot.forEach(async (doc) => {
+        try {
+          const replies = doc.data().replies;
+	  var timestamp;
+	  var start = 1;
+	  for(let reply of replies) {
+	    await db.collection(collections.comments).doc(reply)
+	    .get()
+	    .then(function(doc) {
+	      if (start === 1 && doc.data().timestamp){
+		start = 0;
+		timestamp = doc.data().timestamp;
+	      }
+	      if (doc.data().timestamp && doc.data().timestamp > timestamp){
+	        timestamp = doc.data().timestamp;
+	      }
+	    });
+	  }
+	  if ((replies.length > 0)){
+            await db.collection(collections.comments).doc(doc.id).update({
+              latestReplyTimestamp: timestamp,
+	    });
+  	  }
+        } catch (err) {
+          console.log(err);
+        }
+      });
+    });
+}
+
 export {
   addComment,
   watchComments,
@@ -384,4 +419,5 @@ export {
   editComment,
   editCommentsFields,
   deleteComment,
+  addReplyTimestamp,
 };
