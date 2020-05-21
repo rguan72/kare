@@ -124,7 +124,7 @@ export default function SetupSurvey({ navigation, route }) {
           <Text category='h5'>User Survey</Text>
         </View>
         <Card style={SetupStyles.card}>
-          <Text style={SetupStyles.question}>Select your favorite Color:</Text>
+          <Text style={SetupStyles.question}>Please select a color to represent your user profile:</Text>
           <RNPickerSelect
             style={SetupStyles}
             onValueChange={(value) => setColor(value)}
@@ -142,10 +142,7 @@ export default function SetupSurvey({ navigation, route }) {
               { label: "Black", value: "black" },
             ]}
           />
-        </Card>
-        <Card style={SetupStyles.card}>
-          <Text>Your random username will be</Text>
-          <Text>{userName}</Text>
+          <Text>Your random username will be {userName}</Text>
         </Card>
         <Card style={SetupStyles.card}>
           <Text style={SetupStyles.question}>
@@ -225,8 +222,8 @@ export default function SetupSurvey({ navigation, route }) {
         </Card>
         <Card style={SetupStyles.card}>
           <Text style={SetupStyles.question}>
-            What are the leading causes of your stress? Please select TWO that
-            most impact you. (This information will remain confidential.)
+            What are the leading causes of stress? Please select TWO 
+            that most impact you. This information will remain confidential.
           </Text>
           <Select
             multiSelect={true}
@@ -245,8 +242,8 @@ export default function SetupSurvey({ navigation, route }) {
         </Card>
         <Card style={SetupStyles.card}>
           <Text style={SetupStyles.question}>
-            Which communities within Kare would you like to join? Please choose
-            at least 3. (This information will remain confidential.)
+            Which communities within Kare would you like to join? 
+            Please choose at least 3 communities.
           </Text>
           <FlatList
             data={groupOptions}

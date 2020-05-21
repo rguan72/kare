@@ -31,6 +31,7 @@ export default StyleSheet.create({
   bottomRow: {
     flex: 1,
     flexDirection: "row",
+    alignItems: "flex-start",
     justifyContent: "space-between",
     marginTop: 8,
   },
@@ -53,5 +54,12 @@ export default StyleSheet.create({
     height: 15,
     borderRadius: 5,
     overflow: "hidden",
+  },
+  image: {
+    height: 15,
+    width: 15,
+    resizeMode: "contain",
+    marginTop: 2,
+    marginLeft: 2,
   },
 });

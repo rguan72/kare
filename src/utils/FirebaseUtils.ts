@@ -1,30 +1,11 @@
 import firebaseApp from "firebase/app";
 import firebase from "../constants/Firebase";
 import { collections } from "../constants/FirebaseStrings";
+import { NewComment, User } from "../Models";
+import Report from "../constants/Report";
 
 const db = firebase.firestore();
 const imageStorage = firebase.storage();
-
-interface comment {
-  userId: String;
-  text: String;
-  reports: Number;
-  numReplies: Number;
-  show: Boolean;
-  color: String;
-  commenterName: String;
-}
-
-interface user {
-  name: String;
-  color: String;
-}
-
-enum AuthState {
-  loggedin,
-  emailverify,
-  loggedout,
-}
 
 function getCurrentUser() {
   return firebaseApp.auth().currentUser;
@@ -59,6 +40,9 @@ function sendPasswordResetEmail(email: string) {
   }).catch(function(error){
     console.log(error);
   })
+}
+async function addNotifTokenToUser(id, token) {
+  db.collection(collections.users).doc(id).update({ notificationId: token });
 }
 
 async function addUser(email: string, password: string) {
@@ -96,6 +80,10 @@ function addGroupsToUser(newGroups) {
   });
 }
 
+function deleteComment(commentId) {
+  db.collection(collections.comments).doc(commentId).delete();
+}
+
 function removeGroupFromUser(group) {
   const user = firebaseApp.auth().currentUser;
   db.collection(collections.users)
@@ -106,7 +94,7 @@ function removeGroupFromUser(group) {
     .update({ num_members: firebaseApp.firestore.FieldValue.increment(-1) });
 }
 
-function addComment(comment: comment, groupId) {
+function addComment(comment: NewComment, groupId) {
   db.collection(collections.comments)
     .doc()
     .set({
@@ -114,11 +102,12 @@ function addComment(comment: comment, groupId) {
       numReplies: 0,
       parentId: "",
       groupId: groupId,
+      followers: [],
       ...comment,
     });
 }
 
-function addReply(commentId, comment: comment) {
+function addReply(commentId, comment: Comment) {
   db.collection(collections.comments) // add a new comment
     .add({
       timestamp: firebaseApp.firestore.FieldValue.serverTimestamp(),
@@ -150,7 +139,19 @@ function reportComment(id: string) {
     }
   });
 }
-
+function addReport(report: Report) {
+  db.collection(collections.reports).doc().set({
+    timestamp: firebaseApp.firestore.FieldValue.serverTimestamp(),
+    reporterID: report.reporterID,
+    reporteeID: report.reporteeID,
+    comment: report.comment,
+    commentRef: report.commentRef,
+    helpFlag: report.helpFlag,
+    inappropriateFlag: report.inappropriateFlag,
+    spamFlag: report.spamFlag,
+  });
+  reportComment(report.commentRef);
+}
 function watchComments(setComments, groupId, setCommentsLoading) {
   return db
     .collection(collections.comments)
@@ -169,6 +170,76 @@ function watchComments(setComments, groupId, setCommentsLoading) {
       setComments(comments);
       setCommentsLoading(false);
     });
+}
+
+async function getComment(commentId) {
+  const data = (
+    await db.collection(collections.comments).doc(commentId).get()
+  ).data();
+  return data;
+}
+
+async function followComment(commentId: string, userId: string) {
+  db.collection(collections.comments)
+    .doc(commentId)
+    .update({
+      followers: firebaseApp.firestore.FieldValue.arrayUnion(userId),
+    });
+  db.collection(collections.users)
+    .doc(userId)
+    .update({
+      comments_following: firebaseApp.firestore.FieldValue.arrayUnion(
+        commentId
+      ),
+    });
+}
+
+async function unfollowComment(commentId: string, userId: string) {
+  db.collection(collections.comments)
+    .doc(commentId)
+    .update({
+      followers: firebaseApp.firestore.FieldValue.arrayRemove(userId),
+    });
+  db.collection(collections.users)
+    .doc(userId)
+    .update({
+      comments_following: firebaseApp.firestore.FieldValue.arrayRemove(
+        commentId
+      ),
+    });
+}
+
+/* 
+isFollowing is a boolean of if the user is currently following the post
+commentId is the id of the comment
+userId is the id of the user
+setFollowing is the set state function for following
+*/
+async function manageFollowing(
+  isFollowing: boolean,
+  commentId: string,
+  userId: string,
+  setFollowing
+) {
+  if (isFollowing) {
+    unfollowComment(commentId, userId);
+    setFollowing(false);
+  } else {
+    followComment(commentId, userId);
+    setFollowing(true);
+  }
+}
+
+async function manageFollowingComment(
+  isFollowing: boolean,
+  commentId: string,
+  userId: string
+) {
+  if (isFollowing) {
+    unfollowComment(commentId, userId);
+  } else {
+    followComment(commentId, userId);
+  }
 }
 
 function getUserComments(user) {
@@ -210,7 +281,7 @@ function watchReplies(commentId, setReplies, setLoading) {
 }
 
 // not sure how to get correct Typescript return type
-async function getUser(id): Promise<user> {
+async function getUser(id): Promise<User> {
   return db
     .collection(collections.users)
     .doc(id)
@@ -270,19 +341,21 @@ function onAuthUserListener(next, fallback, notVerifiedFunc) {
   });
 }
 
-async function editComments() {
+function editComment(commentId: string, newText: string) {
+  db.collection(collections.comments).doc(commentId).update({
+    text: newText,
+  });
+}
+
+async function editCommentsFields() {
   /*Function used to add fields to all comments*/
   db.collection(collections.comments)
     .get()
     .then((querySnapshot) => {
       querySnapshot.forEach(async (doc) => {
         try {
-          const user = getUser(doc.data().userId);
-          const color = (await user).color;
-          const name = (await user).name;
           await db.collection(collections.comments).doc(doc.id).update({
-            color: color,
-            commenterName: name,
+            //whatever fields you want to edit
           });
         } catch (err) {
           console.log(err);
@@ -300,15 +373,23 @@ export {
   addUser,
   watchReplies,
   addReply,
+  addReport,
   getUserComments,
   sendVerificationEmail,
   sendPasswordResetEmail,
   getCurrentUser,
   onAuthUserListener,
   setUserGroups,
-  AuthState,
   getGroups,
   getGroupsById,
+  addNotifTokenToUser,
   addGroupsToUser,
   removeGroupFromUser,
+  getComment,
+  manageFollowing,
+  followComment,
+  manageFollowingComment,
+  editComment,
+  editCommentsFields,
+  deleteComment,
 };
