@@ -4,26 +4,26 @@ function sortThreads(threads) {
   var sorted_threads_str = [];
   var count = 0;
   for (let thread of threads) {
-    // gives a score of 0 if comment is older than 2 days (172,800 seconds)
+    // gives a score of 0 if comment is older than 7 days (604,800 seconds)
     // otherwise, gives a score between 0 and 50
     var timestamp_score = 
       50-((((Date.now()/1000)-
-      thread["timestamp"]["seconds"])/172800.0) * 50);
+      thread["timestamp"]["seconds"])/604800.0) * 50);
     if (timestamp_score < 0) {
       timestamp_score = 0;
     }
 
-    // gives score of 0 if latest reply is over 20 days (1728000 secs) old
+    // gives score of 0 if latest reply is over 14 days (1210000 secs) old
     // if numReplies = 0, we use the timestamp of the comment instead
     // otherwise, gives a score between 0 and 50
     if (thread["latestReplyTimestamp"]) {
       var reply_time_score = 
         50-((((Date.now()/1000)-
-        thread["latestReplyTimestamp"]["seconds"])/1728000.0) * 50);
+        thread["latestReplyTimestamp"]["seconds"])/1210000.0) * 50);
     } else {
       var reply_time_score = 
         50-((((Date.now()/1000)-
-        thread["timestamp"]["seconds"])/1728000.0) * 50);
+        thread["timestamp"]["seconds"])/1210000.0) * 50);
     }
     if (reply_time_score < 0) {
       reply_time_score = 0;
