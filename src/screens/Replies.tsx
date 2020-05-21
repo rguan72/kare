@@ -7,8 +7,11 @@ import {
   Platform,
   Keyboard,
   TouchableWithoutFeedback,
+  TouchableOpacity,
+  Image,
   ActivityIndicator,
 } from "react-native";
+import * as Analytics from "expo-firebase-analytics";
 import { Layout, Button, Input, Text, Card } from "@ui-kitten/components";
 import ListItem from "../components/ListItem";
 import {
@@ -16,34 +19,80 @@ import {
   watchReplies,
   reportComment,
   getUser,
+  followComment,
 } from "../utils/FirebaseUtils";
 import screens from "../constants/screenNames";
 import Colors from "../constants/userColors";
 import RepliesStyles from "../StyleSheets/RepliesStyles";
+import ReportDialogue from "../components/ReportDialogue";
+import { Notifications } from "expo";
+import { managePushNotification } from "../utils/NotificationUtils";
 
 export default function Replies({ route, navigation }) {
   const [replies, setReplies] = useState([]);
   const [value, setValue] = useState("");
   const [name, setName] = useState("");
+  const [showReportDialogue, setShowReportDialogue] = useState(false);
+  const [reporterID, setReporterID] = useState("");
+  const [reporteeID, setReporteeID] = useState("");
+  const [reportedComment, setReportedComment] = useState("");
+  const [reportedCommentID, setReportedCommentID] = useState("");
+  const [commenterName, setCommenterName] = useState("");
   const [commenterColor, setCommenterColor] = useState(Colors.purple); // default
   const [user, setUser] = useState();
+  const [following, setFollowing] = useState(null);
+  const [imageLoading, setImageLoading] = useState(true);
   const [loading, setLoading] = useState(true);
   const { commenterId, userId, comment, commentId, date } = route.params;
 
   useEffect(() => {
-    getUser(userId).then((userData) => {
-      setUser(userData);
-    });
-    getUser(commenterId).then((userData) => {
-      setName(userData.name);
-      setCommenterColor(Colors[userData.color]);
-    });
-  }, []); // so it only runs once
+    Analytics.setCurrentScreen("Replies");
+  }, []);
 
   useEffect(() => {
     const unsubscribe = watchReplies(commentId, setReplies, setLoading);
     return () => unsubscribe();
   }, []);
+
+  useEffect(() => {
+    setImageLoading(true);
+    getUser(commenterId).then((userData) => {
+      setCommenterName(userData.name);
+      setCommenterColor(Colors[userData.color]);
+    });
+    getUser(userId).then((userData) => {
+      setUser(userData);
+      if (
+        Boolean(
+          userData.comments_following.find(
+            (commentIdx) => commentIdx === commentId
+          )
+        )
+      ) {
+        // if user is following
+        setFollowing(true);
+      } else {
+        setFollowing(false);
+      }
+      setImageLoading(false);
+    });
+
+    const handleNotification = (notification) => {
+      const { commenterId, comment, commentId, date } = notification.data;
+
+      navigation.navigate(screens.replies, {
+        commenterId,
+        comment,
+        commentId,
+        date,
+        userId,
+      });
+    };
+
+    const _notificationSubscription = Notifications.addListener(
+      handleNotification
+    );
+  }, []); // so it only runs once
 
   const ReplyParent = () => (
     <Layout style={[RepliesStyles.mb, RepliesStyles.bgColor, RepliesStyles.mt]}>
@@ -66,11 +115,30 @@ export default function Replies({ route, navigation }) {
                   { backgroundColor: commenterColor, marginRight: 5 },
                 ]}
               />
-              <Text style={RepliesStyles.userName}>{name}</Text>
+              <Text style={RepliesStyles.userName}> {commenterName}</Text>
               <Text style={RepliesStyles.date}>
                 {" * "}
                 {date}
               </Text>
+              {imageLoading ? (
+                <Text></Text>
+              ) : (
+                <TouchableOpacity style={RepliesStyles.touchable}>
+                  {following ? (
+                    <Image
+                      source={require("../../assets/follow-icon.png")}
+                      style={{ height: 20, width: 20, resizeMode: "contain" }}
+                    />
+                  ) : (
+                    /*
+                    <Image
+                      source={require("../../assets/unfollow.png")}
+                      style={{ height: 20, width: 20, resizeMode: "contain" }}
+                    />*/
+                    <Text></Text>
+                  )}
+                </TouchableOpacity>
+              )}
             </View>
             <Text style={RepliesStyles.comment}>{comment}</Text>
           </Card>
@@ -78,6 +146,16 @@ export default function Replies({ route, navigation }) {
       </Layout>
     </Layout>
   );
+  const handleReportDialogue = (reporterID, reporteeID, comment, commentId) => {
+    setReporterID(reporterID);
+    setReporteeID(reporteeID);
+    setReportedComment(comment);
+    setReportedCommentID(commentId);
+    closeReportDialogue();
+  };
+  const closeReportDialogue = () => {
+    setShowReportDialogue(!showReportDialogue);
+  };
 
   return (
     <KeyboardAvoidingView
@@ -91,6 +169,14 @@ export default function Replies({ route, navigation }) {
           backgroundColor: "#F3EAFF",
         }}
       >
+        <ReportDialogue
+          reporterID={reporterID}
+          reporteeID={reporteeID}
+          comment={reportedComment}
+          commentRef={reportedCommentID}
+          closeReportDialogue_={closeReportDialogue}
+          showReportDialogue_={showReportDialogue}
+        ></ReportDialogue>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <React.Fragment>
             {loading ? (
@@ -107,18 +193,25 @@ export default function Replies({ route, navigation }) {
                   ListHeaderComponent={ReplyParent} // going to be comment
                   renderItem={({ item }) => {
                     const date =
-                item && item.timestamp
-                  ? item.timestamp.toDate().toLocaleDateString() +
-                    " " +
-                    item.timestamp.toDate().toLocaleTimeString([], {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })
-                  : "";
+                      item && item.timestamp
+                        ? item.timestamp.toDate().toLocaleDateString() +
+                          " " +
+                          item.timestamp.toDate().toLocaleTimeString([], {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })
+                        : "";
                     return (
                       <ListItem
                         text={item.text}
-                        onReport={() => reportComment(item.id)}
+                        onReport={() =>
+                          handleReportDialogue(
+                            item.userId,
+                            route.params.userId,
+                            item.text,
+                            item.id
+                          )
+                        }
                         date={date}
                         onReply={() => {
                           return null;
@@ -127,6 +220,9 @@ export default function Replies({ route, navigation }) {
                         showReplies="False"
                         color={item.color}
                         commenterName={item.commenterName}
+                        commentId={item.id}
+                        userId={userId}
+                        commenterId={item.userId}
                       />
                     );
                   }}
@@ -147,6 +243,14 @@ export default function Replies({ route, navigation }) {
                   />
                   <Button
                     onPress={() => {
+                      followComment(commentId, userId);
+                      setFollowing(true);
+                      managePushNotification(value, userId, user.name, {
+                        commenterId,
+                        comment,
+                        commentId,
+                        date,
+                      });
                       addReply(commentId, {
                         userId: userId,
                         text: value,
@@ -157,6 +261,11 @@ export default function Replies({ route, navigation }) {
                         commenterName: user.name,
                       });
                       setValue("");
+                      Analytics.logEvent("ReplySubmitted", {
+                        name: "reply",
+                        screen: "Replies",
+                        purpose: "Reply to a comment",
+                      });
                     }}
                     style={RepliesStyles.mt0}
                     disabled={value === ""}

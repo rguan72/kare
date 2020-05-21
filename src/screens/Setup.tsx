@@ -10,6 +10,7 @@ import {
 } from "@ui-kitten/components";
 import RNPickerSelect from "react-native-picker-select";
 import { ScrollView } from "react-native-gesture-handler";
+import * as Analytics from "expo-firebase-analytics";
 import { addUser, setUserGroups, getGroups } from "../utils/FirebaseUtils";
 import screens from "../constants/screenNames";
 import { stressOptions } from "../constants/community";
@@ -37,6 +38,10 @@ export default function SetupSurvey({ navigation, route }) {
   const [selectedIndexTwo, setSelectedIndexTwo] = useState([]);
   const [groupOptions, setGroupOptions] = useState([]);
   const [groups, setGroups] = useState([]);
+
+  useEffect(() => {
+    Analytics.setCurrentScreen("Setup");
+  }, []);
 
   useEffect(() => {
     getGroups()
@@ -121,10 +126,10 @@ export default function SetupSurvey({ navigation, route }) {
     <View style={SetupStyles.container}>
       <ScrollView>
         <View style={SetupStyles.header}>
-          <Text category='h5'>User Survey</Text>
+          <Text category="h5">User Survey</Text>
         </View>
         <Card style={SetupStyles.card}>
-          <Text style={SetupStyles.question}>Select your favorite Color:</Text>
+          <Text style={SetupStyles.question}>Please select a color to represent your user profile:</Text>
           <RNPickerSelect
             style={SetupStyles}
             onValueChange={(value) => setColor(value)}
@@ -142,10 +147,7 @@ export default function SetupSurvey({ navigation, route }) {
               { label: "Black", value: "black" },
             ]}
           />
-        </Card>
-        <Card style={SetupStyles.card}>
-          <Text>Your random username will be</Text>
-          <Text>{userName}</Text>
+          <Text>Your random username will be {userName}</Text>
         </Card>
         <Card style={SetupStyles.card}>
           <Text style={SetupStyles.question}>
@@ -163,8 +165,8 @@ export default function SetupSurvey({ navigation, route }) {
               style={{ width: 200, height: 40 }}
               minimumValue={0}
               maximumValue={10}
-              minimumTrackTintColor='#000000'
-              maximumTrackTintColor='#000000'
+              minimumTrackTintColor="#000000"
+              maximumTrackTintColor="#000000"
               onSlidingComplete={(e) => {
                 setValues({ ...values, ["val1"]: Math.floor(e) });
                 //console.log(values);
@@ -190,8 +192,8 @@ export default function SetupSurvey({ navigation, route }) {
               style={{ width: 200, height: 40 }}
               minimumValue={0}
               maximumValue={10}
-              minimumTrackTintColor='#000000'
-              maximumTrackTintColor='#000000'
+              minimumTrackTintColor="#000000"
+              maximumTrackTintColor="#000000"
               onSlidingComplete={(e) => {
                 setValues({ ...values, ["val2"]: Math.floor(e) });
               }}
@@ -213,8 +215,8 @@ export default function SetupSurvey({ navigation, route }) {
               style={{ width: 165, height: 40 }}
               minimumValue={0}
               maximumValue={10}
-              minimumTrackTintColor='#000000'
-              maximumTrackTintColor='#000000'
+              minimumTrackTintColor="#000000"
+              maximumTrackTintColor="#000000"
               onSlidingComplete={(e) => {
                 setValues({ ...values, ["val3"]: Math.floor(e) });
                 //console.log(values);
@@ -225,8 +227,8 @@ export default function SetupSurvey({ navigation, route }) {
         </Card>
         <Card style={SetupStyles.card}>
           <Text style={SetupStyles.question}>
-            What are the leading causes of your stress? Please select TWO that
-            most impact you. (This information will remain confidential.)
+            What are the leading causes of stress? Please select TWO 
+            that most impact you. This information will remain confidential.
           </Text>
           <Select
             multiSelect={true}
@@ -235,7 +237,7 @@ export default function SetupSurvey({ navigation, route }) {
             onSelect={(index) => {
               setSelectedIndexOne(index);
             }}
-            placeholder='Select TWO or more'
+            placeholder="Select TWO or more"
             caption={`Select ${
               selectedIndexOne.length < 2 ? 2 - selectedIndexOne.length : "any"
             } more`}
@@ -245,8 +247,8 @@ export default function SetupSurvey({ navigation, route }) {
         </Card>
         <Card style={SetupStyles.card}>
           <Text style={SetupStyles.question}>
-            Which communities within Kare would you like to join? Please choose
-            at least 3. (This information will remain confidential.)
+            Which communities within Kare would you like to join? 
+            Please choose at least 3 communities.
           </Text>
           <FlatList
             data={groupOptions}
@@ -268,7 +270,7 @@ export default function SetupSurvey({ navigation, route }) {
             onSelect={(index) => {
               setSelectedIndexTwo(index);
             }}
-            placeholder='Select THREE or more'
+            placeholder="Select THREE or more"
             caption={`Select ${
               selectedIndexTwo.length < 3 ? 3 - selectedIndexTwo.length : "any"
             } more`}
@@ -285,6 +287,11 @@ export default function SetupSurvey({ navigation, route }) {
                 .then(() => {
                   console.log("User account created & signed in!");
                   setUserGroups(allUserInformation()); // this will be subbed for creating the linked user db entry
+                  Analytics.logEvent("SetupCompleted", {
+                    name: "setup",
+                    screen: "Setup",
+                    purpose: "Join the Kare community",
+                  });
                 })
                 .catch((error) => {
                   if (error.code === "auth/email-already-in-use") {

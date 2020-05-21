@@ -62,4 +62,15 @@ export default StyleSheet.create({
     fontSize: normalize(16),
     fontWeight: "bold",
   },
+  touchable: {
+    borderRadius: 7,
+    position: "absolute",
+    right: 0,
+  },
+  followText: {
+    marginVertical: 2,
+    marginHorizontal: 7,
+    color: "white",
+    fontSize: 14,
+  },
 });

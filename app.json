@@ -3,7 +3,7 @@
     "name": "Kare",
     "slug": "kare-app",
     "privacy": "unlisted",
-    "sdkVersion": "36.0.0",
+    "sdkVersion": "37.0.0",
     "platforms": ["ios", "android", "web"],
     "version": "1.1.0",
     "orientation": "portrait",
@@ -19,6 +19,7 @@
     "assetBundlePatterns": ["**/*"],
     "android": {
       "package": "com.kare.kare",
+      "googleServicesFile": "./google-services.json",
       "versionCode": 1,
       "intentFilters": [
         {
@@ -35,10 +36,28 @@
       ]
     },
     "ios": {
+      "googleServicesFile": "./GoogleService-Info.plist",
       "supportsTablet": true,
       "bundleIdentifier": "me.kareapp",
       "buildNumber": "1.0.0"
     },
-    "scheme": "kare"
+    "web": {
+      "config": {
+        "firebase": {
+          "apiKey": "AIzaSyAWPbEf57Sj8zWT1fMPv1Sgyvjo6bmis-4",
+          "authDomain": "kare-3.firebaseapp.com",
+          "databaseURL": "https://kare-3.firebaseio.com",
+          "projectId": "kare-3",
+          "storageBucket": "kare-3.appspot.com",
+          "messagingSenderId": "777284393355",
+          "appId": "1:777284393355:web:53e7c0b1ffb9fc11c7378e",
+          "measurementId": "G-FSL56NGH61"
+        }
+      }
+    },
+    "scheme": "kare",
+    "notification": {
+      "icon": "./assets/notif_logo.png"
+    }
   }
 }

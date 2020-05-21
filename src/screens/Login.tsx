@@ -1,15 +1,14 @@
-import React, { memo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   StyleSheet,
   View,
-  Image,
 } from "react-native";
 import { CommonActions } from "@react-navigation/native";
-import { authNav, AuthState } from "../utils/FirebaseUtils";
 import screens from "../constants/screenNames";
 import firebase from "firebase";
+import * as Analytics from "expo-firebase-analytics";
 import {
   Modal,
   Card,
@@ -27,6 +26,10 @@ function LoginScreen({ navigation }) {
   const [secureTextEntry, setSecureTextEntry] = useState(true);
   const [visible, setVisible] = useState(false);
 
+  useEffect(() => {
+    Analytics.setCurrentScreen("Login");
+  }, []);
+
   const onIconPress = () => {
     setSecureTextEntry(!secureTextEntry);
   };
@@ -42,6 +45,13 @@ function LoginScreen({ navigation }) {
     firebase
       .auth()
       .signInWithEmailAndPassword(email.value, password.value)
+      .then(() => {
+        Analytics.logEvent("Login", {
+          name: "login",
+          screen: "Login",
+          purpose: "Login to Kare account",
+        });
+      })
       .catch(function (error) {
         console.log("Login Error");
         var errorCode = error.code;
@@ -54,42 +64,42 @@ function LoginScreen({ navigation }) {
   return (
     <View style={{ paddingTop: 30, backgroundColor: "#F3EAFF", flex: 1 }}>
       <View style={{ alignItems: "center", justifyContent: "center" }}>
-        <Logo alignItems='center' />
+        <Logo alignItems="center" />
       </View>
 
       <View style={styles.container}>
         <Input
-          placeholder='Please enter your email'
-          returnKeyType='next'
+          placeholder="Please enter your email"
+          returnKeyType="next"
           value={email.value}
           onChangeText={(text) => setEmail({ value: text, error: "" })}
           error={!!email.error}
           errorText={email.error}
-          autoCapitalize='none'
-          autoCompleteType='email'
-          textContentType='emailAddress'
-          keyboardType='email-address'
+          autoCapitalize="none"
+          autoCompleteType="email"
+          textContentType="emailAddress"
+          keyboardType="email-address"
           style={styles.input}
         />
       </View>
 
       <View style={styles.container}>
         <Input
-          returnKeyType='done'
+          returnKeyType="done"
           value={password.value}
-          placeholder='Please enter your password'
+          placeholder="Please enter your password"
           accessoryRight={renderIcon}
           onChangeText={(text) => setPassword({ value: text, error: "" })}
           error={!!password.error}
           errorText={password.error}
           secureTextEntry={secureTextEntry}
-          autoCapitalize='none'
-          autoCompleteType='password'
+          autoCapitalize="none"
+          autoCompleteType="password"
           style={styles.input}
         />
       </View>
 
-      <Button mode='contained' onPress={_onLoginPressed} style={styles.button}>
+      <Button mode="contained" onPress={_onLoginPressed} style={styles.button}>
         Login
       </Button>
 
@@ -97,6 +107,13 @@ function LoginScreen({ navigation }) {
         <Text style={styles.label}>Don’t have an account? </Text>
         <TouchableOpacity onPress={() => navigation.navigate(screens.signup)}>
           <Text style={styles.link}>Sign up</Text>
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.row}>
+        <Text style={styles.label}>Forgot your password? </Text>
+        <TouchableOpacity onPress={() => navigation.navigate(screens.passwordReset)}>
+          <Text style={styles.link}>Reset</Text>
         </TouchableOpacity>
       </View>
 
