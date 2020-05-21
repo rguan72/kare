@@ -1,14 +1,14 @@
-import React, { memo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   StyleSheet,
   View,
-  Image,
 } from "react-native";
 import { CommonActions } from "@react-navigation/native";
 import screens from "../constants/screenNames";
 import firebase from "firebase";
+import * as Analytics from "expo-firebase-analytics";
 import {
   Modal,
   Card,
@@ -26,6 +26,10 @@ function LoginScreen({ navigation }) {
   const [secureTextEntry, setSecureTextEntry] = useState(true);
   const [visible, setVisible] = useState(false);
 
+  useEffect(() => {
+    Analytics.setCurrentScreen("Login");
+  }, []);
+
   const onIconPress = () => {
     setSecureTextEntry(!secureTextEntry);
   };
@@ -41,6 +45,13 @@ function LoginScreen({ navigation }) {
     firebase
       .auth()
       .signInWithEmailAndPassword(email.value, password.value)
+      .then(() => {
+        Analytics.logEvent("Login", {
+          name: "login",
+          screen: "Login",
+          purpose: "Login to Kare account",
+        });
+      })
       .catch(function (error) {
         console.log("Login Error");
         var errorCode = error.code;

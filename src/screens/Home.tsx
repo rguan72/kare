@@ -8,6 +8,7 @@ import {
 import firebase from "firebase/app";
 import GroupItem from "../components/GroupItem";
 import PropTypes from "prop-types";
+import * as Analytics from "expo-firebase-analytics";
 import { Notifications } from "expo";
 import { Entypo } from "@expo/vector-icons";
 import { Button, Text } from "@ui-kitten/components";
@@ -61,11 +62,20 @@ export default function HomeScreen({ route, navigation }) {
   };
 
   useEffect(() => {
+    Analytics.setCurrentScreen("Home");
+  }, []);
+
+  useEffect(() => {
+    setLoading(true);
     const unsubscribe = navigation.addListener("focus", () => {
       setLoading(true);
       getUser(userId).then((user) =>
         getGroupsById(user.groups).then((fetchedGroups) => {
           setGroups(fetchedGroups);
+          Analytics.setUserProperty(
+            "communitiesJoined",
+            fetchedGroups.length.toString()
+          );
           setLoading(false);
         })
       );
@@ -109,7 +119,7 @@ export default function HomeScreen({ route, navigation }) {
   return (
     <View style={HomeStyles.container}>
       <View style={HomeStyles.Heading}>
-        <Text category='h5' style={{ alignSelf: "center" }}>
+        <Text category="h5" style={{ alignSelf: "center" }}>
           My Communities
         </Text>
         <TouchableOpacity
@@ -120,7 +130,7 @@ export default function HomeScreen({ route, navigation }) {
             })
           }
         >
-          <Entypo name='dots-three-horizontal' size={20} />
+          <Entypo name="dots-three-horizontal" size={20} />
         </TouchableOpacity>
       </View>
       <HomeSearchBar
@@ -130,9 +140,9 @@ export default function HomeScreen({ route, navigation }) {
       />
       {loading ? (
         <ActivityIndicator
-          size='large'
+          size="large"
           style={{ flex: 1 }}
-          color='#5505BA'
+          color="#5505BA"
           animating={loading}
         />
       ) : query.length > 0 ? (
@@ -176,6 +186,12 @@ export default function HomeScreen({ route, navigation }) {
                   image: item.imageURL,
                   num_members: item.num_members,
                 });
+                Analytics.logEvent("openGroup", {
+                  name: "groupOpen",
+                  screen: "Home",
+                  purpose: "Open a group to view contents",
+                });
+              }}
                 onGroupOpen(item.id, userId);
               }}
               commentsSince={groupData[item.id]}

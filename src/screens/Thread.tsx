@@ -7,6 +7,7 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
 } from "react-native";
+import * as Analytics from "expo-firebase-analytics";
 import { Layout, Button, Input, Text, Icon } from "@ui-kitten/components";
 import ListItem from "../components/ListItem";
 import {
@@ -36,6 +37,10 @@ export default function Thread({ route, navigation }) {
   const [reporteeID, setReporteeID] = useState("");
   const [reportedComment, setReportedComment] = useState("");
   const [reportedCommentID, setReportedCommentID] = useState("");
+
+  useEffect(() => {
+    Analytics.setCurrentScreen(`Thread ${title}`);
+  }, []);
 
   const [user, setUser] = useState();
   const [commentsLoading, setCommentsLoading] = useState(true);

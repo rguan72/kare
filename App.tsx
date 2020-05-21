@@ -25,6 +25,7 @@ import firebase from "firebase/app";
 import { default as theme } from "./theme.json";
 
 import UserComments from "./src/screens/UserComments";
+import { setDebugModeEnabled } from "expo-firebase-analytics";
 
 // Firebase bug workaround: https://stackoverflow.com/questions/60361519/cant-find-a-variable-atob
 if (!global.btoa) {
@@ -57,6 +58,8 @@ export default function App() {
     const subscriber = firebase.auth().onAuthStateChanged(onAuthStateChanged);
     return subscriber; // unsubscribe on unmount
   }, []);
+
+  if (__DEV__) setDebugModeEnabled(true);
 
   if (initializing) return null;
   return (

@@ -13,6 +13,7 @@ import {
   Button,
   Input,
 } from "@ui-kitten/components";
+import * as Analytics from "expo-firebase-analytics";
 import { Ionicons } from "@expo/vector-icons";
 import screens from "../constants/screenNames";
 import { emailValid } from "../utils/Parse";
@@ -49,6 +50,10 @@ function SignupScreen({ navigation }) {
     if (isInv) caption = caption + "Password uses invalid characters (< or >)";
     return caption;
   };
+
+  useEffect(() => {
+    Analytics.setCurrentScreen("SignUp");
+  }, []);
 
   useEffect(() => {
     var new_cap = newCaption();
@@ -101,6 +106,12 @@ function SignupScreen({ navigation }) {
         password: password.value,
       });
     }
+
+    return Analytics.logEvent("SignupPress", {
+      name: "signupPress",
+      screen: "Signup",
+      purpose: "To register account before going to Setup",
+    });
   };
 
   const onPasswordChange = (text) => {

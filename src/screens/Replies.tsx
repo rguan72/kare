@@ -11,6 +11,7 @@ import {
   Image,
   ActivityIndicator,
 } from "react-native";
+import * as Analytics from "expo-firebase-analytics";
 import { Layout, Button, Input, Text, Card } from "@ui-kitten/components";
 import ListItem from "../components/ListItem";
 import {
@@ -44,17 +45,9 @@ export default function Replies({ route, navigation }) {
   const [loading, setLoading] = useState(true);
   const { commenterId, userId, comment, commentId, date } = route.params;
 
-  const handleNotification = (notification) => {
-    const { commenterId, comment, commentId, date } = notification.data;
-
-    navigation.navigate(screens.replies, {
-      commenterId,
-      comment,
-      commentId,
-      date,
-      userId,
-    });
-  };
+  useEffect(() => {
+    Analytics.setCurrentScreen("Replies");
+  }, []);
 
   useEffect(() => {
     const unsubscribe = watchReplies(commentId, setReplies, setLoading);
@@ -83,6 +76,18 @@ export default function Replies({ route, navigation }) {
       }
       setImageLoading(false);
     });
+
+    const handleNotification = (notification) => {
+      const { commenterId, comment, commentId, date } = notification.data;
+
+      navigation.navigate(screens.replies, {
+        commenterId,
+        comment,
+        commentId,
+        date,
+        userId,
+      });
+    };
 
     const _notificationSubscription = Notifications.addListener(
       handleNotification
@@ -176,9 +181,9 @@ export default function Replies({ route, navigation }) {
           <React.Fragment>
             {loading ? (
               <ActivityIndicator
-                size='large'
+                size="large"
                 style={{ flex: 1 }}
-                color='#5505BA'
+                color="#5505BA"
                 animating={loading}
               />
             ) : (
@@ -212,7 +217,7 @@ export default function Replies({ route, navigation }) {
                           return null;
                         }}
                         numReplies={item.numReplies}
-                        showReplies='False'
+                        showReplies="False"
                         color={item.color}
                         commenterName={item.commenterName}
                         commentId={item.id}
@@ -232,7 +237,7 @@ export default function Replies({ route, navigation }) {
                 >
                   <Input
                     multiline
-                    placeholder='Add comment'
+                    placeholder="Add comment"
                     value={value}
                     onChangeText={setValue}
                   />
@@ -256,6 +261,11 @@ export default function Replies({ route, navigation }) {
                         commenterName: user.name,
                       });
                       setValue("");
+                      Analytics.logEvent("ReplySubmitted", {
+                        name: "reply",
+                        screen: "Replies",
+                        purpose: "Reply to a comment",
+                      });
                     }}
                     style={RepliesStyles.mt0}
                     disabled={value === ""}
