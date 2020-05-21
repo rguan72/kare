@@ -63,7 +63,7 @@ export default function UserGroupItem({
                   removeGroupFromUser(groupId);
                   onCancel();
                   setVisible(false);
-                  Analytics.logEvent("Group Left", {
+                  Analytics.logEvent("GroupLeft", {
                     name: "group left",
                     screen: "ManageGroups",
                     purpose: "Leave a group user doesn't want to be in",

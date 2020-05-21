@@ -69,7 +69,7 @@ export default function VerifyEmail({ navigation }) {
             console.log("sent email");
             sendVerificationEmail();
             setButtonTxt("Resend Verification");
-            Analytics.logEvent("Email Verification Pressed", {
+            Analytics.logEvent("EmailVerificationPressed", {
               name: "verifyPress",
               screen: "Verify",
               purpose: "Receive verification email",

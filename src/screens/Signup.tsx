@@ -107,7 +107,7 @@ function SignupScreen({ navigation }) {
       });
     }
 
-    return Analytics.logEvent("Signup Press", {
+    return Analytics.logEvent("SignupPress", {
       name: "signupPress",
       screen: "Signup",
       purpose: "To register account before going to Setup",

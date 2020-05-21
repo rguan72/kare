@@ -269,7 +269,7 @@ export default function Replies({ route, navigation }) {
                         commenterName: user.name,
                       });
                       setValue("");
-                      Analytics.logEvent(`Reply Submitted`, {
+                      Analytics.logEvent("ReplySubmitted", {
                         name: "reply",
                         screen: "Replies",
                         purpose: "Reply to a comment",

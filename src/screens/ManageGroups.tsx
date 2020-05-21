@@ -82,7 +82,7 @@ export default function ManageGroups({ route, navigation }) {
     addGroupsToUser(newGroups);
     setSelectedIndexTwo([]);
     setReload(!reload);
-    Analytics.logEvent("Group Joined", {
+    Analytics.logEvent("GroupJoined", {
       name: "groups",
       screen: "ManageGroups",
       purpose: "Joins a group for user",
