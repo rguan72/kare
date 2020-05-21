@@ -17,7 +17,7 @@ export default function GroupItem({
       <View style={GroupItemStyles.buttonBox}>
         <View style={GroupItemStyles.textBox}>
           <Text category='h5'>{title}</Text>
-          <Text>{commentsSince} new comments</Text>
+          <Text style={{ color: "#5505BA" }}>{commentsSince} new comments</Text>
         </View>
         <View style={GroupItemStyles.imageBox}>
           <PureImage style={GroupItemStyles.image} source={{ uri: image }} />
