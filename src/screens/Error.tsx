@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, FlatList, View } from "react-native";
 import { Layout, Text, withStyles } from "@ui-kitten/components";
-import { CommonActions } from "@react-navigation/native";
-import { watchGroups } from "../utils/FirebaseUtils";
+import * as Analytics from "expo-firebase-analytics";
+
 
 function ErrorScreen({ navigation }) {
+
+  useEffect(() => {
+    Analytics.setCurrentScreen("Error");
+  }, [])
+  
   return (
     <View
       style={{ backgroundColor: "#FFFDF4", flex: 1, justifyContent: "center" }}

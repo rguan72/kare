@@ -19,11 +19,13 @@ import VerifyEmailScreen from "./src/screens/Verify";
 import ManageGroups from "./src/screens/ManageGroups";
 import Error from "./src/screens/Error";
 import UserAgreement from "./src/screens/UserAgreement";
+import PasswordReset from "./src/screens/PasswordReset";
 import screens from "./src/constants/screenNames";
 import firebase from "firebase/app";
 import { default as theme } from "./theme.json";
 
 import UserComments from "./src/screens/UserComments";
+import { setDebugModeEnabled } from "expo-firebase-analytics";
 
 // Firebase bug workaround: https://stackoverflow.com/questions/60361519/cant-find-a-variable-atob
 if (!global.btoa) {
@@ -57,6 +59,8 @@ export default function App() {
     return subscriber; // unsubscribe on unmount
   }, []);
 
+  if (__DEV__) setDebugModeEnabled(true);
+
   if (initializing) return null;
   return (
     <NavigationContainer>
@@ -81,6 +85,11 @@ export default function App() {
                 name={screens.login}
                 component={LoginScreen}
                 options={{ title: "", headerTransparent: true }}
+              />
+              <Stack.Screen
+                name={screens.passwordReset}
+                component={PasswordReset}
+                options={{ title: "", headerTransparent: true}}
               />
               <Stack.Screen
                 name={screens.setup}

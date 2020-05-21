@@ -80,7 +80,7 @@ export default StyleSheet.create({
         height: Dimensions.get("window").height*0.0679,
         fontWeight: "bold",
         textAlign: 'center',
-        marginTop: 13,
+        marginTop: Dimensions.get("window").height*0.0215,
         color: 'white',
     }
 })

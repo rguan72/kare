@@ -10,4 +10,5 @@ export default {
   replies: "Replies",
   error: "Error",
   userAgreement: "UserAgreement",
+  passwordReset: "PasswordReset",
 };

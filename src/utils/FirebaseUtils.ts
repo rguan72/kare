@@ -34,6 +34,13 @@ function sendVerificationEmail() {
   }
 }
 
+function sendPasswordResetEmail(email: string) {
+  var auth = firebaseApp.auth();
+  auth.sendPasswordResetEmail(email).then(function() {
+  }).catch(function(error){
+    console.log(error);
+  })
+}
 async function addNotifTokenToUser(id, token) {
   db.collection(collections.users).doc(id).update({ notificationId: token });
 }
@@ -53,6 +60,7 @@ function setUserGroups(allUserInformation) {
     db.collection(collections.groups)
       .doc(group)
       .update({ num_members: firebaseApp.firestore.FieldValue.increment(1) });
+    createConnector(user.uid, group);
   });
 }
 
@@ -70,6 +78,7 @@ function addGroupsToUser(newGroups) {
     db.collection(collections.groups)
       .doc(doc)
       .update({ num_members: firebaseApp.firestore.FieldValue.increment(1) });
+    createConnector(user.uid, doc);
   });
 }
 
@@ -393,7 +402,105 @@ async function addReplyTimestamp() {
     });
 }
 
+/*
+Makes group connectors between all user-group pairs
+Should only be called once
+*/
+async function makeGroupConnectors() {
+  db.collection(collections.users)
+    .get()
+    .then((snapshot) => {
+      snapshot.forEach(async (doc) => {
+        try {
+          const userId = doc.id;
+          const groups = doc.data().groups;
+          groups.forEach((group) => {
+            db.collection(collections.groupConnectors).doc().set({
+              userId: userId,
+              groupId: group,
+              commentsSince: 0,
+            });
+          });
+        } catch (err) {
+          console.log(err);
+        }
+      });
+    });
+}
+
+async function createConnector(userId: string, groupId: string) {
+  db.collection(collections.groupConnectors).doc().set({
+    userId,
+    groupId,
+    commentsSince: 0,
+  });
+}
+
+async function deleteConnector(userId: string, groupId: string) {
+  return db
+    .collection(collections.groupConnectors)
+    .where("groupId", "==", groupId)
+    .where("userId", "==", userId)
+    .get()
+    .then((res) => {
+      res.docs.forEach((doc) => {
+        db.collection(collections.groupConnectors).doc(doc.id).delete();
+      });
+    });
+}
+
+// Gets new comments since last open
+async function getCommentsSince(userId: string) {
+  return db
+    .collection(collections.groupConnectors)
+    .where("userId", "==", userId)
+    .get()
+    .then((res) => {
+      const groupValues = {};
+      res.forEach((doc) => {
+        //groupValues.unshift(doc.data());
+        groupValues[doc.data().groupId] = doc.data().commentsSince;
+      });
+      return groupValues;
+    });
+}
+
+// called when comment is made.. increments each group connector by 1
+async function incrementGroupConnectors(groupId: string) {
+  var count = 0;
+  db.collection(collections.groupConnectors)
+    .where("groupId", "==", groupId)
+    .get()
+    .then((res) => {
+      let batch = db.batch();
+      res.docs.forEach((doc) => {
+        const ref = db.collection(collections.groupConnectors).doc(doc.id);
+        batch.update(ref, {
+          commentsSince: firebaseApp.firestore.FieldValue.increment(1),
+        });
+      });
+      batch.commit();
+    });
+}
+
+// sets commentsSince to 0 to show you opened a group
+async function onGroupOpen(groupId: string, userId: string) {
+  return db
+    .collection(collections.groupConnectors)
+    .where("groupId", "==", groupId)
+    .where("userId", "==", userId)
+    .get()
+    .then((res) => {
+      res.docs.forEach((doc) => {
+        db.collection(collections.groupConnectors)
+          .doc(doc.id)
+          .update({ commentsSince: 0 });
+      });
+    });
+}
+
 export {
+  makeGroupConnectors,
   addComment,
   watchComments,
   reportComment,
@@ -405,6 +512,7 @@ export {
   addReport,
   getUserComments,
   sendVerificationEmail,
+  sendPasswordResetEmail,
   getCurrentUser,
   onAuthUserListener,
   setUserGroups,
@@ -413,6 +521,8 @@ export {
   addNotifTokenToUser,
   addGroupsToUser,
   removeGroupFromUser,
+  incrementGroupConnectors,
+  onGroupOpen,
   getComment,
   manageFollowing,
   followComment,
@@ -421,4 +531,7 @@ export {
   editCommentsFields,
   deleteComment,
   addReplyTimestamp,
+  createConnector,
+  deleteConnector,
+  getCommentsSince,
 };
