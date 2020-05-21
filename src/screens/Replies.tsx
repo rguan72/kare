@@ -51,26 +51,6 @@ export default function Replies({ route, navigation }) {
   }, []);
 
   useEffect(() => {
-    getUser(userId).then((userData) => {
-      setUser(userData);
-    });
-    getUser(commenterId).then((userData) => {
-      setName(userData.name);
-      setCommenterColor(Colors[userData.color]);
-
-  const handleNotification = (notification) => {
-    const { commenterId, comment, commentId, date } = notification.data;
-
-    navigation.navigate(screens.replies, {
-      commenterId,
-      comment,
-      commentId,
-      date,
-      userId,
-    });
-  };
-
-  useEffect(() => {
     const unsubscribe = watchReplies(commentId, setReplies, setLoading);
     return () => unsubscribe();
   }, []);
@@ -97,6 +77,18 @@ export default function Replies({ route, navigation }) {
       }
       setImageLoading(false);
     });
+
+    const handleNotification = (notification) => {
+      const { commenterId, comment, commentId, date } = notification.data;
+
+      navigation.navigate(screens.replies, {
+        commenterId,
+        comment,
+        commentId,
+        date,
+        userId,
+      });
+    };
 
     const _notificationSubscription = Notifications.addListener(
       handleNotification
@@ -197,9 +189,9 @@ export default function Replies({ route, navigation }) {
           <React.Fragment>
             {loading ? (
               <ActivityIndicator
-                size='large'
+                size="large"
                 style={{ flex: 1 }}
-                color='#5505BA'
+                color="#5505BA"
                 animating={loading}
               />
             ) : (
@@ -233,7 +225,7 @@ export default function Replies({ route, navigation }) {
                           return null;
                         }}
                         numReplies={item.numReplies}
-                        showReplies='False'
+                        showReplies="False"
                         color={item.color}
                         commenterName={item.commenterName}
                         commentId={item.id}
@@ -253,7 +245,7 @@ export default function Replies({ route, navigation }) {
                 >
                   <Input
                     multiline
-                    placeholder='Add comment'
+                    placeholder="Add comment"
                     value={value}
                     onChangeText={setValue}
                   />
