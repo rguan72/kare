@@ -31,7 +31,6 @@ interface Group {
 }
 
 export default function HomeScreen({ route, navigation }) {
-  const [currentUser, setCurrentUser] = useState({});
   const [groups, setGroups] = useState([]);
   const [loading, setLoading] = useState(true);
   const { userId } = route.params;
@@ -85,9 +84,7 @@ export default function HomeScreen({ route, navigation }) {
   }, []);
 
   useEffect(() => {
-    if (!currentUser.notificationId) {
-      registerForPushNotificationsAsync(userId);
-    }
+    registerForPushNotificationsAsync(userId);
     const _notificationSubscription = Notifications.addListener(
       handleNotification
     );
