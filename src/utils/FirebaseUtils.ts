@@ -34,6 +34,13 @@ function sendVerificationEmail() {
   }
 }
 
+function sendPasswordResetEmail(email: string) {
+  var auth = firebaseApp.auth();
+  auth.sendPasswordResetEmail(email).then(function() {
+  }).catch(function(error){
+    console.log(error);
+  })
+}
 async function addNotifTokenToUser(id, token) {
   db.collection(collections.users).doc(id).update({ notificationId: token });
 }
@@ -369,6 +376,7 @@ export {
   addReport,
   getUserComments,
   sendVerificationEmail,
+  sendPasswordResetEmail,
   getCurrentUser,
   onAuthUserListener,
   setUserGroups,
