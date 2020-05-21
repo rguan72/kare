@@ -10,13 +10,14 @@ export default function GroupItem({
   image,
   description,
   onPress,
+  commentsSince,
 }) {
-
   return (
     <TouchableOpacity onPress={onPress} style={GroupItemStyles.button}>
       <View style={GroupItemStyles.buttonBox}>
         <View style={GroupItemStyles.textBox}>
           <Text category='h5'>{title}</Text>
+          <Text>{commentsSince} new comments</Text>
         </View>
         <View style={GroupItemStyles.imageBox}>
           <PureImage style={GroupItemStyles.image} source={{ uri: image }} />
@@ -31,4 +32,5 @@ GroupItem.propTypes = {
   image: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
   onPress: PropTypes.func.isRequired,
+  commentsSince: PropTypes.number.isRequired,
 };

@@ -10,7 +10,7 @@ import {
 import PropTypes from "prop-types";
 import GroupItemStyles from "../StyleSheets/GroupItemStyles";
 import { Ionicons } from "@expo/vector-icons";
-import { removeGroupFromUser } from "../utils/FirebaseUtils";
+import { removeGroupFromUser, deleteConnector } from "../utils/FirebaseUtils";
 import PureImage from "../components/PureImage";
 
 export default function UserGroupItem({
@@ -20,6 +20,7 @@ export default function UserGroupItem({
   onCancel,
   groupId,
   num_groups,
+  userId,
 }) {
   const [visible, setVisible] = useState(false);
   const [caption, setCaption] = useState("");
@@ -60,6 +61,7 @@ export default function UserGroupItem({
                   setError(true);
                 } else {
                   removeGroupFromUser(groupId);
+                  deleteConnector(userId, groupId);
                   onCancel();
                   setVisible(false);
                 }

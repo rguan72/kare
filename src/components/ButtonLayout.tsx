@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Layout, Button, Input } from "@ui-kitten/components";
-import { addComment } from "../utils/FirebaseUtils";
+import { addComment, incrementGroupConnectors } from "../utils/FirebaseUtils";
 import ThreadStyles from "../StyleSheets/ThreadStyles";
 import { User } from "../Models";
 
@@ -17,7 +17,7 @@ export default function ButtonLayout(props: ButtonLayoutProps) {
     <Layout style={ThreadStyles.commentBox}>
       <Input
         multiline
-        placeholder="Add comment"
+        placeholder='Add comment'
         value={value}
         onChangeText={(e) => setValue(e)}
       />
@@ -35,6 +35,7 @@ export default function ButtonLayout(props: ButtonLayoutProps) {
             },
             groupId
           );
+          incrementGroupConnectors(groupId);
           setValue("");
         }}
         style={ThreadStyles.submitButton}

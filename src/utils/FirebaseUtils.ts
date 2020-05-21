@@ -53,6 +53,7 @@ function setUserGroups(allUserInformation) {
     db.collection(collections.groups)
       .doc(group)
       .update({ num_members: firebaseApp.firestore.FieldValue.increment(1) });
+    createConnector(user.uid, group);
   });
 }
 
@@ -70,6 +71,7 @@ function addGroupsToUser(newGroups) {
     db.collection(collections.groups)
       .doc(doc)
       .update({ num_members: firebaseApp.firestore.FieldValue.increment(1) });
+    createConnector(user.uid, doc);
   });
 }
 
@@ -357,6 +359,10 @@ async function editCommentsFields() {
     });
 }
 
+/*
+Makes group connectors between all user-group pairs
+Should only be called once
+*/
 async function makeGroupConnectors() {
   db.collection(collections.users)
     .get()
@@ -379,8 +385,44 @@ async function makeGroupConnectors() {
     });
 }
 
-//var batch = db.batch();
+async function createConnector(userId: string, groupId: string) {
+  db.collection(collections.groupConnectors).doc().set({
+    userId,
+    groupId,
+    commentsSince: 0,
+  });
+}
 
+async function deleteConnector(userId: string, groupId: string) {
+  return db
+    .collection(collections.groupConnectors)
+    .where("groupId", "==", groupId)
+    .where("userId", "==", userId)
+    .get()
+    .then((res) => {
+      res.docs.forEach((doc) => {
+        db.collection(collections.groupConnectors).doc(doc.id).delete();
+      });
+    });
+}
+
+// Gets new comments since last open
+async function getCommentsSince(userId: string) {
+  return db
+    .collection(collections.groupConnectors)
+    .where("userId", "==", userId)
+    .get()
+    .then((res) => {
+      const groupValues = {};
+      res.forEach((doc) => {
+        //groupValues.unshift(doc.data());
+        groupValues[doc.data().groupId] = doc.data().commentsSince;
+      });
+      return groupValues;
+    });
+}
+
+// called when comment is made.. increments each group connector by 1
 async function incrementGroupConnectors(groupId: string) {
   var count = 0;
   db.collection(collections.groupConnectors)
@@ -398,6 +440,7 @@ async function incrementGroupConnectors(groupId: string) {
     });
 }
 
+// sets commentsSince to 0 to show you opened a group
 async function onGroupOpen(groupId: string, userId: string) {
   return db
     .collection(collections.groupConnectors)
@@ -443,4 +486,7 @@ export {
   editComment,
   editCommentsFields,
   deleteComment,
+  createConnector,
+  deleteConnector,
+  getCommentsSince,
 };
