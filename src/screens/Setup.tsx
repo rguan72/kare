@@ -126,7 +126,7 @@ export default function SetupSurvey({ navigation, route }) {
     <View style={SetupStyles.container}>
       <ScrollView>
         <View style={SetupStyles.header}>
-          <Text category='h5'>User Survey</Text>
+          <Text category="h5">User Survey</Text>
         </View>
         <Card style={SetupStyles.card}>
           <Text style={SetupStyles.question}>Select your favorite Color:</Text>
@@ -168,8 +168,8 @@ export default function SetupSurvey({ navigation, route }) {
               style={{ width: 200, height: 40 }}
               minimumValue={0}
               maximumValue={10}
-              minimumTrackTintColor='#000000'
-              maximumTrackTintColor='#000000'
+              minimumTrackTintColor="#000000"
+              maximumTrackTintColor="#000000"
               onSlidingComplete={(e) => {
                 setValues({ ...values, ["val1"]: Math.floor(e) });
                 //console.log(values);
@@ -195,8 +195,8 @@ export default function SetupSurvey({ navigation, route }) {
               style={{ width: 200, height: 40 }}
               minimumValue={0}
               maximumValue={10}
-              minimumTrackTintColor='#000000'
-              maximumTrackTintColor='#000000'
+              minimumTrackTintColor="#000000"
+              maximumTrackTintColor="#000000"
               onSlidingComplete={(e) => {
                 setValues({ ...values, ["val2"]: Math.floor(e) });
               }}
@@ -218,8 +218,8 @@ export default function SetupSurvey({ navigation, route }) {
               style={{ width: 165, height: 40 }}
               minimumValue={0}
               maximumValue={10}
-              minimumTrackTintColor='#000000'
-              maximumTrackTintColor='#000000'
+              minimumTrackTintColor="#000000"
+              maximumTrackTintColor="#000000"
               onSlidingComplete={(e) => {
                 setValues({ ...values, ["val3"]: Math.floor(e) });
                 //console.log(values);
@@ -240,7 +240,7 @@ export default function SetupSurvey({ navigation, route }) {
             onSelect={(index) => {
               setSelectedIndexOne(index);
             }}
-            placeholder='Select TWO or more'
+            placeholder="Select TWO or more"
             caption={`Select ${
               selectedIndexOne.length < 2 ? 2 - selectedIndexOne.length : "any"
             } more`}
@@ -273,7 +273,7 @@ export default function SetupSurvey({ navigation, route }) {
             onSelect={(index) => {
               setSelectedIndexTwo(index);
             }}
-            placeholder='Select THREE or more'
+            placeholder="Select THREE or more"
             caption={`Select ${
               selectedIndexTwo.length < 3 ? 3 - selectedIndexTwo.length : "any"
             } more`}
@@ -290,7 +290,7 @@ export default function SetupSurvey({ navigation, route }) {
                 .then(() => {
                   console.log("User account created & signed in!");
                   setUserGroups(allUserInformation()); // this will be subbed for creating the linked user db entry
-                  Analytics.logEvent("Setup Completed", {
+                  Analytics.logEvent("SetupCompleted", {
                     name: "setup",
                     screen: "Setup",
                     purpose: "Join the Kare community",
