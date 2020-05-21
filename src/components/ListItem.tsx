@@ -65,7 +65,7 @@ export default function ListItem({
           <Entypo
             name='dots-three-horizontal'
             size={20}
-            style={{ opacity: 0.7 }}
+            style={{ opacity: 0.7, paddingLeft: 7, paddingBottom: 7 }}
           />
         </TouchableOpacity>
       </View>
@@ -75,19 +75,12 @@ export default function ListItem({
         {showReplies === "False" ? (
           <Text></Text>
         ) : !isFollowing ? (
-          /*<Image
-            source={require("../../assets/unfollow.png")}
-            style={ListItemStyles.image}
-          /> Keep these comments in case we want to change back*/
           <Text></Text>
         ) : (
-          /*<Image
+          <Image
             source={require("../../assets/follow-icon.png")}
             style={ListItemStyles.image}
-          />*/
-          <Text style={{ fontSize: 12, opacity: 0.5, padding: 1 }}>
-            Following
-          </Text>
+          />
         )}
       </View>
       <Modal
