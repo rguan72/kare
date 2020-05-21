@@ -7,9 +7,18 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
 } from "react-native";
+import { Layout, Button, Input, Text, Icon } from "@ui-kitten/components";
+import ListItem from "../components/ListItem";
+import {
+  addComment,
+  watchComments,
+  reportComment,
+  getUser,
+  makeGroupConnectors,
+  incrementGroupConnectors,
+} from "../utils/FirebaseUtils";
 import ListSearchView from "../components/ListSearchView";
 import ButtonLayout from "../components/ButtonLayout";
-import { getUser } from "../utils/FirebaseUtils";
 import ThreadStyles from "../StyleSheets/ThreadStyles";
 import ReportDialogue from "../components/ReportDialogue";
 

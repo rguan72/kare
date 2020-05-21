@@ -107,6 +107,7 @@ export default function ManageGroups({ route, navigation }) {
                 onCancel={onCancel}
                 groupId={item.id}
                 num_groups={groups.length}
+                userId={userId}
               />
             )}
             keyExtractor={(item) => item.id}
