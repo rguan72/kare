@@ -1,10 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  SafeAreaView,
-  FlatList,
-  SectionList,
-  ActivityIndicator,
-} from "react-native";
+import { SafeAreaView } from "react-native";
 import PropTypes from "prop-types";
 import {
   KeyboardAvoidingView,
@@ -12,6 +7,7 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
 } from "react-native";
+<<<<<<< HEAD
 import { Layout, Button, Input, Text, Icon } from "@ui-kitten/components";
 import ListItem from "../components/ListItem";
 import {
@@ -22,12 +18,13 @@ import {
   makeGroupConnectors,
   incrementGroupConnectors,
 } from "../utils/FirebaseUtils";
+=======
+import ListSearchView from "../components/ListSearchView";
+import ButtonLayout from "../components/ButtonLayout";
+import { getUser } from "../utils/FirebaseUtils";
+>>>>>>> 592e9e2a510a4dda6c8e663ab0803fdbfba5c08d
 import ThreadStyles from "../StyleSheets/ThreadStyles";
-import screens from "../constants/screenNames";
-import PureImage from "../components/PureImage";
-import { EvilIcons } from "@expo/vector-icons";
-import SearchBar from "../components/SearchBar";
-import { commentProcess } from "../utils/commentProcess";
+import ReportDialogue from "../components/ReportDialogue";
 
 export default function Thread({ route, navigation }) {
   const {
@@ -38,6 +35,11 @@ export default function Thread({ route, navigation }) {
     image,
     num_members,
   } = route.params;
+  const [showReportDialogue, setShowReportDialogue] = useState(false);
+  const [reporterID, setReporterID] = useState("");
+  const [reporteeID, setReporteeID] = useState("");
+  const [reportedComment, setReportedComment] = useState("");
+  const [reportedCommentID, setReportedCommentID] = useState("");
 
   const [user, setUser] = useState();
   const [commentsLoading, setCommentsLoading] = useState(true);
@@ -48,6 +50,7 @@ export default function Thread({ route, navigation }) {
     });
   }, []);
 
+<<<<<<< HEAD
   const GroupTitle = React.memo(() => {
     return (
       <Layout style={ThreadStyles.header}>
@@ -246,6 +249,22 @@ export default function Thread({ route, navigation }) {
         </Button>
       </Layout>
     );
+=======
+  const handleReportDialogue = (
+    reporterID: string,
+    reporteeID: string,
+    comment: string,
+    commentId: string
+  ) => {
+    setReporterID(reporterID);
+    setReporteeID(reporteeID);
+    setReportedComment(comment);
+    setReportedCommentID(commentId);
+    closeReportDialogue();
+  };
+  const closeReportDialogue = () => {
+    setShowReportDialogue(!showReportDialogue);
+>>>>>>> 592e9e2a510a4dda6c8e663ab0803fdbfba5c08d
   };
 
   return (
@@ -254,13 +273,29 @@ export default function Thread({ route, navigation }) {
       style={ThreadStyles.keyboardAvoidingView}
     >
       <SafeAreaView style={ThreadStyles.safeAreaView}>
+        <ReportDialogue
+          reporterID={reporterID}
+          reporteeID={reporteeID}
+          comment={reportedComment}
+          commentRef={reportedCommentID}
+          showReportDialogue_={showReportDialogue}
+          closeReportDialogue_={closeReportDialogue}
+        />
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <React.Fragment>
-            <ListSearchView />
-            <ButtonLayout />
-            <Button onPress={() => incrementGroupConnectors(groupId)}>
-              Press
-            </Button>
+            <ListSearchView
+              userId={userId}
+              groupId={groupId}
+              commentsLoading={commentsLoading}
+              setCommentsLoading={setCommentsLoading}
+              navigation={navigation}
+              handleReportDialogue={handleReportDialogue}
+              title={title}
+              description={description}
+              image={image}
+              num_members={num_members}
+            />
+            <ButtonLayout userId={userId} user={user} groupId={groupId} />
           </React.Fragment>
         </TouchableWithoutFeedback>
       </SafeAreaView>

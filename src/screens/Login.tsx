@@ -7,7 +7,6 @@ import {
   Image,
 } from "react-native";
 import { CommonActions } from "@react-navigation/native";
-import { authNav, AuthState } from "../utils/FirebaseUtils";
 import screens from "../constants/screenNames";
 import firebase from "firebase";
 import {
@@ -54,42 +53,42 @@ function LoginScreen({ navigation }) {
   return (
     <View style={{ paddingTop: 30, backgroundColor: "#F3EAFF", flex: 1 }}>
       <View style={{ alignItems: "center", justifyContent: "center" }}>
-        <Logo alignItems='center' />
+        <Logo alignItems="center" />
       </View>
 
       <View style={styles.container}>
         <Input
-          placeholder='Please enter your email'
-          returnKeyType='next'
+          placeholder="Please enter your email"
+          returnKeyType="next"
           value={email.value}
           onChangeText={(text) => setEmail({ value: text, error: "" })}
           error={!!email.error}
           errorText={email.error}
-          autoCapitalize='none'
-          autoCompleteType='email'
-          textContentType='emailAddress'
-          keyboardType='email-address'
+          autoCapitalize="none"
+          autoCompleteType="email"
+          textContentType="emailAddress"
+          keyboardType="email-address"
           style={styles.input}
         />
       </View>
 
       <View style={styles.container}>
         <Input
-          returnKeyType='done'
+          returnKeyType="done"
           value={password.value}
-          placeholder='Please enter your password'
+          placeholder="Please enter your password"
           accessoryRight={renderIcon}
           onChangeText={(text) => setPassword({ value: text, error: "" })}
           error={!!password.error}
           errorText={password.error}
           secureTextEntry={secureTextEntry}
-          autoCapitalize='none'
-          autoCompleteType='password'
+          autoCapitalize="none"
+          autoCompleteType="password"
           style={styles.input}
         />
       </View>
 
-      <Button mode='contained' onPress={_onLoginPressed} style={styles.button}>
+      <Button mode="contained" onPress={_onLoginPressed} style={styles.button}>
         Login
       </Button>
 

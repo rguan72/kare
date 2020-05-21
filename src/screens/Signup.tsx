@@ -14,9 +14,8 @@ import {
   Input,
 } from "@ui-kitten/components";
 import { Ionicons } from "@expo/vector-icons";
-import { authNav, AuthState } from "../utils/FirebaseUtils";
 import screens from "../constants/screenNames";
-import { emailValid } from "../utils/Parse.ts";
+import { emailValid } from "../utils/Parse";
 import Logo from "../components/Logo";
 import firebase from "firebase";
 
