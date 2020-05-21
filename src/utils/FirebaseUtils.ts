@@ -283,7 +283,64 @@ async function editComments() {
     });
 }
 
+async function makeGroupConnectors() {
+  db.collection(collections.users)
+    .get()
+    .then((snapshot) => {
+      snapshot.forEach(async (doc) => {
+        try {
+          const userId = doc.id;
+          const groups = doc.data().groups;
+          groups.forEach((group) => {
+            db.collection(collections.groupConnectors).doc().set({
+              userId: userId,
+              groupId: group,
+              commentsSince: 0,
+            });
+          });
+        } catch (err) {
+          console.log(err);
+        }
+      });
+    });
+}
+
+//var batch = db.batch();
+
+async function incrementGroupConnectors(groupId: string) {
+  var count = 0;
+  db.collection(collections.groupConnectors)
+    .where("groupId", "==", groupId)
+    .get()
+    .then((res) => {
+      let batch = db.batch();
+      res.docs.forEach((doc) => {
+        const ref = db.collection(collections.groupConnectors).doc(doc.id);
+        batch.update(ref, {
+          commentsSince: firebaseApp.firestore.FieldValue.increment(1),
+        });
+      });
+      batch.commit();
+    });
+}
+
+async function onGroupOpen(groupId: string, userId: string) {
+  return db
+    .collection(collections.groupConnectors)
+    .where("groupId", "==", groupId)
+    .where("userId", "==", userId)
+    .get()
+    .then((res) => {
+      res.docs.forEach((doc) => {
+        db.collection(collections.groupConnectors)
+          .doc(doc.id)
+          .update({ commentsSince: 0 });
+      });
+    });
+}
+
 export {
+  makeGroupConnectors,
   addComment,
   watchComments,
   reportComment,
@@ -302,4 +359,6 @@ export {
   getGroupsById,
   addGroupsToUser,
   removeGroupFromUser,
+  incrementGroupConnectors,
+  onGroupOpen,
 };
