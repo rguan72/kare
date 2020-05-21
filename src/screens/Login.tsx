@@ -5,6 +5,7 @@ import {
   StyleSheet,
   View,
 } from "react-native";
+import { CommonActions } from "@react-navigation/native";
 import screens from "../constants/screenNames";
 import firebase from "firebase";
 import * as Analytics from "expo-firebase-analytics";
