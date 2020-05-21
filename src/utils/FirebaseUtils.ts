@@ -114,6 +114,7 @@ function addReply(commentId, comment: Comment) {
         .update({
           numReplies: firebaseApp.firestore.FieldValue.increment(1),
           replies: firebaseApp.firestore.FieldValue.arrayUnion(ref.id),
+	  latestReplyTimestamp: firebaseApp.firestore.FieldValue.serverTimestamp(),
         });
     });
 }
