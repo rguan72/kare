@@ -19,6 +19,7 @@ import VerifyEmailScreen from "./src/screens/Verify";
 import ManageGroups from "./src/screens/ManageGroups";
 import Error from "./src/screens/Error";
 import UserAgreement from "./src/screens/UserAgreement";
+import PasswordReset from "./src/screens/PasswordReset";
 import screens from "./src/constants/screenNames";
 import firebase from "firebase/app";
 import { default as theme } from "./theme.json";
@@ -84,6 +85,11 @@ export default function App() {
                 name={screens.login}
                 component={LoginScreen}
                 options={{ title: "", headerTransparent: true }}
+              />
+              <Stack.Screen
+                name={screens.passwordReset}
+                component={PasswordReset}
+                options={{ title: "", headerTransparent: true}}
               />
               <Stack.Screen
                 name={screens.setup}

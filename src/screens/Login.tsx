@@ -110,6 +110,13 @@ function LoginScreen({ navigation }) {
         </TouchableOpacity>
       </View>
 
+      <View style={styles.row}>
+        <Text style={styles.label}>Forgot your password? </Text>
+        <TouchableOpacity onPress={() => navigation.navigate(screens.passwordReset)}>
+          <Text style={styles.link}>Reset</Text>
+        </TouchableOpacity>
+      </View>
+
       <Modal visible={visible}>
         <Card disabled={true}>
           <Text> {email.error} </Text>

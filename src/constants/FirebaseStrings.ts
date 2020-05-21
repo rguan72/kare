@@ -2,7 +2,8 @@ const collections = {
   comments: "comments",
   groups: "groups",
   users: "users",
-  reports: "reports"
+  groupConnectors: "groupConnectors",
+  reports: "reports",
 };
 
 export { collections };

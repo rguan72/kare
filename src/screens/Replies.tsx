@@ -20,7 +20,6 @@ import {
   reportComment,
   getUser,
   followComment,
-  manageFollowing,
 } from "../utils/FirebaseUtils";
 import screens from "../constants/screenNames";
 import Colors from "../constants/userColors";
@@ -124,23 +123,16 @@ export default function Replies({ route, navigation }) {
               {imageLoading ? (
                 <Text></Text>
               ) : (
-                <TouchableOpacity
-                  style={RepliesStyles.touchable}
-                  onPress={() => {
-                    manageFollowing(following, commentId, userId, setFollowing);
-                  }}
-                >
+                <TouchableOpacity style={RepliesStyles.touchable}>
                   {following ? (
-                    /*<Image
-                      source={require("../../assets/unfollow.png")}
-                      style={{ height: 20, width: 20, resizeMode: "contain" }}
-                    />Keep these comments in case we want to change back*/
-                    <Text style={{ fontSize: 12, opacity: 0.5, padding: 1 }}>
-                      Following
-                    </Text>
-                  ) : (
-                    /*<Image
+                    <Image
                       source={require("../../assets/follow-icon.png")}
+                      style={{ height: 20, width: 20, resizeMode: "contain" }}
+                    />
+                  ) : (
+                    /*
+                    <Image
+                      source={require("../../assets/unfollow.png")}
                       style={{ height: 20, width: 20, resizeMode: "contain" }}
                     />*/
                     <Text></Text>

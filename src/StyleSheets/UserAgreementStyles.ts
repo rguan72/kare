@@ -78,7 +78,9 @@ export default StyleSheet.create({
     },
     buttonText: {
         height: Dimensions.get("window").height*0.0679,
-        fontSize: Dimensions.get("window").width*0.0845,
+        fontWeight: "bold",
+        textAlign: 'center',
+        marginTop: Dimensions.get("window").height*0.0215,
         color: 'white',
     }
 })
