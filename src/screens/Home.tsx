@@ -191,7 +191,6 @@ export default function HomeScreen({ route, navigation }) {
                   screen: "Home",
                   purpose: "Open a group to view contents",
                 });
-              }}
                 onGroupOpen(item.id, userId);
               }}
               commentsSince={groupData[item.id]}
