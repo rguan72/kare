@@ -9,11 +9,10 @@ export default StyleSheet.create({
     //marginTop: 60,
     marginBottom: 10,
     display: "flex",
-    flexDirection: "row-reverse",
+    flexDirection: "column",
     justifyContent: "flex-end",
-    alignItems: "center",
     paddingTop: 15,
-    paddingLeft: 40,
+    paddingLeft: 10,
   },
   headerTextBox: {
     flexDirection: "column",
@@ -26,7 +25,7 @@ export default StyleSheet.create({
     flexShrink: 1,
     width: 60,
     height: 60,
-    marginLeft: 15,
+    marginLeft: 11,
     resizeMode: "contain",
   },
   safeAreaView: {
