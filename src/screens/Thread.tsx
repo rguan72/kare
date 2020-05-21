@@ -8,16 +8,6 @@ import {
   TouchableWithoutFeedback,
 } from "react-native";
 import * as Analytics from "expo-firebase-analytics";
-import { Layout, Button, Input, Text, Icon } from "@ui-kitten/components";
-import ListItem from "../components/ListItem";
-import {
-  addComment,
-  watchComments,
-  reportComment,
-  getUser,
-  makeGroupConnectors,
-  incrementGroupConnectors,
-} from "../utils/FirebaseUtils";
 import ListSearchView from "../components/ListSearchView";
 import ButtonLayout from "../components/ButtonLayout";
 import ThreadStyles from "../StyleSheets/ThreadStyles";
@@ -42,14 +32,7 @@ export default function Thread({ route, navigation }) {
     Analytics.setCurrentScreen(`Thread ${title}`);
   }, []);
 
-  const [user, setUser] = useState();
   const [commentsLoading, setCommentsLoading] = useState(true);
-
-  useEffect(() => {
-    getUser(userId).then((userData) => {
-      setUser(userData);
-    });
-  }, []);
 
   const handleReportDialogue = (
     reporterID: string,
@@ -95,7 +78,7 @@ export default function Thread({ route, navigation }) {
               image={image}
               num_members={num_members}
             />
-            <ButtonLayout userId={userId} user={user} groupId={groupId} />
+            <ButtonLayout userId={userId} groupId={groupId} />
           </React.Fragment>
         </TouchableWithoutFeedback>
       </SafeAreaView>

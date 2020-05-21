@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { FlatList, View, ActivityIndicator } from "react-native";
-import { getGroupsById, getUser } from "../utils/FirebaseUtils";
+import { getGroupsById } from "../utils/FirebaseUtils";
 import UserGroupItem from "../components/UserGroupItem";
 import screens from "../constants/screenNames";
 import { Card, Button, Text, Select, SelectItem } from "@ui-kitten/components";
@@ -12,6 +12,8 @@ import SetupStyles from "../StyleSheets/SetupStyles";
 
 import NUM_GROUPS from "../constants/numberGroups";
 
+import { UserContext } from "../UserContext";
+
 export default function ManageGroups({ route, navigation }) {
   const [groups, setGroups] = useState([]);
   const { userId } = route.params;
@@ -20,6 +22,8 @@ export default function ManageGroups({ route, navigation }) {
   const [reload, setReload] = useState(false);
 
   const [loading, setLoading] = useState(true);
+
+  const { userState, dispatch } = useContext(UserContext);
 
   const groupTwoDisplayValues = selectedIndexTwo.map((index) => {
     return groupOptions[index.row].title;
@@ -35,9 +39,9 @@ export default function ManageGroups({ route, navigation }) {
 
   useEffect(() => {
     setLoading(true);
-    getUser(userId)
-      .then((user) => getGroupsById(user.groups))
-      .then((fetchedGroups) => setGroups(fetchedGroups));
+    getGroupsById(userState.groups).then((fetchedGroups) =>
+      setGroups(fetchedGroups)
+    );
   }, [reload]);
 
   useEffect(() => {
@@ -100,9 +104,9 @@ export default function ManageGroups({ route, navigation }) {
       </View>
       {loading ? (
         <ActivityIndicator
-          size="large"
+          size='large'
           style={{ flex: 1 }}
-          color="#5505BA"
+          color='#5505BA'
           animating={loading}
         />
       ) : (
@@ -126,7 +130,7 @@ export default function ManageGroups({ route, navigation }) {
             <Text></Text>
           ) : (
             <Card style={SetupStyles.card}>
-              <Text category="h6">Would you like to join any new groups?</Text>
+              <Text category='h6'>Would you like to join any new groups?</Text>
               <Select
                 multiSelect={true}
                 selectedIndex={selectedIndexTwo}

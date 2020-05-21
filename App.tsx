@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useReducer, useMemo } from "react";
 import "react-native-gesture-handler";
 import { Image } from "react-native";
 import * as eva from "@eva-design/eva";
@@ -27,6 +27,11 @@ import { default as theme } from "./theme.json";
 import UserComments from "./src/screens/UserComments";
 import { setDebugModeEnabled } from "expo-firebase-analytics";
 
+// Global State
+import { UserContext } from "./src/UserContext";
+import { userReducer } from "./src/reducers/userReducers";
+import { getUserFromDb } from "./src/actions/userActions";
+
 // Firebase bug workaround: https://stackoverflow.com/questions/60361519/cant-find-a-variable-atob
 if (!global.btoa) {
   global.btoa = encode;
@@ -44,7 +49,12 @@ export default function App() {
   console.ignoredYellowBox = ["Setting a timer"];
   // Set an initializing state whilst Firebase connects
   const [initializing, setInitializing] = useState(true);
-  const [user, setUser] = useState();
+  const [user, setUser] = useState({});
+
+  // Global State
+  const [userState, dispatch] = useReducer(userReducer, {}); // intial user is {}
+  // so value is only reinitialized if userState or dispatch change
+  const value = useMemo(() => ({ userState, dispatch }), [userState, dispatch]);
 
   // Handle user state changes
   function onAuthStateChanged(user) {
@@ -53,6 +63,12 @@ export default function App() {
     console.log("user: " + user);
     if (initializing) setInitializing(false);
   }
+
+  useEffect(() => {
+    if (Object.keys(user).length !== 0) {
+      getUserFromDb(dispatch, user.uid);
+    }
+  }, [user]);
 
   useEffect(() => {
     const subscriber = firebase.auth().onAuthStateChanged(onAuthStateChanged);
@@ -68,111 +84,113 @@ export default function App() {
         mapping={mapping}
         theme={{ ...lightTheme, ...theme }}
       >
-        <Stack.Navigator>
-          {!user ? (
-            <>
-              <Stack.Screen
-                name={screens.signup}
-                component={SignupScreen}
-                options={{ title: "", headerTransparent: true }}
-              />
-              <Stack.Screen
-                name={screens.userAgreement}
-                component={UserAgreement}
-                options={{ title: "", headerTransparent: true }}
-              />
-              <Stack.Screen
-                name={screens.login}
-                component={LoginScreen}
-                options={{ title: "", headerTransparent: true }}
-              />
-              <Stack.Screen
-                name={screens.passwordReset}
-                component={PasswordReset}
-                options={{ title: "", headerTransparent: true}}
-              />
-              <Stack.Screen
-                name={screens.setup}
-                component={SetupSurvey}
-                options={{ title: "", headerTransparent: true }}
-              />
-              <Stack.Screen
-                name={screens.error}
-                component={Error}
-                options={{
-                  headerTitle: "",
-                  headerTransparent: true,
-                }}
-              />
-            </>
-          ) : user.emailVerified ? (
-            <>
-              <Stack.Screen
-                name={screens.home}
-                component={HomeScreen}
-                options={{ title: "", headerTransparent: true }}
-                initialParams={{ userId: user.uid }}
-              />
-              <Stack.Screen
-                name={screens.manage}
-                component={ManageGroups}
-                options={{ title: "", headerTransparent: true }}
-                initialParams={{ userId: user.uid }}
-              />
-              <Stack.Screen
-                name={screens.userComments}
-                component={UserComments}
-                options={{
-                  headerTitle: "",
-                  headerTransparent: true,
-                }}
-                initialParams={{ userId: user.uid }}
-              />
-              <Stack.Screen
-                name={screens.thread}
-                component={Thread}
-                options={{
-                  headerTitle: "",
-                  headerTransparent: true,
-                }}
-                initialParams={{ userId: user.uid }}
-              />
-              <Stack.Screen
-                name={screens.replies}
-                component={Replies}
-                options={{
-                  headerTitle: "",
-                  headerTransparent: true,
-                }}
-                initialParams={{ userId: user.uid }}
-              />
-              <Stack.Screen
-                name={screens.error}
-                component={Error}
-                options={{
-                  headerTitle: "",
-                  headerTransparent: true,
-                }}
-              />
-            </>
-          ) : (
-            <>
-              <Stack.Screen
-                name={screens.verifyEmail}
-                component={VerifyEmailScreen}
-                options={{ title: "", headerTransparent: true }}
-              />
-              <Stack.Screen
-                name={screens.error}
-                component={Error}
-                options={{
-                  headerTitle: "",
-                  headerTransparent: true,
-                }}
-              />
-            </>
-          )}
-        </Stack.Navigator>
+        <UserContext.Provider value={value}>
+          <Stack.Navigator>
+            {!user ? (
+              <>
+                <Stack.Screen
+                  name={screens.signup}
+                  component={SignupScreen}
+                  options={{ title: "", headerTransparent: true }}
+                />
+                <Stack.Screen
+                  name={screens.userAgreement}
+                  component={UserAgreement}
+                  options={{ title: "", headerTransparent: true }}
+                />
+                <Stack.Screen
+                  name={screens.login}
+                  component={LoginScreen}
+                  options={{ title: "", headerTransparent: true }}
+                />
+                <Stack.Screen
+                  name={screens.passwordReset}
+                  component={PasswordReset}
+                  options={{ title: "", headerTransparent: true }}
+                />
+                <Stack.Screen
+                  name={screens.setup}
+                  component={SetupSurvey}
+                  options={{ title: "", headerTransparent: true }}
+                />
+                <Stack.Screen
+                  name={screens.error}
+                  component={Error}
+                  options={{
+                    headerTitle: "",
+                    headerTransparent: true,
+                  }}
+                />
+              </>
+            ) : user.emailVerified ? (
+              <>
+                <Stack.Screen
+                  name={screens.home}
+                  component={HomeScreen}
+                  options={{ title: "", headerTransparent: true }}
+                  initialParams={{ userId: user.uid }}
+                />
+                <Stack.Screen
+                  name={screens.manage}
+                  component={ManageGroups}
+                  options={{ title: "", headerTransparent: true }}
+                  initialParams={{ userId: user.uid }}
+                />
+                <Stack.Screen
+                  name={screens.userComments}
+                  component={UserComments}
+                  options={{
+                    headerTitle: "",
+                    headerTransparent: true,
+                  }}
+                  initialParams={{ userId: user.uid }}
+                />
+                <Stack.Screen
+                  name={screens.thread}
+                  component={Thread}
+                  options={{
+                    headerTitle: "",
+                    headerTransparent: true,
+                  }}
+                  initialParams={{ userId: user.uid }}
+                />
+                <Stack.Screen
+                  name={screens.replies}
+                  component={Replies}
+                  options={{
+                    headerTitle: "",
+                    headerTransparent: true,
+                  }}
+                  initialParams={{ userId: user.uid }}
+                />
+                <Stack.Screen
+                  name={screens.error}
+                  component={Error}
+                  options={{
+                    headerTitle: "",
+                    headerTransparent: true,
+                  }}
+                />
+              </>
+            ) : (
+              <>
+                <Stack.Screen
+                  name={screens.verifyEmail}
+                  component={VerifyEmailScreen}
+                  options={{ title: "", headerTransparent: true }}
+                />
+                <Stack.Screen
+                  name={screens.error}
+                  component={Error}
+                  options={{
+                    headerTitle: "",
+                    headerTransparent: true,
+                  }}
+                />
+              </>
+            )}
+          </Stack.Navigator>
+        </UserContext.Provider>
       </ApplicationProvider>
     </NavigationContainer>
   );

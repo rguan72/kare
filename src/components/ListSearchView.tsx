@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { FlatList, SectionList, ActivityIndicator } from "react-native";
 import { TouchableWithoutFeedback } from "react-native";
 import { Notifications } from "expo";
@@ -11,6 +11,7 @@ import ThreadStyles from "../StyleSheets/ThreadStyles";
 import screens from "../constants/screenNames";
 import { EvilIcons } from "@expo/vector-icons";
 import { commentProcess } from "../utils/commentProcess";
+import { UserContext } from "../UserContext";
 
 interface ListSearchViewProps {
   groupId: string;
@@ -48,6 +49,7 @@ export default function ListSearchView(props: ListSearchViewProps) {
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(false);
   const [filteredComments, setFilteredComments] = useState([]);
+  const { userState, dispatch } = useContext(UserContext);
 
   useEffect(() => {
     //setCommentsLoading(true);
@@ -94,14 +96,6 @@ export default function ListSearchView(props: ListSearchViewProps) {
       date,
       userId,
     });
-  };
-
-  const handleFollowing = (item) => {
-    if (item && item.hasOwnProperty("followers")) {
-      return Boolean(item.followers.find((userIdx) => userIdx === userId));
-    } else {
-      return false;
-    }
   };
 
   const GroupTitleMemo = React.memo(() => (
@@ -154,7 +148,6 @@ export default function ListSearchView(props: ListSearchViewProps) {
                     minute: "2-digit",
                   })
                 : "";
-            const following = handleFollowing(item);
             return (
               <ListItem
                 text={item.text}
@@ -174,7 +167,6 @@ export default function ListSearchView(props: ListSearchViewProps) {
                 showReplies='True'
                 commenterName={item.commenterName}
                 color={item.color}
-                following={following}
                 userId={userId}
                 commenterId={item.userId}
                 commentId={item.id}
@@ -198,7 +190,6 @@ export default function ListSearchView(props: ListSearchViewProps) {
                     minute: "2-digit",
                   })
                 : "";
-            const following = handleFollowing(item);
             return (
               <ListItem
                 text={item.text}
@@ -218,7 +209,6 @@ export default function ListSearchView(props: ListSearchViewProps) {
                 showReplies='True'
                 commenterName={item.commenterName}
                 color={item.color}
-                following={following}
                 commentId={item.id}
                 userId={userId}
                 commenterId={item.userId}

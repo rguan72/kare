@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useImperativeHandle } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   FlatList,
   View,
@@ -14,7 +14,6 @@ import { Entypo } from "@expo/vector-icons";
 import { Button, Text } from "@ui-kitten/components";
 import {
   getGroupsById,
-  getUser,
   getCommentsSince,
   onGroupOpen,
 } from "../utils/FirebaseUtils";
@@ -23,6 +22,7 @@ import screens from "../constants/screenNames";
 import HomeStyles from "../StyleSheets/HomeStyles";
 import HomeSearchBar from "../components/HomeSearchBar";
 import { commentProcess } from "../utils/commentProcess";
+import { UserContext } from "../UserContext";
 
 interface Group {
   title: String;
@@ -37,8 +37,9 @@ export default function HomeScreen({ route, navigation }) {
   const { userId } = route.params;
   const [query, setQuery] = useState("");
   const [filteredGroups, setFilteredGroups] = useState([]);
-
   const [groupData, setGroupData] = useState({});
+
+  const { userState, dispatch } = useContext(UserContext);
 
   const onSignOut = () => {
     firebase
@@ -69,16 +70,14 @@ export default function HomeScreen({ route, navigation }) {
     setLoading(true);
     const unsubscribe = navigation.addListener("focus", () => {
       setLoading(true);
-      getUser(userId).then((user) =>
-        getGroupsById(user.groups).then((fetchedGroups) => {
-          setGroups(fetchedGroups);
-          Analytics.setUserProperty(
-            "communitiesJoined",
-            fetchedGroups.length.toString()
-          );
-          setLoading(false);
-        })
-      );
+      getGroupsById(userState.groups).then((fetchedGroups) => {
+        setGroups(fetchedGroups);
+        Analytics.setUserProperty(
+          "communitiesJoined",
+          fetchedGroups.length.toString()
+        );
+        setLoading(false);
+      });
     });
 
     return unsubscribe;
@@ -119,7 +118,7 @@ export default function HomeScreen({ route, navigation }) {
   return (
     <View style={HomeStyles.container}>
       <View style={HomeStyles.Heading}>
-        <Text category="h5" style={{ alignSelf: "center" }}>
+        <Text category='h5' style={{ alignSelf: "center" }}>
           My Communities
         </Text>
         <TouchableOpacity
@@ -130,7 +129,7 @@ export default function HomeScreen({ route, navigation }) {
             })
           }
         >
-          <Entypo name="dots-three-horizontal" size={20} />
+          <Entypo name='dots-three-horizontal' size={20} />
         </TouchableOpacity>
       </View>
       <HomeSearchBar
@@ -140,9 +139,9 @@ export default function HomeScreen({ route, navigation }) {
       />
       {loading ? (
         <ActivityIndicator
-          size="large"
+          size='large'
           style={{ flex: 1 }}
-          color="#5505BA"
+          color='#5505BA'
           animating={loading}
         />
       ) : query.length > 0 ? (

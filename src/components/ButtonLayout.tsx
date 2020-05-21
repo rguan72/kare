@@ -1,18 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Layout, Button, Input } from "@ui-kitten/components";
 import { addComment, incrementGroupConnectors } from "../utils/FirebaseUtils";
 import ThreadStyles from "../StyleSheets/ThreadStyles";
-import { User } from "../Models";
+
+import { UserContext } from "../UserContext";
 
 interface ButtonLayoutProps {
   userId: string;
-  user: User;
   groupId: string;
 }
 
 export default function ButtonLayout(props: ButtonLayoutProps) {
-  const { userId, user, groupId } = props;
+  const { userId, groupId } = props;
   const [value, setValue] = useState("");
+
+  const { userState, dispatch } = useContext(UserContext);
+
   return (
     <Layout style={ThreadStyles.commentBox}>
       <Input
@@ -30,8 +33,8 @@ export default function ButtonLayout(props: ButtonLayoutProps) {
               reports: 0,
               show: true,
               numReplies: 0,
-              color: user.color,
-              commenterName: user.name,
+              color: userState.color,
+              commenterName: userState.name,
             },
             groupId
           );

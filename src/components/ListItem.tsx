@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { TouchableOpacity, Image } from "react-native";
 import { Card, Text, Modal, Button, Input } from "@ui-kitten/components";
 import { View } from "react-native";
@@ -12,6 +12,8 @@ import {
   deleteComment,
 } from "../utils/FirebaseUtils";
 import { Entypo } from "@expo/vector-icons";
+import { UserContext } from "../UserContext";
+import { removeFollowing, addFollowing } from "../actions/userActions";
 
 export default function ListItem({
   text,
@@ -22,7 +24,6 @@ export default function ListItem({
   showReplies,
   commenterName,
   color,
-  following,
   commentId,
   userId,
   commenterId,
@@ -31,7 +32,24 @@ export default function ListItem({
   const [visible, setVisible] = useState(false);
   const [value, setValue] = useState(text);
   const [editing, setEditing] = useState(false);
-  const [isFollowing, setIsFollowing] = useState(following);
+  const { userState, dispatch } = useContext(UserContext);
+  const [isFollowing, setIsFollowing] = useState(
+    Boolean(
+      userState.comments_following.find(
+        (commentIdx) => commentIdx === commentId
+      )
+    )
+  );
+
+  useEffect(() => {
+    setIsFollowing(
+      Boolean(
+        userState.comments_following.find(
+          (commentIdx) => commentIdx === commentId
+        )
+      )
+    );
+  }, [userState]);
 
   const commentColor = Colors[color];
 
@@ -203,6 +221,9 @@ export default function ListItem({
                 onPress={() => {
                   manageFollowingComment(isFollowing, commentId, userId);
                   setIsFollowing(!isFollowing);
+                  isFollowing
+                    ? removeFollowing(dispatch, commentId)
+                    : addFollowing(dispatch, commentId);
                 }}
                 style={[
                   ReportDialogueStyles.reportReasons,
