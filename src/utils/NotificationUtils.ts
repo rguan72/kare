@@ -151,6 +151,7 @@ async function sendFollowersNotification(
   data: data,
   sent: object
 ) {
+  console.log(sent);
   const commentData = getComment(data.commentId);
   const followers = (await commentData).followers;
   followers.forEach(async (userId) => {
@@ -190,7 +191,8 @@ async function managePushNotification(
   userName: string,
   data: data
 ) {
-  const sent = { currentUserId: "seen" }; // so current user does not get notification
+  const sent = {};
+  sent[currentUserId] = "seen"; // so current user does not get notification
   if (currentUserId != data.commenterId) {
     // if you are not replying to your own comment
     const sentAfterInit = sendCommenterNotification(
