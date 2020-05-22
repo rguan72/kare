@@ -21,12 +21,14 @@ export default function ModModal(props: ModModalProps) {
       >
         <Card disabled={true}>
           <Text>
-            Anyone experiencing thoughts of suicide can seek help from: The
-            24-hour National Suicide Prevention Lifeline at 1-800-273-TALK
-            (8255). The Ozone House, a 24-hour hotline for youth, at
-            734-662-2222. The 24-hour hotline at University of Michigan
-            Psychiatric Emergency Services at 734-936-5900. The Washtenaw County
-            Community Mental Health crisis team at 734-544-3050
+            The comment you submitted has language that goes against our
+            community guidelines. Please submit a different comment. Anyone
+            experiencing thoughts of suicide can seek help from: The 24-hour
+            National Suicide Prevention Lifeline at 1-800-273-TALK (8255). The
+            Ozone House, a 24-hour hotline for youth, at 734-662-2222. The
+            24-hour hotline at University of Michigan Psychiatric Emergency
+            Services at 734-936-5900. The Washtenaw County Community Mental
+            Health crisis team at 734-544-3050
           </Text>
           <Button onPress={() => setshVisible(false)}>DISMISS</Button>
         </Card>
