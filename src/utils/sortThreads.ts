@@ -4,13 +4,14 @@ function sortThreads(threads) {
   var sorted_threads_str = [];
   var count = 0;
   for (let thread of threads) {
-    // gives a score of 0 if comment is older than 7 days (604,800 seconds)
-    // otherwise, gives a score between 0 and 50
     if (!(thread["timestamp"] && thread["latestReplyTimestamp"])){
       thread_scores[count] = 110;
       count = count + 1;
       continue;
     }
+
+    // gives a score of 0 if comment is older than 7 days (604,800 seconds)
+    // otherwise, gives a score between 0 and 50
     var timestamp_score = 
       50-((((Date.now()/1000)-
       thread["timestamp"]["seconds"])/604800.0) * 50);
