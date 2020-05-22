@@ -11,8 +11,8 @@ export default StyleSheet.create({
     // marginBottom: "10%",
     zIndex: 2,
     // styling
-    backgroundColor: "#F3EAFF",
-    borderColor: Colors["karePurple"],
+    backgroundColor: "#d3d3d3",
+    borderColor: "#d3d3d3",
     borderWidth: 2,
     borderRadius: 20,
     shadowOffset: { width: 5, height: 5 }, // shadow prop is for iOS

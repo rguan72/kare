@@ -71,12 +71,5 @@ export default StyleSheet.create({
         marginLeft: 30,
         marginRight: 30,
 	marginBottom: 30,
-    },
-    buttonText: {
-        height: Dimensions.get("window").height*0.0679,
-        fontWeight: "bold",
-        textAlign: 'center',
-        marginTop: Dimensions.get("window").height*0.0215,
-        color: 'white',
     }
 })
