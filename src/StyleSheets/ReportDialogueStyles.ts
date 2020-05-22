@@ -47,7 +47,7 @@ export default StyleSheet.create({
     //styling
     color: Colors["karePurple"],
     fontWeight: "bold",
-    fontSize: normalize(18),
+    fontSize: normalize(15),
     // borderBottomColor: Colors["karePurple"],
     // borderBottomWidth: 1,
     // alignment
