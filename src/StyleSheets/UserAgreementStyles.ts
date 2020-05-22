@@ -70,6 +70,7 @@ export default StyleSheet.create({
         marginTop: 24,
         marginLeft: 30,
         marginRight: 30,
+	marginBottom: 30,
     },
     buttonText: {
         height: Dimensions.get("window").height*0.0679,
