@@ -1,5 +1,19 @@
-import { StyleSheet } from "react-native";
+import { Dimensions, PixelRatio, StyleSheet } from "react-native";
 import Colors from "../constants/userColors";
+
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
+
+const scale = SCREEN_WIDTH / 375;
+
+export function normalize(size) {
+  const newSize = size * scale;
+  if (Platform.OS === "ios") {
+    return Math.round(PixelRatio.roundToNearestPixel(newSize));
+  } else {
+    return Math.round(PixelRatio.roundToNearestPixel(newSize)) - 2;
+  }
+}
+
 // TODO: update the styles so it looks good. Also you will need to add new items for inapropriateButton and spamButton
 export default StyleSheet.create({
   container: {
@@ -33,6 +47,7 @@ export default StyleSheet.create({
     //styling
     color: Colors["karePurple"],
     fontWeight: "bold",
+    fontSize: normalize(18),
     // borderBottomColor: Colors["karePurple"],
     // borderBottomWidth: 1,
     // alignment

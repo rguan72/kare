@@ -86,7 +86,7 @@ export default function ReportDialogue({
       style={ReportDialogueStyles.container}
     >
       <View style={{ flex: 1 }}>
-        <Text style={ReportDialogueStyles.descriptionBox} category='h6'>
+        <Text style={ReportDialogueStyles.descriptionBox}>
           Why are you reporting this post?
         </Text>
         <TouchableOpacity
