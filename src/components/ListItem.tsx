@@ -195,7 +195,7 @@ export default function ListItem({
             >
               <Text style={{ color: "white" }}>Report</Text>
             </TouchableOpacity>
-            {showReplies == "True" ? (
+            {showReplies ? (
               <TouchableOpacity
                 onPress={() => {
                   manageFollowingComment(isFollowing, commentId, userId);
@@ -246,6 +246,8 @@ ListItem.propTypes = {
   onReply: PropTypes.func.isRequired,
   commenterName: PropTypes.string.isRequired,
   color: PropTypes.string.isRequired,
+  showReplies: PropTypes.bool.isRequired,
+  numReplies: PropTypes.number,
   //following: PropTypes.bool.isRequired,
   commentId: PropTypes.string.isRequired,
   userId: PropTypes.string.isRequired,
