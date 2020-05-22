@@ -151,7 +151,6 @@ async function sendFollowersNotification(
   data: data,
   sent: object
 ) {
-  console.log(sent);
   const commentData = getComment(data.commentId);
   const followers = (await commentData).followers;
   followers.forEach(async (userId) => {
