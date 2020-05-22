@@ -72,7 +72,7 @@ export default function ListItem({
       <View style={ListItemStyles.bottomRow}>
         {showReplies && RepliesNumber}
         {!showReplies || !isFollowing ? (
-          <Text></Text>
+          <View></View>
         ) : (
           <PureImage
             source={require("../../assets/follow-icon.png")}
