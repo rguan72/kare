@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { SafeAreaView, FlatList, KeyboardAvoidingView } from "react-native";
 import PropTypes from "prop-types";
 import { Layout, Text } from "@ui-kitten/components";
+import * as Analytics from "expo-firebase-analytics";
 import UserListItem from "../components/UserListItem";
 import {
   getUserComments,
@@ -14,6 +15,10 @@ export default function UserComments({ route, navigation }) {
   const [comments, setComments] = useState([]);
   const [name, setName] = useState("");
   const { userId } = route.params;
+
+  useEffect(() => {
+    Analytics.setCurrentScreen("UserComments");
+  }, []);
 
   useEffect(() => {
     getUser(userId).then((userData) => {

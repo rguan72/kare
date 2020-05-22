@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "777284393355",
+    "firebase_url": "https://kare-3.firebaseio.com",
+    "project_id": "kare-3",
+    "storage_bucket": "kare-3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:777284393355:android:e90bf99da73e7b81c7378e",
+        "android_client_info": {
+          "package_name": "com.kare.kare"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "777284393355-4gcgc7c0m1aml5jogdagueegdbp1jj8i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDfOLKlUJidfbT_A5t-NGgUdQk7Dy9w3kM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "777284393355-4gcgc7c0m1aml5jogdagueegdbp1jj8i.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "777284393355-rvo6kgkpnsu6n2i9ct0nso983749d359.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "me.kareapp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -10,7 +10,8 @@ import {
 import PropTypes from "prop-types";
 import GroupItemStyles from "../StyleSheets/GroupItemStyles";
 import { Ionicons } from "@expo/vector-icons";
-import { removeGroupFromUser } from "../utils/FirebaseUtils";
+import * as Analytics from "expo-firebase-analytics";
+import { removeGroupFromUser, deleteConnector } from "../utils/FirebaseUtils";
 import PureImage from "../components/PureImage";
 
 export default function UserGroupItem({
@@ -20,6 +21,7 @@ export default function UserGroupItem({
   onCancel,
   groupId,
   num_groups,
+  userId,
 }) {
   const [visible, setVisible] = useState(false);
   const [caption, setCaption] = useState("");
@@ -36,14 +38,14 @@ export default function UserGroupItem({
         <View style={styles.buttonBox}>
           <View style={styles.textBox}>
             <View style={{ flex: 10 }}>
-              <Text category='h5'>{title}</Text>
+              <Text category="h5">{title}</Text>
               <Text>{description}</Text>
             </View>
             <TouchableOpacity
               style={{ flex: 1, paddingLeft: 5 }}
               onPress={onIconPress}
             >
-              <Ionicons name='ios-trash' size={40} />
+              <Ionicons name="ios-trash" size={40} />
             </TouchableOpacity>
           </View>
           <View style={styles.imageBox}>
@@ -60,8 +62,14 @@ export default function UserGroupItem({
                   setError(true);
                 } else {
                   removeGroupFromUser(groupId);
+                  deleteConnector(userId, groupId);
                   onCancel();
                   setVisible(false);
+                  Analytics.logEvent("GroupLeft", {
+                    name: "group left",
+                    screen: "ManageGroups",
+                    purpose: "Leave a group user doesn't want to be in",
+                  });
                 }
               }}
               style={styles.groupButton}

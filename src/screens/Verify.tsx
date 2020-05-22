@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import firebase from "firebase/app";
 import { View, TouchableOpacity, TouchableWithoutFeedback } from "react-native";
+import * as Analytics from "expo-firebase-analytics";
 import { Modal, Card, Text, Button } from "@ui-kitten/components";
 import screens from "../constants/screenNames";
 import { sendVerificationEmail, getCurrentUser } from "../utils/FirebaseUtils";
@@ -12,6 +13,11 @@ export default function VerifyEmail({ navigation }) {
   const user = getCurrentUser();
   const [visible, setVisible] = useState(false);
   const [buttonTxt, setButtonTxt] = useState("Send Verification");
+
+  useEffect(() => {
+    Analytics.setCurrentScreen("Verify");
+  }, []);
+
   const onSignOut = () => {
     setVisible(true);
     firebase
@@ -63,6 +69,11 @@ export default function VerifyEmail({ navigation }) {
             console.log("sent email");
             sendVerificationEmail();
             setButtonTxt("Resend Verification");
+            Analytics.logEvent("EmailVerificationPressed", {
+              name: "verifyPress",
+              screen: "Verify",
+              purpose: "Receive verification email",
+            });
           }}
         >
           {buttonTxt}
