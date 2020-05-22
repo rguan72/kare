@@ -166,7 +166,7 @@ function watchComments(setComments, groupId, setCommentsLoading) {
       querySnapshot.forEach((doc) => {
         comments.unshift({
           id: doc.id,
-          ...doc.data(),
+          ...doc.data({serverTimestamps: 'estimate'}),
         });
       });
       setComments(comments);
