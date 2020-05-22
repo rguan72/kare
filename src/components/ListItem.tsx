@@ -123,11 +123,6 @@ export default function ListItem({
                   }}
                   style={[
                     ReportDialogueStyles.reportReasons,
-                    {
-                      marginBottom: 50,
-                      height: "20%",
-                      backgroundColor: "#5505BA",
-                    },
                   ]}
                 >
                   <Text style={{ color: "white" }}>Save Changes</Text>
@@ -139,12 +134,6 @@ export default function ListItem({
                   onPress={() => setEditing(true)}
                   style={[
                     ReportDialogueStyles.reportReasons,
-                    {
-                      marginBottom: 5,
-                      marginTop: 10,
-                      height: "20%",
-                      backgroundColor: "#5505BA",
-                    },
                   ]}
                 >
                   <Text style={{ color: "white" }}>Edit</Text>
@@ -153,12 +142,6 @@ export default function ListItem({
                   onPress={() => deleteComment(commentId)}
                   style={[
                     ReportDialogueStyles.reportReasons,
-                    {
-                      marginBottom: 50,
-                      marginTop: 5,
-                      height: "20%",
-                      backgroundColor: "#5505BA",
-                    },
                   ]}
                 >
                   <Text style={{ color: "white" }}>Delete</Text>
@@ -173,8 +156,7 @@ export default function ListItem({
                 setEditing(false);
               }}
               style={[
-                ReportDialogueStyles.reportReasons,
-                { marginTop: 5, height: "20%", backgroundColor: "#5505BA" },
+                ReportDialogueStyles.submitButton,
               ]}
             >
               <Text style={{ color: "white" }}>Cancel</Text>
@@ -188,12 +170,6 @@ export default function ListItem({
               }
               style={[
                 ReportDialogueStyles.reportReasons,
-                {
-                  marginBottom: 5,
-                  marginTop: 10,
-                  height: "20%",
-                  backgroundColor: "#5505BA",
-                },
               ]}
             >
               <Text style={{ color: "white" }}>Report</Text>
@@ -206,12 +182,6 @@ export default function ListItem({
                 }}
                 style={[
                   ReportDialogueStyles.reportReasons,
-                  {
-                    marginBottom: 50,
-                    marginTop: 10,
-                    height: "20%",
-                    backgroundColor: "#5505BA",
-                  },
                 ]}
               >
                 <Text style={{ color: "white" }}>
@@ -229,8 +199,7 @@ export default function ListItem({
                 setEditing(false);
               }}
               style={[
-                ReportDialogueStyles.reportReasons,
-                { marginTop: 5, height: "20%", backgroundColor: "#5505BA" },
+                ReportDialogueStyles.submitButton,
               ]}
             >
               <Text style={{ color: "white" }}>Cancel</Text>

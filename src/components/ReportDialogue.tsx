@@ -92,34 +92,37 @@ export default function ReportDialogue({
         <TouchableOpacity
           style={[
             ReportDialogueStyles.reportReasons,
-            { backgroundColor: helpButtonBackground },
+            { height:"13%" },
           ]}
           onPress={submitHelpFlag}
         >
-          <Text style={{ color: helpButtonText }}>Flag for help</Text>
+          <Text style={{ color: "white" }}>Flag for help</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[
             ReportDialogueStyles.reportReasons,
-            { backgroundColor: inappropriateButtonBackground },
+            { height: "13%" },
           ]}
           onPress={submitInappropriate}
         >
-          <Text style={{ color: inappropriateButtonText }}>
+          <Text style={{ color: "white" }}>
             Content is inappropriate
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[
             ReportDialogueStyles.reportReasons,
-            { backgroundColor: spamButtonBackground },
+            { height: "13%" },
           ]}
           onPress={submitSpam}
         >
-          <Text style={{ color: spamButtonText }}>Content is spam</Text>
+          <Text style={{ color: "white" }}>Content is spam</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={ReportDialogueStyles.submitButton}
+          style={[
+            ReportDialogueStyles.submitButton, 
+            { height: "13%" },
+          ]}
           onPress={submitReport}
         >
           <View>

@@ -43,18 +43,15 @@ export default StyleSheet.create({
     // placement
     bottom: "5%",
     position: "absolute",
-    width: "25%",
-    height: "12.5%",
+    width: "90%",
+    height: "20%",
+    "marginTop": 3,
     zIndex: 2,
     // styling
     backgroundColor: Colors["karePurple"],
-    borderColor: "black",
     borderWidth: 1,
     borderRadius: 5,
     elevation: 2, // for android
-    shadowOffset: { width: 5, height: 5 }, // for iOS
-    shadowColor: Colors["karePurple"],
-    shadowOpacity: 1.0,
     // alignment
     alignItems: "center",
     alignSelf: "center",
@@ -63,15 +60,13 @@ export default StyleSheet.create({
   reportReasons: {
     // placement
     marginTop: 3,
-    height: "15%",
+    marginBottom: 3,
+    height: "20%",
     width: "90%",
     zIndex: 2,
     //styling
-    backgroundColor: "#F3EAFF",
+    backgroundColor: Colors["karePurple"],
     elevation: 1,
-    shadowOffset: { width: 3, height: 3 },
-    shadowColor: "black",
-    shadowOpacity: 0.5,
     borderRadius: 3,
     // alignment
     alignSelf: "center",
