@@ -69,9 +69,10 @@ export default function ListItem({
         </TouchableOpacity>
       </View>
       <Text style={ListItemStyles.comments}>{text}</Text>
+      {showReplies ? (
       <View style={ListItemStyles.bottomRow}>
-        {showReplies && RepliesNumber}
-        {!showReplies || !isFollowing ? (
+        {RepliesNumber}
+        {!isFollowing ? (
           <View></View>
         ) : (
           <PureImage
@@ -80,6 +81,9 @@ export default function ListItem({
           />
         )}
       </View>
+      )  :  (
+        <View></View>
+      )}
       <Modal
         visible={visible}
         style={[ReportDialogueStyles.container, { height: "25%" }]}
