@@ -74,6 +74,7 @@ export default function ButtonLayout(props: ButtonLayoutProps) {
           } else {
             addCommentLogic(userId, value, groupId, user);
           }
+          setValue("");
         }}
         style={ThreadStyles.submitButton}
         disabled={value === ""}
