@@ -7,14 +7,18 @@ import {
   Platform,
   Keyboard,
   TouchableWithoutFeedback,
-  TouchableOpacity,
-  Image,
   ActivityIndicator,
 } from "react-native";
 import * as Analytics from "expo-firebase-analytics";
 import { Layout, Text, Card } from "@ui-kitten/components";
 import ListItem from "../components/ListItem";
-import { watchReplies, getUser } from "../utils/FirebaseUtils";
+import PureImage from "../components/PureImage";
+import {
+  addReply,
+  watchReplies,
+  getUser,
+  followComment,
+} from "../utils/FirebaseUtils";
 import screens from "../constants/screenNames";
 import Colors from "../constants/userColors";
 import RepliesStyles from "../StyleSheets/RepliesStyles";
@@ -86,7 +90,7 @@ export default function Replies({ route, navigation }) {
     );
   }, []); // so it only runs once
 
-  const ReplyParent = () => (
+  const ReplyParent = (
     <Layout style={[RepliesStyles.mb, RepliesStyles.bgColor, RepliesStyles.mt]}>
       <Layout
         style={{
@@ -100,31 +104,33 @@ export default function Replies({ route, navigation }) {
           }}
         >
           <Card style={RepliesStyles.card}>
-            <View style={{ flexDirection: "row" }}>
-              <View
-                style={[
-                  RepliesStyles.square,
-                  { backgroundColor: commenterColor, marginRight: 5 },
-                ]}
-              />
-              <Text style={RepliesStyles.userName}> {commenterName}</Text>
-              <Text style={RepliesStyles.date}>
-                {" * "}
-                {date}
-              </Text>
-              {imageLoading ? (
+            <View
+              style={{ flexDirection: "row", justifyContent: "space-between" }}
+            >
+              <View style={{ flexDirection: "row" }}>
+                <View
+                  style={[
+                    RepliesStyles.square,
+                    { backgroundColor: commenterColor, marginRight: 5 },
+                  ]}
+                />
+                <Text style={RepliesStyles.userName}> {commenterName}</Text>
+                <Text style={RepliesStyles.date}>
+                  {" * "}
+                  {date}
+                </Text>
+              </View>
+              {imageLoading || !following ? (
                 <Text></Text>
               ) : (
-                <TouchableOpacity style={RepliesStyles.touchable}>
-                  {following ? (
-                    <Image
-                      source={require("../../assets/follow-icon.png")}
-                      style={{ height: 20, width: 20, resizeMode: "contain" }}
-                    />
-                  ) : (
-                    <Text></Text>
-                  )}
-                </TouchableOpacity>
+                <PureImage
+                  source={require("../../assets/follow-icon.png")}
+                  style={{
+                    height: 20,
+                    width: 20,
+                    resizeMode: "contain",
+                  }}
+                />
               )}
             </View>
             <Text style={RepliesStyles.comment}>{comment}</Text>
@@ -200,11 +206,9 @@ export default function Replies({ route, navigation }) {
                           )
                         }
                         date={date}
-                        onReply={() => {
-                          return null;
-                        }}
+                        onReply={() => null}
                         numReplies={item.numReplies}
-                        showReplies="False"
+                        showReplies={false}
                         color={item.color}
                         commenterName={item.commenterName}
                         commentId={item.id}

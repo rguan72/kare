@@ -123,6 +123,7 @@ function addReply(commentId, comment: Comment) {
         .update({
           numReplies: firebaseApp.firestore.FieldValue.increment(1),
           replies: firebaseApp.firestore.FieldValue.arrayUnion(ref.id),
+	  latestReplyTimestamp: firebaseApp.firestore.FieldValue.serverTimestamp(),
         });
     });
 }
@@ -160,13 +161,12 @@ function watchComments(setComments, groupId, setCommentsLoading) {
     .where("parentId", "==", "")
     .where("show", "==", true)
     .where("groupId", "==", groupId)
-    .orderBy("timestamp", "asc")
     .onSnapshot((querySnapshot) => {
       const comments = [];
       querySnapshot.forEach((doc) => {
         comments.unshift({
           id: doc.id,
-          ...doc.data(),
+          ...doc.data({serverTimestamps: 'estimate'}),
         });
       });
       setComments(comments);
@@ -366,6 +366,41 @@ async function editCommentsFields() {
     });
 }
 
+async function addReplyTimestamp() {
+  /*Function used to add latest reply field to all comments with numReplies > 0 */
+  db.collection(collections.comments)
+    .get()
+    .then((querySnapshot) => {
+      querySnapshot.forEach(async (doc) => {
+        try {
+          const replies = doc.data().replies;
+	  var timestamp;
+	  var start = 1;
+	  for(let reply of replies) {
+	    await db.collection(collections.comments).doc(reply)
+	    .get()
+	    .then(function(doc) {
+	      if (start === 1 && doc.data().timestamp){
+		start = 0;
+		timestamp = doc.data().timestamp;
+	      }
+	      if (doc.data().timestamp && doc.data().timestamp > timestamp){
+	        timestamp = doc.data().timestamp;
+	      }
+	    });
+	  }
+	  if ((replies.length > 0)){
+            await db.collection(collections.comments).doc(doc.id).update({
+              latestReplyTimestamp: timestamp,
+	    });
+  	  }
+        } catch (err) {
+          console.log(err);
+        }
+      });
+    });
+}
+
 /*
 Makes group connectors between all user-group pairs
 Should only be called once
@@ -494,6 +529,7 @@ export {
   editComment,
   editCommentsFields,
   deleteComment,
+  addReplyTimestamp,
   createConnector,
   deleteConnector,
   getCommentsSince,
