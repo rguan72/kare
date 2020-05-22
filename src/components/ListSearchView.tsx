@@ -119,9 +119,9 @@ export default function ListSearchView(props: ListSearchViewProps) {
   const renderIcon = () => (
     <TouchableWithoutFeedback>
       {!query ? (
-        <EvilIcons name='search' size={25} />
+        <EvilIcons name="search" size={25} />
       ) : loading ? (
-        <ActivityIndicator size={25} color='#8566AA' />
+        <ActivityIndicator size={25} color="#8566AA" />
       ) : (
         <Text></Text>
       )}
@@ -131,16 +131,16 @@ export default function ListSearchView(props: ListSearchViewProps) {
   return (
     <>
       <SearchBar
-        placeholder='Search for a comment...'
+        placeholder="Search for a comment..."
         onChangeText={setQuery}
         value={query}
         accessoryRight={renderIcon}
       />
       {commentsLoading ? (
         <ActivityIndicator
-          size='large'
+          size="large"
           style={{ flex: 1 }}
-          color='#5505BA'
+          color="#5505BA"
           animating={commentsLoading}
         />
       ) : query.length > 0 ? (
@@ -174,7 +174,7 @@ export default function ListSearchView(props: ListSearchViewProps) {
                 }
                 date={date}
                 numReplies={item.numReplies}
-                showReplies='True'
+                showReplies
                 commenterName={item.commenterName}
                 color={item.color}
                 following={following}
@@ -218,7 +218,7 @@ export default function ListSearchView(props: ListSearchViewProps) {
                 }
                 date={date}
                 numReplies={item.numReplies}
-                showReplies='True'
+                showReplies
                 commenterName={item.commenterName}
                 color={item.color}
                 following={following}
