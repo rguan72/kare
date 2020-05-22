@@ -152,7 +152,6 @@ function watchComments(setComments, groupId, setCommentsLoading) {
     .where("parentId", "==", "")
     .where("show", "==", true)
     .where("groupId", "==", groupId)
-    .orderBy("timestamp", "asc")
     .onSnapshot((querySnapshot) => {
       const comments = [];
       querySnapshot.forEach((doc) => {
