@@ -31,7 +31,6 @@ interface Group {
 }
 
 export default function HomeScreen({ route, navigation }) {
-  const [currentUser, setCurrentUser] = useState({});
   const [groups, setGroups] = useState([]);
   const [loading, setLoading] = useState(true);
   const { userId } = route.params;
@@ -85,9 +84,7 @@ export default function HomeScreen({ route, navigation }) {
   }, []);
 
   useEffect(() => {
-    if (!currentUser.notificationId) {
-      registerForPushNotificationsAsync(userId);
-    }
+    registerForPushNotificationsAsync(userId);
     const _notificationSubscription = Notifications.addListener(
       handleNotification
     );
@@ -115,7 +112,7 @@ export default function HomeScreen({ route, navigation }) {
       setLoading(false);
     }, 500);
   }, [query]);
-
+  const groupDataToShow = query.length > 0 ? filteredGroups : groups;
   return (
     <View style={HomeStyles.container}>
       <View style={HomeStyles.Heading}>
@@ -134,7 +131,7 @@ export default function HomeScreen({ route, navigation }) {
         </TouchableOpacity>
       </View>
       <HomeSearchBar
-        placeholder='Search for a community...'
+        placeholder="Search for a community..."
         onChangeText={setQuery}
         value={query}
       />
@@ -145,33 +142,9 @@ export default function HomeScreen({ route, navigation }) {
           color="#5505BA"
           animating={loading}
         />
-      ) : query.length > 0 ? (
-        <FlatList
-          data={filteredGroups}
-          renderItem={({ item }) => (
-            <GroupItem
-              title={item.title}
-              image={item.imageURL}
-              description={item.description}
-              onPress={() => {
-                navigation.navigate(screens.thread, {
-                  userId: userId,
-                  title: item.title,
-                  description: item.description,
-                  groupId: item.id,
-                  image: item.imageURL,
-                  num_members: item.num_members,
-                });
-                onGroupOpen(item.id, userId);
-              }}
-              commentsSince={groupData[item.id]}
-            />
-          )}
-          keyExtractor={(item) => item.id}
-        />
       ) : (
         <FlatList
-          data={groups}
+          data={groupDataToShow}
           renderItem={({ item }) => (
             <GroupItem
               title={item.title}

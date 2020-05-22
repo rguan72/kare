@@ -1,27 +1,33 @@
 interface NewComment {
-  color: String;
-  commenterName: String;
-  numReplies: Number;
-  reports: Number;
-  show: Boolean;
-  text: String;
-  userId: String;
+  color: string;
+  commenterName: string;
+  numReplies: number;
+  reports: number;
+  show: boolean;
+  text: string;
+  userId: string;
 }
 
 interface StressItem {
-  id: Number;
-  title: String;
+  id: number;
+  title: string;
 }
 
 interface User {
-  color: String;
-  consider: Number;
-  groups: Array<String>;
-  name: String;
+  color: string;
+  consider: number;
+  groups: Array<string>;
+  name: string;
   stress: Array<StressItem>;
-  support: Number;
-  timestamp: String;
-  voice: Number;
+  support: number;
+  timestamp: string;
+  voice: number;
 }
 
-export { User, NewComment };
+enum ModTypesEnum {
+  selfHarm,
+  offensive,
+  ok,
+}
+
+export { User, NewComment, ModTypesEnum };

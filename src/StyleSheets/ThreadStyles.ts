@@ -49,4 +49,7 @@ export default StyleSheet.create({
   submitButton: {
     marginTop: 0,
   },
+  backdrop: {
+    backgroundColor: "rgba(0, 0, 0, 0.2)",
+  },
 });
