@@ -116,16 +116,11 @@ export default function ListItem({
                     setVisible(false);
                     setValue(value);
                     setEditing(false);
-                    setQuery("");
+                    if (setQuery) {
+                      setQuery("");
+                    }
                   }}
-                  style={[
-                    ReportDialogueStyles.reportReasons,
-                    {
-                      marginBottom: 50,
-                      height: "20%",
-                      backgroundColor: "#5505BA",
-                    },
-                  ]}
+                  style={[ReportDialogueStyles.reportReasons]}
                 >
                   <Text style={{ color: "white" }}>Save Changes</Text>
                 </TouchableOpacity>
@@ -134,29 +129,13 @@ export default function ListItem({
               <>
                 <TouchableOpacity
                   onPress={() => setEditing(true)}
-                  style={[
-                    ReportDialogueStyles.reportReasons,
-                    {
-                      marginBottom: 5,
-                      marginTop: 10,
-                      height: "20%",
-                      backgroundColor: "#5505BA",
-                    },
-                  ]}
+                  style={[ReportDialogueStyles.reportReasons]}
                 >
                   <Text style={{ color: "white" }}>Edit</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={() => deleteComment(commentId)}
-                  style={[
-                    ReportDialogueStyles.reportReasons,
-                    {
-                      marginBottom: 50,
-                      marginTop: 5,
-                      height: "20%",
-                      backgroundColor: "#5505BA",
-                    },
-                  ]}
+                  style={[ReportDialogueStyles.reportReasons]}
                 >
                   <Text style={{ color: "white" }}>Delete</Text>
                 </TouchableOpacity>
@@ -169,10 +148,7 @@ export default function ListItem({
                 setValue(text);
                 setEditing(false);
               }}
-              style={[
-                ReportDialogueStyles.reportReasons,
-                { marginTop: 5, height: "20%", backgroundColor: "#5505BA" },
-              ]}
+              style={[ReportDialogueStyles.submitButton]}
             >
               <Text style={{ color: "white" }}>Cancel</Text>
             </TouchableOpacity>
@@ -183,15 +159,7 @@ export default function ListItem({
               onPress={
                 onReport /* currently "onReport" to make show false might have to change */
               }
-              style={[
-                ReportDialogueStyles.reportReasons,
-                {
-                  marginBottom: 5,
-                  marginTop: 10,
-                  height: "20%",
-                  backgroundColor: "#5505BA",
-                },
-              ]}
+              style={[ReportDialogueStyles.reportReasons]}
             >
               <Text style={{ color: "white" }}>Report</Text>
             </TouchableOpacity>
@@ -201,15 +169,7 @@ export default function ListItem({
                   manageFollowingComment(isFollowing, commentId, userId);
                   setIsFollowing(!isFollowing);
                 }}
-                style={[
-                  ReportDialogueStyles.reportReasons,
-                  {
-                    marginBottom: 50,
-                    marginTop: 10,
-                    height: "20%",
-                    backgroundColor: "#5505BA",
-                  },
-                ]}
+                style={[ReportDialogueStyles.reportReasons]}
               >
                 <Text style={{ color: "white" }}>
                   {isFollowing ? "Unfollow Post" : "Follow Post"}
@@ -225,10 +185,7 @@ export default function ListItem({
                 setValue(text);
                 setEditing(false);
               }}
-              style={[
-                ReportDialogueStyles.reportReasons,
-                { marginTop: 5, height: "20%", backgroundColor: "#5505BA" },
-              ]}
+              style={[ReportDialogueStyles.submitButton]}
             >
               <Text style={{ color: "white" }}>Cancel</Text>
             </TouchableOpacity>
