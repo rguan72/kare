@@ -37,8 +37,12 @@ export default function ButtonLayout(props: ButtonLayoutProps) {
   // easier to do than in Typescript
   if (__DEV__) {
     assert(
-      (commentId && commenterId) ||
-        (commentId === undefined && commenterId === undefined)
+      (commentId && commenterId && comment && date) ||
+        (commentId === undefined &&
+          commenterId === undefined &&
+          comment === undefined &&
+          date === undefined &&
+          groupId)
     );
   }
   return (
@@ -51,10 +55,10 @@ export default function ButtonLayout(props: ButtonLayoutProps) {
       />
       <Button
         onPress={() => {
-          const messageProblem = moderate(value);
-          if (messageProblem != ModTypesEnum.ok) {
+          const { moderateType } = moderate(value);
+          if (moderateType != ModTypesEnum.ok) {
             setmodVisible(true);
-            setFlagType(messageProblem);
+            setFlagType(moderateType);
             return;
           }
           if (isReply) {

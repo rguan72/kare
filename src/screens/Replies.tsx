@@ -12,14 +12,9 @@ import {
   ActivityIndicator,
 } from "react-native";
 import * as Analytics from "expo-firebase-analytics";
-import { Layout, Button, Input, Text, Card } from "@ui-kitten/components";
+import { Layout, Text, Card } from "@ui-kitten/components";
 import ListItem from "../components/ListItem";
-import {
-  addReply,
-  watchReplies,
-  getUser,
-  followComment,
-} from "../utils/FirebaseUtils";
+import { watchReplies, getUser } from "../utils/FirebaseUtils";
 import screens from "../constants/screenNames";
 import Colors from "../constants/userColors";
 import RepliesStyles from "../StyleSheets/RepliesStyles";
@@ -29,7 +24,6 @@ import { Notifications } from "expo";
 
 export default function Replies({ route, navigation }) {
   const [replies, setReplies] = useState([]);
-  const [value, setValue] = useState("");
   const [showReportDialogue, setShowReportDialogue] = useState(false);
   const [reporterID, setReporterID] = useState("");
   const [reporteeID, setReporteeID] = useState("");
@@ -128,11 +122,6 @@ export default function Replies({ route, navigation }) {
                       style={{ height: 20, width: 20, resizeMode: "contain" }}
                     />
                   ) : (
-                    /*
-                    <Image
-                      source={require("../../assets/unfollow.png")}
-                      style={{ height: 20, width: 20, resizeMode: "contain" }}
-                    />*/
                     <Text></Text>
                   )}
                 </TouchableOpacity>
@@ -226,7 +215,7 @@ export default function Replies({ route, navigation }) {
                   }}
                   keyExtractor={(item) => item.id}
                 />
-                <ButtonLayout 
+                <ButtonLayout
                   user={user}
                   userId={userId}
                   comment={comment}
