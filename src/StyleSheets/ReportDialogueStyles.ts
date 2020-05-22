@@ -4,7 +4,7 @@ import Colors from "../constants/userColors";
 export default StyleSheet.create({
   container: {
     // placement
-    height: "30%",
+    height: "40%",
     width: "90%",
     // position: "absolute",
     // bottom: 0,
@@ -25,7 +25,7 @@ export default StyleSheet.create({
   },
   descriptionBox: {
     //placement
-    width: "80%",
+    width: "75%",
     height: "10%",
     marginTop: 15,
     marginBottom: 10,
@@ -49,7 +49,6 @@ export default StyleSheet.create({
     zIndex: 2,
     // styling
     backgroundColor: Colors["karePurple"],
-    borderWidth: 1,
     borderRadius: 5,
     elevation: 2, // for android
     // alignment
