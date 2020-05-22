@@ -31,7 +31,7 @@ export default StyleSheet.create({
   bottomRow: {
     flex: 1,
     flexDirection: "row",
-    alignItems: "flex-start",
+    alignItems: "center",
     marginTop: 8,
   },
   comments: {
@@ -60,5 +60,15 @@ export default StyleSheet.create({
     resizeMode: "contain",
     marginTop: 2,
     marginLeft: 2,
+  },
+  mlauto: {
+    marginLeft: "auto",
+  },
+  mr: {
+    marginRight: 2,
+  },
+  replyNum: {
+    marginRight: 4,
+    opacity: 50,
   },
 });
