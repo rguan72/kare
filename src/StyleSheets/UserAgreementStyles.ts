@@ -67,14 +67,9 @@ export default StyleSheet.create({
         height: Dimensions.get("window").height*0.0272,
     },
     button: {
-        borderColor: '#5505BA',
-        borderWidth: 1,
-        borderRadius: 15,
-        height: '7%',
-        marginVertical:'10%',
-        width: '25%',
-        backgroundColor: '#5505BA',
-        alignItems:'center',
+        marginTop: 24,
+        marginLeft: 30,
+        marginRight: 30,
     },
     buttonText: {
         height: Dimensions.get("window").height*0.0679,

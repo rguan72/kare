@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Text } from "@ui-kitten/components";
+import { Text, Button } from "@ui-kitten/components";
 import { View, ScrollView, TouchableOpacity } from "react-native";
 import * as Analytics from "expo-firebase-analytics";
 import screens from "../constants/screenNames";
@@ -138,12 +138,13 @@ export default function UserAgreement({ navigation, route }) {
           </Text>
         </TouchableOpacity>
       </View>
-      <TouchableOpacity
+      <Button
+	mode="contained"
         style={UserAgreementStyles.button}
         onPress={onNextPress}
       >
-        <Text style={UserAgreementStyles.buttonText}>Next</Text>
-      </TouchableOpacity>
+        Next
+      </Button>
     </View>
   );
 }
