@@ -60,7 +60,6 @@ export default StyleSheet.create({
     position: "absolute",
     width: "90%",
     height: "20%",
-    "marginTop": 3,
     zIndex: 2,
     // styling
     backgroundColor: Colors["karePurple"],
