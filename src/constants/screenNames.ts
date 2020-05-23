@@ -11,4 +11,5 @@ export default {
   error: "Error",
   userAgreement: "UserAgreement",
   passwordReset: "PasswordReset",
+  peerListenerChat: "PeerListenerChat",
 };

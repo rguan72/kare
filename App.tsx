@@ -20,6 +20,7 @@ import ManageGroups from "./src/screens/ManageGroups";
 import Error from "./src/screens/Error";
 import UserAgreement from "./src/screens/UserAgreement";
 import PasswordReset from "./src/screens/PasswordReset";
+import PeerListenerChat from "./src/screens/PeerListenerChat";
 import screens from "./src/constants/screenNames";
 import firebase from "firebase/app";
 import { default as theme } from "./theme.json";
@@ -97,6 +98,11 @@ export default function App() {
                 options={{ title: "", headerTransparent: true }}
               />
               <Stack.Screen
+                name={screens.peerListenerChat}
+                component={PeerListenerChat}
+                options={{ title: "", headerTransparent: true }}
+              />
+              <Stack.Screen
                 name={screens.error}
                 component={Error}
                 options={{
@@ -153,6 +159,11 @@ export default function App() {
                   headerTitle: "",
                   headerTransparent: true,
                 }}
+              />
+              <Stack.Screen
+                name={screens.peerListenerChat}
+                component={PeerListenerChat}
+                options={{ title: "", headerTransparent: true }}
               />
             </>
           ) : (

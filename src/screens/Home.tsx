@@ -116,8 +116,16 @@ export default function HomeScreen({ route, navigation }) {
     }, 500);
   }, [query]);
 
+  const navigateToPeerListenerChat = () => {
+    navigation.navigate(screens.peerListenerChat);
+  }
+
   return (
     <View style={HomeStyles.container}>
+    {/* Temporary button to navigate to the active listener chat */}
+    <Button style={{height: 20, width: 200}} onPress={navigateToPeerListenerChat}>
+      <Text style={{color: "white"}}>Go To Peer Listeners</Text>
+    </Button>
       <View style={HomeStyles.Heading}>
         <Text category="h5" style={{ alignSelf: "center" }}>
           My Communities
