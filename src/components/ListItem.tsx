@@ -27,6 +27,7 @@ export default function ListItem({
   commentId,
   userId,
   commenterId,
+  parentId,
   setQuery,
 }) {
   const [visible, setVisible] = useState(false);
@@ -138,7 +139,7 @@ export default function ListItem({
                   <Text style={{ color: "white" }}>Edit</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  onPress={() => deleteComment(commentId)}
+                  onPress={() => deleteComment(parentId, commentId)}
                   style={[ReportDialogueStyles.reportReasons]}
                 >
                   <Text style={{ color: "white" }}>Delete</Text>
@@ -211,6 +212,7 @@ ListItem.propTypes = {
   numReplies: PropTypes.number,
   //following: PropTypes.bool.isRequired,
   commentId: PropTypes.string.isRequired,
+  parentId: PropTypes.string,
   userId: PropTypes.string.isRequired,
   commenterId: PropTypes.string.isRequired,
   setQuery: PropTypes.func,

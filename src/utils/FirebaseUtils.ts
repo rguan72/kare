@@ -82,7 +82,14 @@ function addGroupsToUser(newGroups) {
   });
 }
 
-function deleteComment(commentId) {
+function deleteComment(parentId, commentId) {
+  if (parentId){
+    db.collection(collections.comments)
+      .doc(parentId)
+      .update({
+        numReplies: firebaseApp.firestore.FieldValue.increment(-1),
+      });
+  }
   db.collection(collections.comments).doc(commentId).delete();
 }
 

@@ -212,6 +212,7 @@ export default function Replies({ route, navigation }) {
                         color={item.color}
                         commenterName={item.commenterName}
                         commentId={item.id}
+			parentId={commentId}
                         userId={userId}
                         commenterId={item.userId}
                       />
