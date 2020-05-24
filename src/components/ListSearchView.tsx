@@ -11,7 +11,7 @@ import ThreadStyles from "../StyleSheets/ThreadStyles";
 import screens from "../constants/screenNames";
 import { EvilIcons } from "@expo/vector-icons";
 import { commentProcess } from "../utils/commentProcess";
-import { UserContext } from "../UserContext";
+import { KareContext } from "../KareContext";
 
 interface ListSearchViewProps {
   groupId: string;
@@ -49,7 +49,7 @@ export default function ListSearchView(props: ListSearchViewProps) {
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(false);
   const [filteredComments, setFilteredComments] = useState([]);
-  const { userState, dispatch } = useContext(UserContext);
+  const { state, dispatch } = useContext(KareContext);
 
   useEffect(() => {
     //setCommentsLoading(true);

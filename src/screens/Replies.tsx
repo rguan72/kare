@@ -28,7 +28,7 @@ import ReportDialogue from "../components/ReportDialogue";
 import { Notifications } from "expo";
 import { managePushNotification } from "../utils/NotificationUtils";
 
-import { UserContext } from "../UserContext";
+import { KareContext } from "../KareContext";
 import { addFollowing } from "../actions/userActions";
 
 export default function Replies({ route, navigation }) {
@@ -48,7 +48,7 @@ export default function Replies({ route, navigation }) {
   const [loading, setLoading] = useState(true);
   const { commenterId, userId, comment, commentId, date } = route.params;
 
-  const { userState, dispatch } = useContext(UserContext);
+  const { state, dispatch } = useContext(KareContext);
 
   useEffect(() => {
     Analytics.setCurrentScreen("Replies");
@@ -67,7 +67,7 @@ export default function Replies({ route, navigation }) {
     });
     if (
       Boolean(
-        userState.comments_following.find(
+        state.user.comments_following.find(
           (commentIdx) => commentIdx === commentId
         )
       )
@@ -242,7 +242,7 @@ export default function Replies({ route, navigation }) {
                     onPress={() => {
                       followComment(commentId, userId);
                       setFollowing(true);
-                      managePushNotification(value, userId, userState.name, {
+                      managePushNotification(value, userId, state.user.name, {
                         commenterId,
                         comment,
                         commentId,
@@ -254,10 +254,10 @@ export default function Replies({ route, navigation }) {
                         reports: 0,
                         show: true,
                         numReplies: 0,
-                        color: userState.color,
-                        commenterName: userState.name,
+                        color: state.user.color,
+                        commenterName: state.user.name,
                       });
-                      addFollowing(dispatch, commentId);
+                      addFollowing(dispatch, commentId, userId);
                       setValue("");
                       Analytics.logEvent("ReplySubmitted", {
                         name: "reply",

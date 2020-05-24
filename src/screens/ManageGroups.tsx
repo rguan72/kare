@@ -12,7 +12,7 @@ import SetupStyles from "../StyleSheets/SetupStyles";
 
 import NUM_GROUPS from "../constants/numberGroups";
 
-import { UserContext } from "../UserContext";
+import { KareContext } from "../KareContext";
 
 export default function ManageGroups({ route, navigation }) {
   const [groups, setGroups] = useState([]);
@@ -21,9 +21,9 @@ export default function ManageGroups({ route, navigation }) {
   const [groupOptions, setGroupOptions] = useState([]);
   const [reload, setReload] = useState(false);
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
-  const { userState, dispatch } = useContext(UserContext);
+  const { state, dispatch } = useContext(KareContext);
 
   const groupTwoDisplayValues = selectedIndexTwo.map((index) => {
     return groupOptions[index.row].title;
@@ -36,13 +36,14 @@ export default function ManageGroups({ route, navigation }) {
   useEffect(() => {
     Analytics.setCurrentScreen("ManageGroups");
   }, []);
-
+  /*
   useEffect(() => {
     setLoading(true);
     getGroupsById(userState.groups).then((fetchedGroups) =>
       setGroups(fetchedGroups)
     );
   }, [reload]);
+  */
 
   useEffect(() => {
     getGroups()
@@ -112,7 +113,7 @@ export default function ManageGroups({ route, navigation }) {
       ) : (
         <React.Fragment>
           <FlatList
-            data={groups}
+            data={state.groups}
             renderItem={({ item }) => (
               <UserGroupItem
                 title={item.title}

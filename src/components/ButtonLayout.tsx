@@ -3,7 +3,7 @@ import { Layout, Button, Input } from "@ui-kitten/components";
 import { addComment, incrementGroupConnectors } from "../utils/FirebaseUtils";
 import ThreadStyles from "../StyleSheets/ThreadStyles";
 
-import { UserContext } from "../UserContext";
+import { KareContext } from "../KareContext";
 
 interface ButtonLayoutProps {
   userId: string;
@@ -14,7 +14,7 @@ export default function ButtonLayout(props: ButtonLayoutProps) {
   const { userId, groupId } = props;
   const [value, setValue] = useState("");
 
-  const { userState, dispatch } = useContext(UserContext);
+  const { state, dispatch } = useContext(KareContext);
 
   return (
     <Layout style={ThreadStyles.commentBox}>
@@ -33,8 +33,8 @@ export default function ButtonLayout(props: ButtonLayoutProps) {
               reports: 0,
               show: true,
               numReplies: 0,
-              color: userState.color,
-              commenterName: userState.name,
+              color: state.user.color,
+              commenterName: state.user.name,
             },
             groupId
           );

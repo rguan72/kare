@@ -452,6 +452,7 @@ async function incrementGroupConnectors(groupId: string) {
 
 // sets commentsSince to 0 to show you opened a group
 async function onGroupOpen(groupId: string, userId: string) {
+  console.log("group opened");
   return db
     .collection(collections.groupConnectors)
     .where("groupId", "==", groupId)
@@ -493,6 +494,7 @@ export {
   getComment,
   manageFollowing,
   followComment,
+  unfollowComment,
   manageFollowingComment,
   editComment,
   editCommentsFields,

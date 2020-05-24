@@ -28,9 +28,12 @@ import UserComments from "./src/screens/UserComments";
 import { setDebugModeEnabled } from "expo-firebase-analytics";
 
 // Global State
-import { UserContext } from "./src/UserContext";
+import { KareContext } from "./src/KareContext";
+import { useCombinedReducer } from "./src/reducers/useCombineReducers";
 import { userReducer } from "./src/reducers/userReducers";
+import { groupReducer } from "./src/reducers/groupReducers";
 import { getUserFromDb } from "./src/actions/userActions";
+import { getGroupsFromDb } from "./src/actions/groupActions";
 
 // Firebase bug workaround: https://stackoverflow.com/questions/60361519/cant-find-a-variable-atob
 if (!global.btoa) {
@@ -52,9 +55,13 @@ export default function App() {
   const [user, setUser] = useState({});
 
   // Global State
-  const [userState, dispatch] = useReducer(userReducer, {}); // intial user is {}
+  const [state, dispatch] = useCombinedReducer({
+    user: useReducer(userReducer, {}),
+    groups: useReducer(groupReducer, []),
+  }); // intial user and groups are empty
+
   // so value is only reinitialized if userState or dispatch change
-  const value = useMemo(() => ({ userState, dispatch }), [userState, dispatch]);
+  const value = useMemo(() => ({ state, dispatch }), [state, dispatch]);
 
   // Handle user state changes
   function onAuthStateChanged(user) {
@@ -64,11 +71,11 @@ export default function App() {
     if (initializing) setInitializing(false);
   }
 
-  useEffect(() => {
-    if (Object.keys(user).length !== 0) {
-      getUserFromDb(dispatch, user.uid);
-    }
-  }, [user]);
+  //useEffect(() => {
+  //  if (Object.keys(state).length !== 0) {
+  //    getUserFromDb(dispatch, user.uid); // will load the user and their groups
+  //  }
+  //}, [user]);
 
   useEffect(() => {
     const subscriber = firebase.auth().onAuthStateChanged(onAuthStateChanged);
@@ -84,7 +91,7 @@ export default function App() {
         mapping={mapping}
         theme={{ ...lightTheme, ...theme }}
       >
-        <UserContext.Provider value={value}>
+        <KareContext.Provider value={value}>
           <Stack.Navigator>
             {!user ? (
               <>
@@ -190,7 +197,7 @@ export default function App() {
               </>
             )}
           </Stack.Navigator>
-        </UserContext.Provider>
+        </KareContext.Provider>
       </ApplicationProvider>
     </NavigationContainer>
   );

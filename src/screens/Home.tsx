@@ -22,7 +22,8 @@ import screens from "../constants/screenNames";
 import HomeStyles from "../StyleSheets/HomeStyles";
 import HomeSearchBar from "../components/HomeSearchBar";
 import { commentProcess } from "../utils/commentProcess";
-import { UserContext } from "../UserContext";
+import { KareContext } from "../KareContext";
+import { getUserFromDb } from "../actions/userActions";
 
 interface Group {
   title: String;
@@ -32,14 +33,14 @@ interface Group {
 
 export default function HomeScreen({ route, navigation }) {
   const [currentUser, setCurrentUser] = useState({});
-  const [groups, setGroups] = useState([]);
+  //const [groups, setGroups] = useState([]);
   const [loading, setLoading] = useState(true);
   const { userId } = route.params;
   const [query, setQuery] = useState("");
   const [filteredGroups, setFilteredGroups] = useState([]);
   const [groupData, setGroupData] = useState({});
 
-  const { userState, dispatch } = useContext(UserContext);
+  const { state, dispatch } = useContext(KareContext);
 
   const onSignOut = () => {
     firebase
@@ -68,24 +69,31 @@ export default function HomeScreen({ route, navigation }) {
 
   useEffect(() => {
     setLoading(true);
+    //getGroupsFromDb(dispatch, state.user.groups);
+    getUserFromDb(dispatch, userId);
+
     const unsubscribe = navigation.addListener("focus", () => {
-      setLoading(true);
-      getGroupsById(userState.groups).then((fetchedGroups) => {
-        setGroups(fetchedGroups);
-        Analytics.setUserProperty(
-          "communitiesJoined",
-          fetchedGroups.length.toString()
-        );
-        setLoading(false);
-      });
+      //setLoading(true);
+      //getGroupsById(userState.groups).then((fetchedGroups) => {
+      //  setGroups(fetchedGroups);
+      //  Analytics.setUserProperty(
+      //    "communitiesJoined",
+      //    fetchedGroups.length.toString()
+      //  );
+      //  setLoading(false);
+      //});
     });
+    if (state.groups.length > 0) {
+      setLoading(false);
+      console.log("setting loading to false");
+    }
 
     return unsubscribe;
   }, []);
 
   useEffect(() => {
-    if (!currentUser.notificationId) {
-      registerForPushNotificationsAsync(userId);
+    if (!state.user.notificationId) {
+      registerForPushNotificationsAsync(dispatch, userId);
     }
     const _notificationSubscription = Notifications.addListener(
       handleNotification
@@ -94,20 +102,21 @@ export default function HomeScreen({ route, navigation }) {
 
   useEffect(() => {
     getCommentsSince(userId).then((res) => setGroupData(res));
-  }, [groups]);
+  }, [state.groups]);
 
   useEffect(() => {
-    if (groups && groups.length > 0) {
+    if (state.groups && state.groups.length > 0) {
+      console.log("seeting laoding ot false");
       setLoading(false);
     }
-  }, [groups]);
+  }, [state.groups]);
 
   useEffect(() => {
     setLoading(true);
     setTimeout(() => {
       const lowerCaseQuery = commentProcess(query);
       setFilteredGroups(
-        groups.filter((group) => {
+        state.groups.filter((group) => {
           return commentProcess(group["title"]).includes(lowerCaseQuery);
         })
       );
@@ -162,6 +171,8 @@ export default function HomeScreen({ route, navigation }) {
                   num_members: item.num_members,
                 });
                 onGroupOpen(item.id, userId);
+                groupData[item.id] = 0;
+                setGroupData(groupData);
               }}
               commentsSince={groupData[item.id]}
             />
@@ -170,7 +181,7 @@ export default function HomeScreen({ route, navigation }) {
         />
       ) : (
         <FlatList
-          data={groups}
+          data={state.groups}
           renderItem={({ item }) => (
             <GroupItem
               title={item.title}

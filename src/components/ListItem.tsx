@@ -12,7 +12,7 @@ import {
   deleteComment,
 } from "../utils/FirebaseUtils";
 import { Entypo } from "@expo/vector-icons";
-import { UserContext } from "../UserContext";
+import { KareContext } from "../KareContext";
 import { removeFollowing, addFollowing } from "../actions/userActions";
 
 export default function ListItem({
@@ -32,10 +32,10 @@ export default function ListItem({
   const [visible, setVisible] = useState(false);
   const [value, setValue] = useState(text);
   const [editing, setEditing] = useState(false);
-  const { userState, dispatch } = useContext(UserContext);
+  const { state, dispatch } = useContext(KareContext);
   const [isFollowing, setIsFollowing] = useState(
     Boolean(
-      userState.comments_following.find(
+      state.user.comments_following.find(
         (commentIdx) => commentIdx === commentId
       )
     )
@@ -44,12 +44,12 @@ export default function ListItem({
   useEffect(() => {
     setIsFollowing(
       Boolean(
-        userState.comments_following.find(
+        state.user.comments_following.find(
           (commentIdx) => commentIdx === commentId
         )
       )
     );
-  }, [userState]);
+  }, [state]);
 
   const commentColor = Colors[color];
 
@@ -219,11 +219,12 @@ export default function ListItem({
             {showReplies == "True" ? (
               <TouchableOpacity
                 onPress={() => {
-                  manageFollowingComment(isFollowing, commentId, userId);
+                  //manageFollowingComment(isFollowing, commentId, userId);
                   setIsFollowing(!isFollowing);
+                  //console.log(state.user);
                   isFollowing
-                    ? removeFollowing(dispatch, commentId)
-                    : addFollowing(dispatch, commentId);
+                    ? removeFollowing(dispatch, commentId, userId)
+                    : addFollowing(dispatch, commentId, userId);
                 }}
                 style={[
                   ReportDialogueStyles.reportReasons,

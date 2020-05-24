@@ -7,6 +7,7 @@ import {
   getUser,
   getComment,
 } from "../utils/FirebaseUtils";
+import { addNotificationId } from "../actions/userActions";
 
 interface data {
   commenterId: String;
@@ -16,7 +17,7 @@ interface data {
 }
 
 // Registers for notifications by adding Exponent token to user in db
-async function registerForPushNotificationsAsync(userId: string) {
+async function registerForPushNotificationsAsync(dispatch, userId: string) {
   if (Constants.isDevice) {
     const { status: existingStatus } = await Permissions.getAsync(
       Permissions.NOTIFICATIONS
@@ -31,7 +32,7 @@ async function registerForPushNotificationsAsync(userId: string) {
       return;
     }
     const token = await Notifications.getExpoPushTokenAsync();
-    // TODO add token to user in db
+    addNotificationId(dispatch, token);
     addNotifTokenToUser(userId, token);
   } else {
     alert("Must use physical device for Push Notifications");
