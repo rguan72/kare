@@ -61,7 +61,7 @@ async function sendCommenterNotification(
 ) {
   let sent = {};
   let commentUser = getUser(data.commenterId); // user profile of the person who owns the comment
-  sent[(await commentUser).userId] = "seen"; // mark that a notif has been sent to the user
+  sent[(await commentUser).id] = "seen"; // mark that a notif has been sent to the user
   let notifId = (await commentUser).notificationId;
   const message = await {
     to: notifId,

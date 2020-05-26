@@ -1,7 +1,7 @@
 import firebaseApp from "firebase/app";
 import firebase from "../constants/Firebase";
 import { collections } from "../constants/FirebaseStrings";
-import { NewComment, User } from "../Models";
+import { NewComment, User, UserWithId } from "../Models";
 import Report from "../constants/Report";
 
 const db = firebase.firestore();
@@ -36,10 +36,12 @@ function sendVerificationEmail() {
 
 function sendPasswordResetEmail(email: string) {
   var auth = firebaseApp.auth();
-  auth.sendPasswordResetEmail(email).then(function() {
-  }).catch(function(error){
-    console.log(error);
-  })
+  auth
+    .sendPasswordResetEmail(email)
+    .then(function () {})
+    .catch(function (error) {
+      console.log(error);
+    });
 }
 async function addNotifTokenToUser(id, token) {
   db.collection(collections.users).doc(id).update({ notificationId: token });
@@ -283,12 +285,14 @@ function watchReplies(commentId, setReplies, setLoading) {
 }
 
 // not sure how to get correct Typescript return type
-async function getUser(id): Promise<User> {
+async function getUser(id): Promise<UserWithId> {
   return db
     .collection(collections.users)
     .doc(id)
     .get()
-    .then((ref) => ref.data());
+    .then((ref) => {
+      return { ...ref.data(), id: ref.id };
+    });
 }
 
 function watchGroups(setGroups) {

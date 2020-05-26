@@ -24,4 +24,16 @@ interface User {
   voice: Number;
 }
 
-export { User, NewComment };
+interface UserWithId {
+  id: String;
+  color: String;
+  consider: Number;
+  groups: Array<String>;
+  name: String;
+  stress: Array<StressItem>;
+  support: Number;
+  timestamp: String;
+  voice: Number;
+}
+
+export { User, NewComment, UserWithId };
