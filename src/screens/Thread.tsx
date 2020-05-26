@@ -8,16 +8,7 @@ import {
   TouchableWithoutFeedback,
 } from "react-native";
 import * as Analytics from "expo-firebase-analytics";
-import { Layout, Button, Input, Text, Icon } from "@ui-kitten/components";
-import ListItem from "../components/ListItem";
-import {
-  addComment,
-  watchComments,
-  reportComment,
-  getUser,
-  makeGroupConnectors,
-  incrementGroupConnectors,
-} from "../utils/FirebaseUtils";
+import { getUser } from "../utils/FirebaseUtils";
 import ListSearchView from "../components/ListSearchView";
 import ButtonLayout from "../components/ButtonLayout";
 import ThreadStyles from "../StyleSheets/ThreadStyles";

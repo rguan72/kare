@@ -7,17 +7,15 @@ import {
   Platform,
   Keyboard,
   TouchableWithoutFeedback,
-  TouchableOpacity,
-  Image,
   ActivityIndicator,
 } from "react-native";
 import * as Analytics from "expo-firebase-analytics";
-import { Layout, Button, Input, Text, Card } from "@ui-kitten/components";
+import { Layout, Text, Card } from "@ui-kitten/components";
 import ListItem from "../components/ListItem";
+import PureImage from "../components/PureImage";
 import {
   addReply,
   watchReplies,
-  reportComment,
   getUser,
   followComment,
 } from "../utils/FirebaseUtils";
@@ -25,13 +23,11 @@ import screens from "../constants/screenNames";
 import Colors from "../constants/userColors";
 import RepliesStyles from "../StyleSheets/RepliesStyles";
 import ReportDialogue from "../components/ReportDialogue";
+import ButtonLayout from "../components/ButtonLayout";
 import { Notifications } from "expo";
-import { managePushNotification } from "../utils/NotificationUtils";
 
 export default function Replies({ route, navigation }) {
   const [replies, setReplies] = useState([]);
-  const [value, setValue] = useState("");
-  const [name, setName] = useState("");
   const [showReportDialogue, setShowReportDialogue] = useState(false);
   const [reporterID, setReporterID] = useState("");
   const [reporteeID, setReporteeID] = useState("");
@@ -94,7 +90,7 @@ export default function Replies({ route, navigation }) {
     );
   }, []); // so it only runs once
 
-  const ReplyParent = () => (
+  const ReplyParent = (
     <Layout style={[RepliesStyles.mb, RepliesStyles.bgColor, RepliesStyles.mt]}>
       <Layout
         style={{
@@ -108,36 +104,33 @@ export default function Replies({ route, navigation }) {
           }}
         >
           <Card style={RepliesStyles.card}>
-            <View style={{ flexDirection: "row" }}>
-              <View
-                style={[
-                  RepliesStyles.square,
-                  { backgroundColor: commenterColor, marginRight: 5 },
-                ]}
-              />
-              <Text style={RepliesStyles.userName}> {commenterName}</Text>
-              <Text style={RepliesStyles.date}>
-                {" * "}
-                {date}
-              </Text>
-              {imageLoading ? (
+            <View
+              style={{ flexDirection: "row", justifyContent: "space-between" }}
+            >
+              <View style={{ flexDirection: "row" }}>
+                <View
+                  style={[
+                    RepliesStyles.square,
+                    { backgroundColor: commenterColor, marginRight: 5 },
+                  ]}
+                />
+                <Text style={RepliesStyles.userName}> {commenterName}</Text>
+                <Text style={RepliesStyles.date}>
+                  {" * "}
+                  {date}
+                </Text>
+              </View>
+              {imageLoading || !following ? (
                 <Text></Text>
               ) : (
-                <TouchableOpacity style={RepliesStyles.touchable}>
-                  {following ? (
-                    <Image
-                      source={require("../../assets/follow-icon.png")}
-                      style={{ height: 20, width: 20, resizeMode: "contain" }}
-                    />
-                  ) : (
-                    /*
-                    <Image
-                      source={require("../../assets/unfollow.png")}
-                      style={{ height: 20, width: 20, resizeMode: "contain" }}
-                    />*/
-                    <Text></Text>
-                  )}
-                </TouchableOpacity>
+                <PureImage
+                  source={require("../../assets/follow-icon.png")}
+                  style={{
+                    height: 20,
+                    width: 20,
+                    resizeMode: "contain",
+                  }}
+                />
               )}
             </View>
             <Text style={RepliesStyles.comment}>{comment}</Text>
@@ -213,11 +206,9 @@ export default function Replies({ route, navigation }) {
                           )
                         }
                         date={date}
-                        onReply={() => {
-                          return null;
-                        }}
+                        onReply={() => null}
                         numReplies={item.numReplies}
-                        showReplies="False"
+                        showReplies={false}
                         color={item.color}
                         commenterName={item.commenterName}
                         commentId={item.id}
@@ -228,51 +219,14 @@ export default function Replies({ route, navigation }) {
                   }}
                   keyExtractor={(item) => item.id}
                 />
-                <Layout
-                  style={{
-                    justifyContent: "flex-end",
-                    backgroundColor: "#F3EAFF",
-                    flexDirection: "column",
-                  }}
-                >
-                  <Input
-                    multiline
-                    placeholder="Add comment"
-                    value={value}
-                    onChangeText={setValue}
-                  />
-                  <Button
-                    onPress={() => {
-                      followComment(commentId, userId);
-                      setFollowing(true);
-                      managePushNotification(value, userId, user.name, {
-                        commenterId,
-                        comment,
-                        commentId,
-                        date,
-                      });
-                      addReply(commentId, {
-                        userId: userId,
-                        text: value,
-                        reports: 0,
-                        show: true,
-                        numReplies: 0,
-                        color: user.color,
-                        commenterName: user.name,
-                      });
-                      setValue("");
-                      Analytics.logEvent("ReplySubmitted", {
-                        name: "reply",
-                        screen: "Replies",
-                        purpose: "Reply to a comment",
-                      });
-                    }}
-                    style={RepliesStyles.mt0}
-                    disabled={value === ""}
-                  >
-                    Submit
-                  </Button>
-                </Layout>
+                <ButtonLayout
+                  user={user}
+                  userId={userId}
+                  comment={comment}
+                  commentId={commentId}
+                  commenterId={commenterId}
+                  date={date}
+                />
               </>
             )}
           </React.Fragment>

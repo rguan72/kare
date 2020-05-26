@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { TouchableOpacity, Image } from "react-native";
-import { Card, Text, Modal, Button, Input } from "@ui-kitten/components";
+import { Card, Text, Modal, Layout, Input } from "@ui-kitten/components";
 import { View } from "react-native";
 import PropTypes from "prop-types";
+import { Entypo } from "@expo/vector-icons";
 import Colors from "../constants/userColors";
 import ListItemStyles from "../StyleSheets/ListItemStyles";
 import ReportDialogueStyles from "../StyleSheets/ReportDialogueStyles";
@@ -11,7 +12,7 @@ import {
   editComment,
   deleteComment,
 } from "../utils/FirebaseUtils";
-import { Entypo } from "@expo/vector-icons";
+import PureImage from "../components/PureImage";
 
 export default function ListItem({
   text,
@@ -35,17 +36,15 @@ export default function ListItem({
 
   const commentColor = Colors[color];
 
-  const RepliesNumber = () => {
-    if (showReplies == "True") {
-      return (
-        <View>
-          <Text>{numReplies ? numReplies : 0} Replies </Text>
-        </View>
-      );
-    } else {
-      return null;
-    }
-  };
+  const RepliesNumber = (
+    <Layout style={{ flexDirection: "row", alignItems: "center" }}>
+      <PureImage
+        source={require("../../assets/chat-icon.png")}
+        style={[ListItemStyles.image, ListItemStyles.mr]}
+      />
+      <Text style={ListItemStyles.replyNum}>{numReplies ? numReplies : 0}</Text>
+    </Layout>
+  );
 
   return (
     <Card style={ListItemStyles.card} onPress={onReply}>
@@ -63,26 +62,28 @@ export default function ListItem({
           style={{ position: "absolute", right: 0 }}
         >
           <Entypo
-            name='dots-three-horizontal'
+            name="dots-three-horizontal"
             size={20}
             style={{ opacity: 0.7, paddingLeft: 7, paddingBottom: 7 }}
           />
         </TouchableOpacity>
       </View>
       <Text style={ListItemStyles.comments}>{text}</Text>
+      {showReplies ? (
       <View style={ListItemStyles.bottomRow}>
-        <RepliesNumber />
-        {showReplies === "False" ? (
-          <Text></Text>
-        ) : !isFollowing ? (
-          <Text></Text>
+        {RepliesNumber}
+        {!isFollowing ? (
+          <View></View>
         ) : (
-          <Image
+          <PureImage
             source={require("../../assets/follow-icon.png")}
-            style={ListItemStyles.image}
+            style={[ListItemStyles.image]}
           />
         )}
       </View>
+      )  :  (
+        <View></View>
+      )}
       <Modal
         visible={visible}
         style={[ReportDialogueStyles.container, { height: "25%" }]}
@@ -119,16 +120,11 @@ export default function ListItem({
                     setVisible(false);
                     setValue(value);
                     setEditing(false);
-                    setQuery("");
+                    if (setQuery) {
+                      setQuery("");
+                    }
                   }}
-                  style={[
-                    ReportDialogueStyles.reportReasons,
-                    {
-                      marginBottom: 50,
-                      height: "20%",
-                      backgroundColor: "#5505BA",
-                    },
-                  ]}
+                  style={[ReportDialogueStyles.reportReasons]}
                 >
                   <Text style={{ color: "white" }}>Save Changes</Text>
                 </TouchableOpacity>
@@ -137,29 +133,13 @@ export default function ListItem({
               <>
                 <TouchableOpacity
                   onPress={() => setEditing(true)}
-                  style={[
-                    ReportDialogueStyles.reportReasons,
-                    {
-                      marginBottom: 5,
-                      marginTop: 10,
-                      height: "20%",
-                      backgroundColor: "#5505BA",
-                    },
-                  ]}
+                  style={[ReportDialogueStyles.reportReasons]}
                 >
                   <Text style={{ color: "white" }}>Edit</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={() => deleteComment(commentId)}
-                  style={[
-                    ReportDialogueStyles.reportReasons,
-                    {
-                      marginBottom: 50,
-                      marginTop: 5,
-                      height: "20%",
-                      backgroundColor: "#5505BA",
-                    },
-                  ]}
+                  style={[ReportDialogueStyles.reportReasons]}
                 >
                   <Text style={{ color: "white" }}>Delete</Text>
                 </TouchableOpacity>
@@ -172,10 +152,7 @@ export default function ListItem({
                 setValue(text);
                 setEditing(false);
               }}
-              style={[
-                ReportDialogueStyles.reportReasons,
-                { marginTop: 5, height: "20%", backgroundColor: "#5505BA" },
-              ]}
+              style={[ReportDialogueStyles.submitButton]}
             >
               <Text style={{ color: "white" }}>Cancel</Text>
             </TouchableOpacity>
@@ -186,33 +163,17 @@ export default function ListItem({
               onPress={
                 onReport /* currently "onReport" to make show false might have to change */
               }
-              style={[
-                ReportDialogueStyles.reportReasons,
-                {
-                  marginBottom: 5,
-                  marginTop: 10,
-                  height: "20%",
-                  backgroundColor: "#5505BA",
-                },
-              ]}
+              style={[ReportDialogueStyles.reportReasons]}
             >
               <Text style={{ color: "white" }}>Report</Text>
             </TouchableOpacity>
-            {showReplies == "True" ? (
+            {showReplies ? (
               <TouchableOpacity
                 onPress={() => {
                   manageFollowingComment(isFollowing, commentId, userId);
                   setIsFollowing(!isFollowing);
                 }}
-                style={[
-                  ReportDialogueStyles.reportReasons,
-                  {
-                    marginBottom: 50,
-                    marginTop: 10,
-                    height: "20%",
-                    backgroundColor: "#5505BA",
-                  },
-                ]}
+                style={[ReportDialogueStyles.reportReasons]}
               >
                 <Text style={{ color: "white" }}>
                   {isFollowing ? "Unfollow Post" : "Follow Post"}
@@ -228,10 +189,7 @@ export default function ListItem({
                 setValue(text);
                 setEditing(false);
               }}
-              style={[
-                ReportDialogueStyles.reportReasons,
-                { marginTop: 5, height: "20%", backgroundColor: "#5505BA" },
-              ]}
+              style={[ReportDialogueStyles.submitButton]}
             >
               <Text style={{ color: "white" }}>Cancel</Text>
             </TouchableOpacity>
@@ -249,6 +207,8 @@ ListItem.propTypes = {
   onReply: PropTypes.func.isRequired,
   commenterName: PropTypes.string.isRequired,
   color: PropTypes.string.isRequired,
+  showReplies: PropTypes.bool.isRequired,
+  numReplies: PropTypes.number,
   //following: PropTypes.bool.isRequired,
   commentId: PropTypes.string.isRequired,
   userId: PropTypes.string.isRequired,
