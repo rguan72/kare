@@ -32,8 +32,6 @@ import { KareContext } from "./src/KareContext";
 import { useCombinedReducer } from "./src/reducers/useCombineReducers";
 import { userReducer } from "./src/reducers/userReducers";
 import { groupReducer } from "./src/reducers/groupReducers";
-import { getUserFromDb } from "./src/actions/userActions";
-import { getGroupsFromDb } from "./src/actions/groupActions";
 
 // Firebase bug workaround: https://stackoverflow.com/questions/60361519/cant-find-a-variable-atob
 if (!global.btoa) {
@@ -57,7 +55,7 @@ export default function App() {
   // Global State
   const [state, dispatch] = useCombinedReducer({
     user: useReducer(userReducer, {}),
-    groups: useReducer(groupReducer, []),
+    groups: useReducer(groupReducer, { userGroups: [], allGroups: [] }),
   }); // intial user and groups are empty
 
   // so value is only reinitialized if userState or dispatch change
@@ -70,12 +68,6 @@ export default function App() {
     console.log("user: " + user);
     if (initializing) setInitializing(false);
   }
-
-  //useEffect(() => {
-  //  if (Object.keys(state).length !== 0) {
-  //    getUserFromDb(dispatch, user.uid); // will load the user and their groups
-  //  }
-  //}, [user]);
 
   useEffect(() => {
     const subscriber = firebase.auth().onAuthStateChanged(onAuthStateChanged);

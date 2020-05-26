@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Text, Modal, Button, Card } from "@ui-kitten/components";
 import {
   Image,
@@ -13,6 +13,8 @@ import { Ionicons } from "@expo/vector-icons";
 import * as Analytics from "expo-firebase-analytics";
 import { removeGroupFromUser, deleteConnector } from "../utils/FirebaseUtils";
 import PureImage from "../components/PureImage";
+import { removeGroups } from "../actions/groupActions";
+import { KareContext } from "../KareContext";
 
 export default function UserGroupItem({
   title,
@@ -26,6 +28,7 @@ export default function UserGroupItem({
   const [visible, setVisible] = useState(false);
   const [caption, setCaption] = useState("");
   const [error, setError] = useState(false);
+  const { dispatch } = useContext(KareContext);
 
   const onIconPress = () => {
     setCaption(`Are you sure you want to leave group ${title}?`);
@@ -38,14 +41,14 @@ export default function UserGroupItem({
         <View style={styles.buttonBox}>
           <View style={styles.textBox}>
             <View style={{ flex: 10 }}>
-              <Text category="h5">{title}</Text>
+              <Text category='h5'>{title}</Text>
               <Text>{description}</Text>
             </View>
             <TouchableOpacity
               style={{ flex: 1, paddingLeft: 5 }}
               onPress={onIconPress}
             >
-              <Ionicons name="ios-trash" size={40} />
+              <Ionicons name='ios-trash' size={40} />
             </TouchableOpacity>
           </View>
           <View style={styles.imageBox}>
@@ -61,8 +64,7 @@ export default function UserGroupItem({
                   setVisible(false);
                   setError(true);
                 } else {
-                  removeGroupFromUser(groupId);
-                  deleteConnector(userId, groupId);
+                  removeGroups(dispatch, userId, groupId);
                   onCancel();
                   setVisible(false);
                   Analytics.logEvent("GroupLeft", {

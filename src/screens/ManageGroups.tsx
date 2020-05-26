@@ -13,20 +13,20 @@ import SetupStyles from "../StyleSheets/SetupStyles";
 import NUM_GROUPS from "../constants/numberGroups";
 
 import { KareContext } from "../KareContext";
+import { addGroups, getAllGroups } from "../actions/groupActions";
 
 export default function ManageGroups({ route, navigation }) {
-  const [groups, setGroups] = useState([]);
   const { userId } = route.params;
   const [selectedIndexTwo, setSelectedIndexTwo] = useState([]);
-  const [groupOptions, setGroupOptions] = useState([]);
   const [reload, setReload] = useState(false);
 
   const [loading, setLoading] = useState(false);
 
   const { state, dispatch } = useContext(KareContext);
+  const { groups } = state;
 
   const groupTwoDisplayValues = selectedIndexTwo.map((index) => {
-    return groupOptions[index.row].title;
+    return state.groups.allGroups[index.row].title;
   });
 
   const renderOption = (group) => (
@@ -36,32 +36,10 @@ export default function ManageGroups({ route, navigation }) {
   useEffect(() => {
     Analytics.setCurrentScreen("ManageGroups");
   }, []);
-  /*
-  useEffect(() => {
-    setLoading(true);
-    getGroupsById(userState.groups).then((fetchedGroups) =>
-      setGroups(fetchedGroups)
-    );
-  }, [reload]);
-  */
 
   useEffect(() => {
-    getGroups()
-      .then((querySnapshot) => {
-        const options = [];
-        querySnapshot.forEach((doc) => {
-          if (
-            groups.filter((group) => {
-              return group.title == doc.data().title;
-            }).length == 0
-          ) {
-            options.push({ id: doc.id, title: doc.data().title });
-          }
-        });
-        setGroupOptions(options);
-      })
-      .catch(() => navigation.navigate(screens.error));
-  }, [groups]);
+    getAllGroups(dispatch);
+  }, []);
 
   useEffect(() => {
     if (groups.length > 0) {
@@ -81,10 +59,10 @@ export default function ManageGroups({ route, navigation }) {
 
   const onPress = () => {
     const newGroups = makeArray(
-      groupOptions.map((opt) => opt.id),
+      state.groups.allGroups.map((opt) => opt.id),
       selectedIndexTwo
     );
-    addGroupsToUser(newGroups);
+    addGroups(dispatch, newGroups);
     setSelectedIndexTwo([]);
     setReload(!reload);
     Analytics.logEvent("GroupJoined", {
@@ -113,7 +91,7 @@ export default function ManageGroups({ route, navigation }) {
       ) : (
         <React.Fragment>
           <FlatList
-            data={state.groups}
+            data={groups.userGroups}
             renderItem={({ item }) => (
               <UserGroupItem
                 title={item.title}
@@ -127,7 +105,7 @@ export default function ManageGroups({ route, navigation }) {
             )}
             keyExtractor={(item) => item.id}
           />
-          {!(groups.length < NUM_GROUPS) ? (
+          {!(groups.allGroups.length < NUM_GROUPS) ? (
             <Text></Text>
           ) : (
             <Card style={SetupStyles.card}>
@@ -140,7 +118,7 @@ export default function ManageGroups({ route, navigation }) {
                   setSelectedIndexTwo(index);
                 }}
               >
-                {groupOptions.map(renderOption)}
+                {groups.allGroups.map(renderOption)}
               </Select>
               <Button onPress={onPress} disabled={selectedIndexTwo.length == 0}>
                 Join!

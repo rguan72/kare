@@ -15,6 +15,7 @@ export default function ButtonLayout(props: ButtonLayoutProps) {
   const [value, setValue] = useState("");
 
   const { state, dispatch } = useContext(KareContext);
+  const { user } = state;
 
   return (
     <Layout style={ThreadStyles.commentBox}>
@@ -33,8 +34,8 @@ export default function ButtonLayout(props: ButtonLayoutProps) {
               reports: 0,
               show: true,
               numReplies: 0,
-              color: state.user.color,
-              commenterName: state.user.name,
+              color: user.color,
+              commenterName: user.name,
             },
             groupId
           );

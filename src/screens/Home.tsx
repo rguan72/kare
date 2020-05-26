@@ -41,6 +41,7 @@ export default function HomeScreen({ route, navigation }) {
   const [groupData, setGroupData] = useState({});
 
   const { state, dispatch } = useContext(KareContext);
+  const { user, groups } = state;
 
   const onSignOut = () => {
     firebase
@@ -71,28 +72,10 @@ export default function HomeScreen({ route, navigation }) {
     setLoading(true);
     //getGroupsFromDb(dispatch, state.user.groups);
     getUserFromDb(dispatch, userId);
-
-    const unsubscribe = navigation.addListener("focus", () => {
-      //setLoading(true);
-      //getGroupsById(userState.groups).then((fetchedGroups) => {
-      //  setGroups(fetchedGroups);
-      //  Analytics.setUserProperty(
-      //    "communitiesJoined",
-      //    fetchedGroups.length.toString()
-      //  );
-      //  setLoading(false);
-      //});
-    });
-    if (state.groups.length > 0) {
-      setLoading(false);
-      console.log("setting loading to false");
-    }
-
-    return unsubscribe;
   }, []);
 
   useEffect(() => {
-    if (!state.user.notificationId) {
+    if (!user.notificationId) {
       registerForPushNotificationsAsync(dispatch, userId);
     }
     const _notificationSubscription = Notifications.addListener(
@@ -102,26 +85,27 @@ export default function HomeScreen({ route, navigation }) {
 
   useEffect(() => {
     getCommentsSince(userId).then((res) => setGroupData(res));
-  }, [state.groups]);
+  }, [groups.userGroups]);
 
   useEffect(() => {
-    if (state.groups && state.groups.length > 0) {
-      console.log("seeting laoding ot false");
+    if (groups.userGroups && groups.userGroups.length > 0) {
       setLoading(false);
     }
-  }, [state.groups]);
+  }, [groups.userGroups]);
 
   useEffect(() => {
     setLoading(true);
-    setTimeout(() => {
-      const lowerCaseQuery = commentProcess(query);
-      setFilteredGroups(
-        state.groups.filter((group) => {
-          return commentProcess(group["title"]).includes(lowerCaseQuery);
-        })
-      );
-      setLoading(false);
-    }, 500);
+    if (query) {
+      setTimeout(() => {
+        const lowerCaseQuery = commentProcess(query);
+        setFilteredGroups(
+          groups.userGroups.filter((group) => {
+            return commentProcess(group["title"]).includes(lowerCaseQuery);
+          })
+        );
+        setLoading(false);
+      }, 500);
+    }
   }, [query]);
 
   return (
@@ -181,7 +165,7 @@ export default function HomeScreen({ route, navigation }) {
         />
       ) : (
         <FlatList
-          data={state.groups}
+          data={groups.userGroups}
           renderItem={({ item }) => (
             <GroupItem
               title={item.title}
