@@ -17,7 +17,6 @@ import ListItem from "../components/ListItem";
 import {
   addReply,
   watchReplies,
-  reportComment,
   getUser,
   followComment,
 } from "../utils/FirebaseUtils";

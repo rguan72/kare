@@ -5,7 +5,7 @@ import {
 } from "../utils/FirebaseUtils";
 import { getGroupsFromDb } from "./groupActions";
 
-export async function getUserFromDb(dispatch, userId) {
+export async function getUserFromDb(dispatch, userId: string) {
   try {
     getUser(userId).then((dbUser) => {
       console.log("action user");
@@ -20,18 +20,26 @@ export async function getUserFromDb(dispatch, userId) {
   }
 }
 
-export async function addFollowing(dispatch, commentId, userId) {
+export async function addFollowing(
+  dispatch,
+  commentId: string,
+  userId: string
+) {
   console.log("adding");
   dispatch({ type: "ADD_FOLLOWING", payload: commentId });
   followComment(commentId, userId);
 }
 
-export async function removeFollowing(dispatch, commentId, userId) {
+export async function removeFollowing(
+  dispatch,
+  commentId: string,
+  userId: string
+) {
   console.log("removing");
   dispatch({ type: "REMOVE_FOLLOWING", payload: commentId });
   unfollowComment(commentId, userId);
 }
 
-export async function addNotificationId(dispatch, notificationId) {
+export async function addNotificationId(dispatch, notificationId: string) {
   dispatch({ type: "ADD_NOTIFICATION_ID", payload: notificationId });
 }

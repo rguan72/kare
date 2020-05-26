@@ -32,6 +32,7 @@ import { KareContext } from "./src/KareContext";
 import { useCombinedReducer } from "./src/reducers/useCombineReducers";
 import { userReducer } from "./src/reducers/userReducers";
 import { groupReducer } from "./src/reducers/groupReducers";
+import { connectorReducer } from "./src/reducers/connectorReducers";
 
 // Firebase bug workaround: https://stackoverflow.com/questions/60361519/cant-find-a-variable-atob
 if (!global.btoa) {
@@ -56,6 +57,7 @@ export default function App() {
   const [state, dispatch] = useCombinedReducer({
     user: useReducer(userReducer, {}),
     groups: useReducer(groupReducer, { userGroups: [], allGroups: [] }),
+    connectors: useReducer(connectorReducer, {}),
   }); // intial user and groups are empty
 
   // so value is only reinitialized if userState or dispatch change

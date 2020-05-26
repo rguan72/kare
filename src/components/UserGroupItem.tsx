@@ -11,10 +11,10 @@ import PropTypes from "prop-types";
 import GroupItemStyles from "../StyleSheets/GroupItemStyles";
 import { Ionicons } from "@expo/vector-icons";
 import * as Analytics from "expo-firebase-analytics";
-import { removeGroupFromUser, deleteConnector } from "../utils/FirebaseUtils";
 import PureImage from "../components/PureImage";
 import { removeGroups } from "../actions/groupActions";
 import { KareContext } from "../KareContext";
+import { removeConnector } from "../actions/connectorActions";
 
 export default function UserGroupItem({
   title,
@@ -65,6 +65,7 @@ export default function UserGroupItem({
                   setError(true);
                 } else {
                   removeGroups(dispatch, userId, groupId);
+                  removeConnector(dispatch, groupId);
                   onCancel();
                   setVisible(false);
                   Analytics.logEvent("GroupLeft", {

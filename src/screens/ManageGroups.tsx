@@ -14,6 +14,7 @@ import NUM_GROUPS from "../constants/numberGroups";
 
 import { KareContext } from "../KareContext";
 import { addGroups, getAllGroups } from "../actions/groupActions";
+import { addConnector } from "../actions/connectorActions";
 
 export default function ManageGroups({ route, navigation }) {
   const { userId } = route.params;
@@ -63,6 +64,7 @@ export default function ManageGroups({ route, navigation }) {
       selectedIndexTwo
     );
     addGroups(dispatch, newGroups);
+    addConnector(dispatch, newGroups);
     setSelectedIndexTwo([]);
     setReload(!reload);
     Analytics.logEvent("GroupJoined", {

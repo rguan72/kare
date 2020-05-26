@@ -12,11 +12,6 @@ import * as Analytics from "expo-firebase-analytics";
 import { Notifications } from "expo";
 import { Entypo } from "@expo/vector-icons";
 import { Button, Text } from "@ui-kitten/components";
-import {
-  getGroupsById,
-  getCommentsSince,
-  onGroupOpen,
-} from "../utils/FirebaseUtils";
 import { registerForPushNotificationsAsync } from "../utils/NotificationUtils";
 import screens from "../constants/screenNames";
 import HomeStyles from "../StyleSheets/HomeStyles";
@@ -24,6 +19,7 @@ import HomeSearchBar from "../components/HomeSearchBar";
 import { commentProcess } from "../utils/commentProcess";
 import { KareContext } from "../KareContext";
 import { getUserFromDb } from "../actions/userActions";
+import { getConnectorsFromDb, openGroup } from "../actions/connectorActions";
 
 interface Group {
   title: String;
@@ -41,7 +37,7 @@ export default function HomeScreen({ route, navigation }) {
   const [groupData, setGroupData] = useState({});
 
   const { state, dispatch } = useContext(KareContext);
-  const { user, groups } = state;
+  const { user, groups, connectors } = state;
 
   const onSignOut = () => {
     firebase
@@ -72,6 +68,7 @@ export default function HomeScreen({ route, navigation }) {
     setLoading(true);
     //getGroupsFromDb(dispatch, state.user.groups);
     getUserFromDb(dispatch, userId);
+    getConnectorsFromDb(dispatch, userId);
   }, []);
 
   useEffect(() => {
@@ -82,10 +79,6 @@ export default function HomeScreen({ route, navigation }) {
       handleNotification
     );
   }, []);
-
-  useEffect(() => {
-    getCommentsSince(userId).then((res) => setGroupData(res));
-  }, [groups.userGroups]);
 
   useEffect(() => {
     if (groups.userGroups && groups.userGroups.length > 0) {
@@ -154,11 +147,9 @@ export default function HomeScreen({ route, navigation }) {
                   image: item.imageURL,
                   num_members: item.num_members,
                 });
-                onGroupOpen(item.id, userId);
-                groupData[item.id] = 0;
-                setGroupData(groupData);
+                openGroup(dispatch, userId, item.id);
               }}
-              commentsSince={groupData[item.id]}
+              commentsSince={connectors[item.id]}
             />
           )}
           keyExtractor={(item) => item.id}
@@ -185,9 +176,9 @@ export default function HomeScreen({ route, navigation }) {
                   screen: "Home",
                   purpose: "Open a group to view contents",
                 });
-                onGroupOpen(item.id, userId);
+                openGroup(dispatch, userId, item.id);
               }}
-              commentsSince={groupData[item.id]}
+              commentsSince={connectors[item.id]}
             />
           )}
           keyExtractor={(item) => item.id}

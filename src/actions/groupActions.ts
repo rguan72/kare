@@ -35,7 +35,7 @@ export function addGroups(dispatch, groups) {
   addGroupsToUser(groups);
 }
 
-export function removeGroups(dispatch, userId, groupId) {
+export function removeGroups(dispatch, userId: string, groupId) {
   getGroupsById([groupId]).then((group) => {
     console.log(group);
     dispatch({
