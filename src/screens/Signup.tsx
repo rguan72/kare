@@ -19,6 +19,7 @@ import screens from "../constants/screenNames";
 import { emailValid } from "../utils/Parse";
 import Logo from "../components/Logo";
 import firebase from "firebase";
+import {LinearGradient} from "expo-linear-gradient";
 
 function SignupScreen({ navigation }) {
   const [email, setEmail] = useState({ value: "", error: "" });
@@ -137,7 +138,10 @@ function SignupScreen({ navigation }) {
   };
 
   return (
-    <View style={{ paddingTop: 30, backgroundColor: "#F3EAFF", flex: 1 }}>
+    <View style={{ paddingTop: 30, flex: 1 }}>
+      <LinearGradient
+        colors={['#99F4FF', '#68A8FF', '#3953FF']}
+      >
       {/* <BackButton goBack={() => navigation.navigate('HomeScreen')} /> */}
 
       <View
@@ -221,6 +225,7 @@ function SignupScreen({ navigation }) {
           </Button>
         </Card>
       </Modal>
+      </LinearGradient>
     </View>
   );
 }
